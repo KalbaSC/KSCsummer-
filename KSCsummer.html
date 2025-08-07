@@ -7,7 +7,6 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#000000">
 
-  <!-- Fonts and Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -76,7 +75,6 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header-container">
     <div class="header-right">
       <img src="Picture3.png" class="logo">
@@ -89,7 +87,6 @@
     </div>
   </header>
 
-  <!-- Navigation -->
   <nav>
     <button class="active" onclick="switchSection('scanner')">تسجيل الحضور</button>
     <button onclick="switchSection('reports')">لوحة التقارير</button>
@@ -97,38 +94,27 @@
     <button onclick="switchSection('camp')">تسجيل المخيم</button>
   </nav>
 
-  <!-- Sections -->
   <section id="scanner" class="active">
-    <!-- 🔻 Paste AttendanceScan.html main content here -->
     <h2>تسجيل الحضور عبر QR</h2>
-    <!-- Your scanner code and UI goes here -->
   </section>
 
   <section id="reports">
-    <!-- 🔻 Paste reports.html content here -->
     <h2>التقارير</h2>
-    <!-- Your reports UI goes here -->
   </section>
 
   <section id="evaluate">
-    <!-- 🔻 Paste evaluate.html content here -->
     <h2>تقييم اللاعبين</h2>
-    <!-- Your evaluation form goes here -->
   </section>
 
   <section id="camp">
-    <!-- 🔻 Paste camp.html content here -->
     <h2>تسجيل المخيم الصيفي</h2>
-    <!-- Your camp form goes here -->
   </section>
 
-  <!-- Footer -->
   <footer>
     <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 12px; color: #aaa">تم التطوير بواسطة روند أحمد الضمور</p>
   </footer>
 
-  <!-- Section Switcher Script -->
   <script>
     function switchSection(id) {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
