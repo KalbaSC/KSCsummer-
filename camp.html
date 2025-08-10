@@ -580,6 +580,37 @@ document.getElementById('idnum').addEventListener('change', function () {
 });
 </script>
 
+    <script>
+(() => {
+  const isEmbedded = new URLSearchParams(location.search).has('embed');
+  if (isEmbedded) {
+    const style = document.createElement('style');
+    style.textContent = `
+      header.header-container, .header-container, .footer-container, footer { display: none !important; }
+      html, body { background: transparent !important; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const sendSize = () => {
+    const b = document.body, e = document.documentElement;
+    const h = Math.max(
+      b.scrollHeight, b.offsetHeight, b.clientHeight,
+      e.scrollHeight, e.offsetHeight, e.clientHeight
+    );
+    window.parent.postMessage({ type: 'kalba-iframe-size', height: h }, '*');
+  };
+
+  const mo = new MutationObserver(() => { sendSize(); });
+  mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+
+  window.addEventListener('load', sendSize, true);
+  setTimeout(sendSize, 100);
+  setTimeout(sendSize, 400);
+  setTimeout(sendSize, 900);
+})();
+</script>
+
 <footer>
   <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 14px; color: #aaa; margin-top: -10px;">تم التطوير بواسطة روند أحمد الضمور</p>
@@ -595,3 +626,4 @@ document.getElementById('idnum').addEventListener('change', function () {
 
 </body>
 </html>
+
