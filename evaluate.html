@@ -1105,11 +1105,11 @@ function renderPlayersList(players = playersData) {
 
     const playerDateFormatted = formatDate(player.date);
     
-    return !evaluations.some(eval => {
-      const evalDateFormatted = formatDate(eval["Date"]);
-      return eval["Player ID"] === player.id && 
-             evalDateFormatted === playerDateFormatted;
-    });
+return !evaluations.some(row => {
+  const evalDateFormatted = formatDate(row["Date"]);
+  return row["Player ID"] === player.id &&
+         evalDateFormatted === playerDateFormatted;
+});
   });
 
   if (unevaluatedPlayers.length === 0) {
@@ -1164,20 +1164,11 @@ async function saveEvaluation(playerId, playerDate) {
   const evaluationDate = playerDate;
   const playerDateFormatted = formatDate(evaluationDate);
 
-  const alreadyEvaluated = evaluations.some(eval => {
-    const evalDateFormatted = formatDate(eval["Date"]);
-
-    console.log("✅ Comparing:", {
-      evalDate: eval["Date"],
-      evalFormatted: evalDateFormatted,
-      currentDate: playerDateFormatted,
-      playerIdEval: eval["Player ID"],
-      playerIdCurrent: playerId
-    });
-
-    return eval["Player ID"] === playerId && 
-           evalDateFormatted === playerDateFormatted;
-  });
+const alreadyEvaluated = evaluations.some(row => {
+  const evalDateFormatted = formatDate(row["Date"]);
+  console.log({ evalDate: row["Date"], playerIdEval: row["Player ID"] });
+  return row["Player ID"] === playerId && evalDateFormatted === playerDateFormatted;
+});
 
   if (alreadyEvaluated) {
     showToast('تم تقييم هذا اللاعب بالفعل في هذا التاريخ', false);
@@ -1283,33 +1274,27 @@ async function renderEvaluatedPlayersList() {
     let data = await response.json();
 
     const processedData = data
-      .filter(eval => eval.Activity === currentCoach.activity)
-      .map(eval => {
-        let total = 0;
-        const criteria = evaluationCriteria[currentCoach.activity] || [];
-
-        criteria.forEach(criterion => {
-          const score = parseInt(eval[criterion]) || 0;
-          total += score;
-        });
-
-        const percentage = Math.round((total / (criteria.length * 5)) * 100) + "%";
-
-        return {
-          ...eval,
-          "Date": formatDate(eval.Date),
-          "Time-stamp": formatDate(eval["Timestamp"]),
-          "Total Score": total,
-          "Percentage": percentage,
-          normalizedPlayerId: String(eval["Player ID"]).trim(),
-          normalizedDate: formatDate(eval.Date)
-        };
-      });
+     .filter(rec => rec.Activity === currentCoach.activity)
+.map(rec => {
+  let total = 0;
+  const criteria = evaluationCriteria[currentCoach.activity] || [];
+  criteria.forEach(criterion => { total += parseInt(rec[criterion]) || 0; });
+  const percentage = Math.round((total / (criteria.length * 5)) * 100) + "%";
+  return {
+    ...rec,
+    "Date": formatDate(rec.Date),
+    "Time-stamp": formatDate(rec["Timestamp"]),
+    "Total Score": total,
+    "Percentage": percentage,
+    normalizedPlayerId: String(rec["Player ID"]).trim(),
+    normalizedDate: formatDate(rec.Date)
+  };
+});
 
     evaluations = processedData;
 
     const playersMap = new Map();
-    processedData.forEach(eval => {
+    processedData.forEach(rec => { 
       const playerId = eval.normalizedPlayerId;
       if (!playersMap.has(playerId)) {
         playersMap.set(playerId, {
@@ -1318,7 +1303,7 @@ async function renderEvaluatedPlayersList() {
           evaluations: []
         });
       }
-      playersMap.get(playerId).evaluations.push(eval);
+      playersMap.get(id).evaluations.push(rec); });
     });
 
     container.innerHTML = '';
@@ -1341,12 +1326,12 @@ async function renderEvaluatedPlayersList() {
       playerCard.innerHTML = `
         <h3>${player.name || 'غير معروف'} <small>(${player.id || 'غير معروف'})</small></h3>
         <div class="player-evaluations">
-          ${player.evaluations.map(eval => `
+          ${player.evaluations.map(rec => `
             <div class="evaluation-session">
-              <p><strong>تاريخ الحضور:</strong> ${eval["Date"] || 'غير محدد'}</p>
-              <p><strong>تاريخ التقييم:</strong> ${eval["Time-stamp"] || 'غير محدد'}</p>
-              <p><strong>المجموع:</strong> ${eval["Total Score"] || 0}/25 (${eval["Percentage"] || '0%'})</p>
-              ${eval["Notes"] ? `<p><strong>ملاحظات:</strong> ${eval["Notes"]}</p>` : ''}
+              <p><strong>تاريخ الحضور:</strong> ${rec["Date"] || 'غير محدد'}</p>
+              <p><strong>تاريخ التقييم:</strong> ${rec["Time-stamp"] || 'غير محدد'}</p>
+              <p><strong>المجموع:</strong> ${rec["Total Score"] || 0}/25 (${eval["Percentage"] || '0%'})</p>
+              ${rec["Notes"] ? `<p><strong>ملاحظات:</strong> ${rec["Notes"]}</p>` : ''}
             </div>
           `).join('')}
         </div>
