@@ -5,7 +5,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>نادي كلباء الرياضي الثقافي - الصفحة الرئيسية</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -13,27 +13,40 @@
     @font-face {
       font-family: 'NotoKufiArabic';
       src: url('NotoKufiArabic.ttf') format('truetype');
+      font-display: swap;
     }
+
+    :root {
+      --brand: #f4e733;
+      --bg-dark: #111;
+      --bg-black: #000;
+    }
+
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
     }
     body {
-      font-family: 'NotoKufiArabic', 'Cairo', sans-serif;
-      background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
+      font-family: 'NotoKufiArabic', 'Cairo', system-ui, sans-serif;
+      color: #fff;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      /* Background image + safe fallback color */
+      background-color: #000;
+      background-image: url('black_and_yellow_grunge_background.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      background-size: cover;
     }
 
-    /* Header (from camp.html style) */
+    /* Header (camp style) */
     .header-container {
       width: 100%;
-      background: #111;
-      border-bottom: 3px solid #f4e733;
+      background: var(--bg-dark);
+      border-bottom: 3px solid var(--brand);
     }
     .header-right {
       width: 100%;
@@ -44,89 +57,93 @@
       justify-content: center;
       gap: 20px;
       padding: 20px 42px;
-      background-color: #111;
+      background-color: var(--bg-dark);
       color: white;
       box-sizing: border-box;
     }
-    .header-right img.logo {
-      height: 70px;
-    }
-    .divider {
-      width: 1.5px;
-      height: 65px;
-      background-color: #f4e733;
-    }
+    .header-right img.logo { height: 70px; }
+    .divider { width: 1.5px; height: 65px; background-color: var(--brand); }
     .header-info { text-align: center; }
     .arabic-name { font-weight: bold; font-size: 20px; }
-    .english-name { font-size: 14px; color: #f4e733; }
+    .english-name { font-size: 14px; color: var(--brand); }
 
-    /* Nav under header */
+    /* Nav */
     nav {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      background: #000;
-      border-bottom: 2px solid #f4e733;
+      background: var(--bg-black);
+      border-bottom: 2px solid var(--brand);
     }
     nav button {
       background: none;
       border: none;
-      color: #f4e733;
+      color: var(--brand);
       padding: 12px 18px;
       font-size: 16px;
       cursor: pointer;
     }
     nav button.active {
-      background: #f4e733;
+      background: var(--brand);
       color: #000;
       border-radius: 8px;
     }
 
     /* Main + iframe */
     main {
-      flex: 1; /* ensures footer goes after content */
+      flex: 1; /* push footer to the end if content is short */
       width: 100%;
       box-sizing: border-box;
     }
     #pageFrame {
       width: 100%;
-      border: none;
+      border: 0;
       display: block;
-      background: #000;
-      min-height: 400px; /* visible while loading */
+      background: transparent; /* allow outer background to show if we hide inner background */
+      min-height: 420px; /* visible area while loading */
+      /* Fix mobile 1px gaps during dynamic height changes */
+      transform: translateZ(0);
     }
 
-    /* Footer (from camp.html style) */
+    /* Footer (camp style) */
     footer {
-      background-color: #111;
+      background-color: var(--bg-dark);
       color: white;
       text-align: center;
-      padding: 20px;
-      border-top: 3px solid #f4e733;
+      padding: 18px 12px;
+      border-top: 3px solid var(--brand);
       font-size: 14px;
+      line-height: 1.4;
     }
     .social-icons a {
       color: white;
       margin: 0 8px;
-      font-size: 20px;
+      font-size: 18px;
     }
 
+    /* Mobile tweaks */
     @media (max-width: 768px) {
-      .header-right {
-        padding: 10px 10px;
-        gap: 10px;
-      }
-      .header-right img.logo {
-        height: 50px !important;
-        max-height: 50px !important;
-      }
-      .divider { height: 45px; }
-      nav button {
-        padding: 10px 12px;
-        font-size: 14px;
-      }
+      .header-right { padding: 10px 10px; gap: 10px; }
+      .header-right img.logo { height: 48px !important; max-height: 48px !important; }
+      .divider { height: 42px; }
+      .arabic-name { font-size: 16px; }
+      .english-name { font-size: 12px; }
+
+      nav button { padding: 10px 12px; font-size: 14px; }
+
+      /* Footer smaller on phones */
+      footer { padding: 12px 10px; font-size: 12px; }
+      .social-icons a { font-size: 16px; }
+    }
+
+    /* Ultra small */
+    @media (max-width: 420px) {
+      .arabic-name { font-size: 15px; }
+      .english-name { font-size: 11px; }
+      nav button { font-size: 13px; }
+      footer { font-size: 11px; }
     }
   </style>
 </head>
@@ -155,7 +172,7 @@
 
   <!-- Content Wrapper -->
   <main>
-    <iframe id="pageFrame" src="AttendanceScan.html" title="Club Module"></iframe>
+    <iframe id="pageFrame" src="AttendanceScan.html" title="Club Module" allowtransparency="true"></iframe>
   </main>
 
   <!-- Global Footer -->
@@ -171,27 +188,32 @@
   </footer>
 
   <script>
-    // ---- Helpers ----
+    // ---------------------------
+    // Utilities
+    // ---------------------------
     function setActive(btn) {
       document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
 
-    // Inject CSS into the iframe to hide its own header/footer
+    // Hide the loaded page's own header/footer so we don't see doubles
     function hideInnerHeaderFooter(doc) {
-      const style = doc.createElement('style');
-      style.textContent = `
-        header.header-container,
-        .header-container,
-        .footer-container,
-        footer { display: none !important; }
-        /* optional: unify background to be transparent so the outer bg shows */
-        body { background: transparent !important; }
-      `;
-      doc.head.appendChild(style);
+      try {
+        const style = doc.createElement('style');
+        style.textContent = `
+          header.header-container,
+          .header-container,
+          .footer-container,
+          footer { display: none !important; }
+          /* Let the outer page show its background */
+          html, body { background: transparent !important; }
+        `;
+        doc.head.appendChild(style);
+      } catch (e) {
+        console.warn('Inject style failed (likely cross-origin):', e);
+      }
     }
 
-    // Get full scroll height of iframe document
     function getDocHeight(doc) {
       const b = doc.body, e = doc.documentElement;
       return Math.max(
@@ -200,58 +222,73 @@
       );
     }
 
-    // Adjust iframe height to content so footer sits at the end
     function adjustIframeHeight() {
       const frame = document.getElementById('pageFrame');
       try {
         const doc = frame.contentDocument || frame.contentWindow.document;
-        frame.style.height = getDocHeight(doc) + 'px';
+        const h = getDocHeight(doc);
+        // Add a tiny buffer so no scrollbars appear due to rounding
+        frame.style.height = (h + 2) + 'px';
       } catch (e) {
-        // If cross-origin (shouldn't happen on same GitHub Pages repo), ignore
         console.warn('Could not size iframe (cross-origin?):', e);
       }
     }
 
-    function observeIframeMutations(doc) {
-      // Watch content changes to keep height updated as tables load, filters change, etc.
-      const obs = new MutationObserver(() => adjustIframeHeight());
-      obs.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
-      // Also adjust on window resize inside iframe
-      doc.defaultView.addEventListener('resize', adjustIframeHeight);
-      // Adjust a few times after load to catch late content
+    function observeIframe(doc) {
+      // Resize when content changes (tables render, charts animate, filters apply…)
+      const mo = new MutationObserver(() => {
+        adjustIframeHeight();
+      });
+      mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+
+      // In case internal layout changes without mutations (e.g., images load)
+      doc.addEventListener('load', adjustIframeHeight, true);
+
+      // A few delayed checks for late content
       setTimeout(adjustIframeHeight, 100);
       setTimeout(adjustIframeHeight, 400);
-      setTimeout(adjustIframeHeight, 800);
+      setTimeout(adjustIframeHeight, 900);
     }
 
-    // Load a page into the iframe
+    function onFrameLoaded() {
+      const frame = document.getElementById('pageFrame');
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        hideInnerHeaderFooter(doc);
+        observeIframe(doc);
+        adjustIframeHeight();
+      } catch (e) {
+        // If different origin, we can't access the iframe (shouldn't happen on same repo)
+        console.warn('iframe load hook limited due to origin:', e);
+      }
+    }
+
     function loadPage(btn, page) {
       setActive(btn);
       const frame = document.getElementById('pageFrame');
-      frame.onload = function () {
-        try {
-          const doc = frame.contentDocument || frame.contentWindow.document;
-          hideInnerHeaderFooter(doc);
-          observeIframeMutations(doc);
-          adjustIframeHeight();
-        } catch (e) {
-          console.warn('Could not inject/hide inner header/footer:', e);
-        }
-      };
-      // cache-buster to avoid stale file on GH Pages
+      frame.onload = onFrameLoaded;
+
+      // cache buster to avoid stale GH Pages cache
       const bust = (page.includes('?') ? '&' : '?') + 'v=' + Date.now();
       frame.src = page + bust;
     }
 
-    // First load
+    // Initial run (default tab)
     document.addEventListener('DOMContentLoaded', () => {
-      // Trigger load of the default tab again so onload hook runs
+      // Kick the onload flow to ensure injection/resize runs
       const firstBtn = document.querySelector('nav button.active');
       loadPage(firstBtn, 'AttendanceScan.html');
     });
 
-    // Outer window resize -> re-fit height
-    window.addEventListener('resize', adjustIframeHeight);
+    // Outer window resize/orientation -> re-fit height
+    window.addEventListener('resize', () => {
+      // debounce a bit
+      clearTimeout(window.__resizeTid);
+      window.__resizeTid = setTimeout(adjustIframeHeight, 80);
+    });
+    window.addEventListener('orientationchange', () => {
+      setTimeout(adjustIframeHeight, 120);
+    });
   </script>
 </body>
 </html>
