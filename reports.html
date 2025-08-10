@@ -18,10 +18,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <style>
-@font-face {
-  font-family: 'NotoKufiArabic';
-  src: url('/NotoKufiArabic.ttf') format('truetype');
-  font-display: swap;
+@font-face{
+  font-family:'NotoKufiArabic';
+      url('/NotoKufiArabic.ttf') format('truetype');
+  font-display:swap;
 }
 html {
 height: 100%;
@@ -2785,42 +2785,6 @@ function exportToExcel() {
   XLSX.writeFile(wb, `${filename}.xlsx`);
 }
     
-
-function prepareMainExportData() {
-  const rows = document.querySelectorAll('#attendanceTable tbody tr');
-  const exportData = [];
-  const seenIds = new Set();
-
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length < 6) return;
-
-    const id = cells[2].textContent.trim();
-    if (seenIds.has(id)) return; 
-    seenIds.add(id);
-
-    const date = cells[0].textContent.trim().split(' ')[0];
-    const time = cells[0].textContent.trim().split(' ')[1];
-    const fullName = cells[1].textContent.trim(); 
-    const staff = cells[3].textContent.trim();
-    const activity = cells[4].textContent.trim();
-    const type = cells[5].textContent.trim();
-
-    exportData.push({
-      "التاريخ": date,
-      "الوقت": time,
-      "الاسم": fullName,
-      "المعرف": id,
-      "الموظف المسجل": staff,
-      "النشاط": activity,
-      "النوع": type,
-      "الحالة": type === "عام" ? "حضور عام" : "حضور نشاط"
-    });
-  });
-
-  return exportData;
-}
-
 function prepareMainExportData() {
   const uniqueDaily = {};
 
