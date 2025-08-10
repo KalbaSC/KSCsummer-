@@ -2,19 +2,34 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>نادي كلباء الرياضي الثقافي</title>
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نادي كلباء الرياضي الثقافي - الصفحة الرئيسية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    body {
+    @font-face {
+      font-family: 'NotoKufiArabic';
+      src: url('NotoKufiArabic.ttf') format('truetype');
+    }
+    html, body {
+      height: 100%;
       margin: 0;
-      font-family: 'NotoKufiArabic', system-ui, sans-serif;
+      padding: 0;
+    }
+    body {
+      font-family: 'NotoKufiArabic', 'Cairo', sans-serif;
       background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
+
+    /* Header (from camp.html style) */
     .header-container {
       width: 100%;
       background: #111;
@@ -33,19 +48,27 @@
       color: white;
       box-sizing: border-box;
     }
-    .header-right img.logo { height: 70px; }
-    .divider { width: 1.5px; height: 65px; background-color: #f4e733; }
+    .header-right img.logo {
+      height: 70px;
+    }
+    .divider {
+      width: 1.5px;
+      height: 65px;
+      background-color: #f4e733;
+    }
     .header-info { text-align: center; }
     .arabic-name { font-weight: bold; font-size: 20px; }
     .english-name { font-size: 14px; color: #f4e733; }
 
+    /* Nav under header */
     nav {
       display: flex;
       justify-content: center;
-      background: #000;
-      border-bottom: 2px solid #f4e733;
+      align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      background: #000;
+      border-bottom: 2px solid #f4e733;
     }
     nav button {
       background: none;
@@ -55,38 +78,66 @@
       font-size: 16px;
       cursor: pointer;
     }
-    nav button.active { background: #f4e733; color: #000; border-radius: 8px; }
+    nav button.active {
+      background: #f4e733;
+      color: #000;
+      border-radius: 8px;
+    }
 
-    #frameWrap { width: 100%; }
+    /* Main + iframe */
+    main {
+      flex: 1; /* ensures footer goes after content */
+      width: 100%;
+      box-sizing: border-box;
+    }
     #pageFrame {
       width: 100%;
       border: none;
-      background: #000;
       display: block;
+      background: #000;
+      min-height: 400px; /* visible while loading */
     }
 
+    /* Footer (from camp.html style) */
     footer {
       background-color: #111;
       color: white;
       text-align: center;
-      padding: 16px;
+      padding: 20px;
       border-top: 3px solid #f4e733;
       font-size: 14px;
     }
+    .social-icons a {
+      color: white;
+      margin: 0 8px;
+      font-size: 20px;
+    }
 
     @media (max-width: 768px) {
-      .header-right { padding: 10px 10px; gap: 10px; }
-      .header-right img.logo { height: 50px; }
+      .header-right {
+        padding: 10px 10px;
+        gap: 10px;
+      }
+      .header-right img.logo {
+        height: 50px !important;
+        max-height: 50px !important;
+      }
       .divider { height: 45px; }
+      nav button {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Global Header -->
   <header class="header-container">
     <div class="header-right">
-      <img src="Picture3.png" alt="شعار مجلس الشارقة الرياضي" class="logo" />
+      <img src="Picture3.png" alt="شعار الشارقة" class="logo">
       <div class="divider"></div>
-      <img src="logo.png" alt="شعار نادي كلباء الرياضي الثقافي" class="logo" />
+      <img src="logo.png" alt="شعار نادي كلباء" class="logo">
       <div class="header-info">
         <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
         <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
@@ -94,6 +145,7 @@
     </div>
   </header>
 
+  <!-- Global Nav -->
   <nav>
     <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">📷 تسجيل الحضور</button>
     <button onclick="loadPage(this, 'reports.html')">📊 لوحة التقارير</button>
@@ -101,10 +153,12 @@
     <button onclick="loadPage(this, 'camp.html')">🧒 تسجيل المخيم</button>
   </nav>
 
-  <div id="frameWrap">
-    <iframe id="pageFrame" src="camp.html" title="Club Module"></iframe>
-  </div>
+  <!-- Content Wrapper -->
+  <main>
+    <iframe id="pageFrame" src="AttendanceScan.html" title="Club Module"></iframe>
+  </main>
 
+  <!-- Global Footer -->
   <footer>
     <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 12px; color: #aaa;">تم التطوير بواسطة روند أحمد الضمور</p>
@@ -117,54 +171,87 @@
   </footer>
 
   <script>
-    function resizeFrame() {
-      const headerH = document.querySelector('.header-container').offsetHeight;
-      const navH = document.querySelector('nav').offsetHeight;
-      const footerH = document.querySelector('footer').offsetHeight;
-      const vh = window.innerHeight;
-      const frame = document.getElementById('pageFrame');
-      frame.style.height = (vh - headerH - navH - footerH) + 'px';
-    }
-    window.addEventListener('resize', resizeFrame);
-    window.addEventListener('load', resizeFrame);
-
-    function loadPage(btn, page) {
+    // ---- Helpers ----
+    function setActive(btn) {
       document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+    }
 
+    // Inject CSS into the iframe to hide its own header/footer
+    function hideInnerHeaderFooter(doc) {
+      const style = doc.createElement('style');
+      style.textContent = `
+        header.header-container,
+        .header-container,
+        .footer-container,
+        footer { display: none !important; }
+        /* optional: unify background to be transparent so the outer bg shows */
+        body { background: transparent !important; }
+      `;
+      doc.head.appendChild(style);
+    }
+
+    // Get full scroll height of iframe document
+    function getDocHeight(doc) {
+      const b = doc.body, e = doc.documentElement;
+      return Math.max(
+        b.scrollHeight, b.offsetHeight, b.clientHeight,
+        e.scrollHeight, e.offsetHeight, e.clientHeight
+      );
+    }
+
+    // Adjust iframe height to content so footer sits at the end
+    function adjustIframeHeight() {
+      const frame = document.getElementById('pageFrame');
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        frame.style.height = getDocHeight(doc) + 'px';
+      } catch (e) {
+        // If cross-origin (shouldn't happen on same GitHub Pages repo), ignore
+        console.warn('Could not size iframe (cross-origin?):', e);
+      }
+    }
+
+    function observeIframeMutations(doc) {
+      // Watch content changes to keep height updated as tables load, filters change, etc.
+      const obs = new MutationObserver(() => adjustIframeHeight());
+      obs.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+      // Also adjust on window resize inside iframe
+      doc.defaultView.addEventListener('resize', adjustIframeHeight);
+      // Adjust a few times after load to catch late content
+      setTimeout(adjustIframeHeight, 100);
+      setTimeout(adjustIframeHeight, 400);
+      setTimeout(adjustIframeHeight, 800);
+    }
+
+    // Load a page into the iframe
+    function loadPage(btn, page) {
+      setActive(btn);
       const frame = document.getElementById('pageFrame');
       frame.onload = function () {
         try {
           const doc = frame.contentDocument || frame.contentWindow.document;
-
-          const style = doc.createElement('style');
-          style.textContent = `
-            header.header-container,
-            .header-container,
-            .footer-container,
-            footer { display: none !important; }
-            body { background: transparent !important; }
-          `;
-          doc.head.appendChild(style);
-
-          const main = doc.querySelector('main');
-          if (main) {
-            main.style.paddingTop = '10px';
-            main.style.paddingBottom = '10px';
-          }
+          hideInnerHeaderFooter(doc);
+          observeIframeMutations(doc);
+          adjustIframeHeight();
         } catch (e) {
-          console.warn('Could not inject style into iframe:', e);
+          console.warn('Could not inject/hide inner header/footer:', e);
         }
-        resizeFrame();
       };
-
-      const bust = 'v=' + Date.now();
-      frame.src = page + (page.includes('?') ? '&' : '?') + bust;
+      // cache-buster to avoid stale file on GH Pages
+      const bust = (page.includes('?') ? '&' : '?') + 'v=' + Date.now();
+      frame.src = page + bust;
     }
 
+    // First load
     document.addEventListener('DOMContentLoaded', () => {
-      loadPage(document.querySelector('nav button.active'), 'AttendanceScan.html');
+      // Trigger load of the default tab again so onload hook runs
+      const firstBtn = document.querySelector('nav button.active');
+      loadPage(firstBtn, 'AttendanceScan.html');
     });
+
+    // Outer window resize -> re-fit height
+    window.addEventListener('resize', adjustIframeHeight);
   </script>
 </body>
 </html>
