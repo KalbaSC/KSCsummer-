@@ -16,21 +16,42 @@
       color: white;
       text-align: center;
     }
-    header {
+    .header-container {
+      width: 100%;
       background: #111;
       border-bottom: 3px solid #f4e733;
-      padding: 15px;
     }
-    .logo {
-      height: 50px;
-      vertical-align: middle;
+    .header-right {
+      width: 100%;
+      max-width: 1170px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px 42px;
+      background-color: #111;
+      color: white;
+      box-sizing: border-box;
+    }
+    .header-right img.logo {
+      height: 70px;
     }
     .divider {
-      display: inline-block;
-      width: 2px;
-      height: 45px;
+      width: 1.5px;
+      height: 65px;
       background-color: #f4e733;
-      margin: 0 10px;
+    }
+    .header-info {
+      text-align: center;
+    }
+    .arabic-name {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .english-name {
+      font-size: 14px;
+      color: #f4e733;
     }
     nav {
       display: flex;
@@ -60,25 +81,60 @@
       bottom: 0;
       width: 100%;
     }
+        @media (max-width: 768px) {
+ .header-right {
+    padding: 10px 10px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-info {
+    display: block;
+    text-align: center;
+  }
+
+  .header-info .arabic-name {
+    font-size: 16px;
+  }
+
+  .header-info .english-name {
+    font-size: 12px;
+  }
+
+  .header-right .divider {
+    height: 45px;
+    width: 1.5px;
+    background-color: #f4e733;
+  }
+
+  img.logo {
+    height: 50px !important;
+    max-height: 50px !important;
+  }
+      }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="Picture3.png" class="logo">
-    <span class="divider"></span>
-    <img src="logo.png" class="logo">
-    <div>
-      <div>نادي كلباء الرياضي الثقافي</div>
-      <div style="color: #f4e733;">KALBA SPORTS & CULTURAL CLUB</div>
+<header class="header-container">
+  <div class="header-right">
+    <img src="Picture3.png" alt="شعار الشارقة" class="logo">
+    <div class="divider"></div>
+    <img src="logo.png" alt="شعار نادي كلباء" class="logo">
+    <div class="header-info">
+      <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
+      <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
     </div>
-  </header>
+  </div>
+</header>
 
   <nav>
-    <a href="AttendanceScan.html">📷 تسجيل الحضور</a>
-    <a href="reports.html">📊 لوحة التقارير</a>
-    <a href="evaluate.html">📝 تقييم اللاعبين</a>
     <a href="camp.html">🧒 تسجيل المخيم</a>
+    <a href="AttendanceScan.html">📷 تسجيل الحضور</a>
+    <a href="evaluate.html">📝 تقييم اللاعبين</a>
+    <a href="reports.html">📊 لوحة التقارير</a>
   </nav>
 
   <main style="padding: 20px;">
