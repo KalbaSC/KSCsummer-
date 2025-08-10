@@ -1942,8 +1942,39 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => showTab('rankings'), 100);
   }
 });
+</script>  
 
-    </script>  
+<script>
+(() => {
+  const isEmbedded = new URLSearchParams(location.search).has('embed');
+  if (isEmbedded) {
+    const style = document.createElement('style');
+    style.textContent = `
+      header.header-container, .header-container, .footer-container, footer { display: none !important; }
+      html, body { background: transparent !important; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const sendSize = () => {
+    const b = document.body, e = document.documentElement;
+    const h = Math.max(
+      b.scrollHeight, b.offsetHeight, b.clientHeight,
+      e.scrollHeight, e.offsetHeight, e.clientHeight
+    );
+    window.parent.postMessage({ type: 'kalba-iframe-size', height: h }, '*');
+  };
+
+  const mo = new MutationObserver(() => { sendSize(); });
+  mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+
+  window.addEventListener('load', sendSize, true);
+  setTimeout(sendSize, 100);
+  setTimeout(sendSize, 400);
+  setTimeout(sendSize, 900);
+})();
+</script>
+
   </body>
   <div class="footer-container">
 <footer>
