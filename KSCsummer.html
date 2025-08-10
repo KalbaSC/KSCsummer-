@@ -2,21 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نادي كلباء الرياضي الثقافي</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <style>
-    @font-face {
-      font-family: 'NotoKufiArabic';
-      src: url('NotoKufiArabic.ttf') format('truetype');
-    }
     body {
-      font-family: 'NotoKufiArabic', 'Cairo', sans-serif;
       margin: 0;
+      font-family: 'NotoKufiArabic', sans-serif;
       background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
@@ -27,65 +19,46 @@
       border-bottom: 3px solid #f4e733;
     }
     .header-right {
-      width: 100%;
-      max-width: 1170px;
-      margin: auto;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       gap: 20px;
-      padding: 20px 42px;
-      background-color: #111;
-      color: white;
-      box-sizing: border-box;
+      padding: 20px;
     }
-    .header-right img.logo {
-      height: 70px;
-    }
-    .divider {
-      width: 1.5px;
-      height: 65px;
-      background-color: #f4e733;
-    }
-    .header-info {
-      text-align: center;
-    }
-    .arabic-name {
-      font-weight: bold;
-      font-size: 20px;
-    }
-    .english-name {
-      font-size: 14px;
-      color: #f4e733;
-    }
+    .logo { height: 60px; }
+    .divider { width: 2px; height: 50px; background-color: #f4e733; }
+    .arabic-name { font-weight: bold; font-size: 20px; }
+    .english-name { font-size: 14px; color: #f4e733; }
     nav {
       display: flex;
       justify-content: center;
       background: #000;
       border-bottom: 2px solid #f4e733;
     }
-    nav a {
+    nav button {
+      background: none;
+      border: none;
       color: #f4e733;
-      text-decoration: none;
       padding: 12px 20px;
-      display: block;
+      font-size: 16px;
+      cursor: pointer;
     }
-    nav a:hover {
+    nav button:hover {
       background: #f4e733;
       color: black;
     }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 220px);
+      border: none;
+      background: white;
+    }
     footer {
-      background-color: #111;
+      background: #111;
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 15px;
       border-top: 3px solid #f4e733;
-      font-size: 14px;
-    }
-    .social-icons a {
-      color: white;
-      margin: 0 8px;
-      font-size: 20px;
     }
   </style>
 </head>
@@ -94,38 +67,41 @@
   <!-- Header -->
   <header class="header-container">
     <div class="header-right">
-      <img src="Picture3.png" alt="شعار الشارقة" class="logo">
+      <img src="Picture3.png" class="logo">
       <div class="divider"></div>
-      <img src="logo.png" alt="شعار نادي كلباء" class="logo">
-      <div class="header-info">
+      <img src="logo.png" class="logo">
+      <div>
         <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
         <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
       </div>
     </div>
   </header>
-  
+
   <nav>
-    <a href="camp.html">🧒 تسجيل المخيم</a>
-    <a href="AttendanceScan.html">📷 تسجيل الحضور</a>
-    <a href="evaluate.html">📝 تقييم اللاعبين</a>
-    <a href="reports.html">📊 لوحة التقارير</a>
+    <button onclick="loadPage('camp.html')">🧒 تسجيل المخيم</button>
+    <button onclick="loadPage('AttendanceScan.html')">📷 تسجيل الحضور</button>
+    <button onclick="loadPage('evaluate.html')">📝 تقييم اللاعبين</button>
+    <button onclick="loadPage('reports.html')">📊 لوحة التقارير</button>
   </nav>
 
-  <main style="padding: 20px;">
-    <h2>مرحباً بك في النظام الموحد</h2>
-    <p>اختر من القائمة أعلاه للوصول إلى القسم المطلوب.</p>
-  </main>
-  
+  <iframe id="pageFrame" src="AttendanceScan.html"></iframe>
+
   <footer>
     <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 12px; color: #aaa;">تم التطوير بواسطة روند أحمد الضمور</p>
-    <div class="social-icons">
+    <div>
       <a href="https://facebook.com/Kalbasc1" target="_blank"><i class="fab fa-facebook-f"></i></a>
       <a href="https://instagram.com/kalbasc" target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="https://x.com/Kalba_sc" target="_blank"><i class="fab fa-twitter"></i></a>
       <a href="https://youtube.com/@kalbasc" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
+
+  <script>
+    function loadPage(page) {
+      document.getElementById('pageFrame').src = page;
+    }
+  </script>
 
 </body>
 </html>
