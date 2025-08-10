@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>نادي كلباء الرياضي الثقافي</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
       margin: 0;
-      font-family: 'NotoKufiArabic', sans-serif;
+      font-family: 'NotoKufiArabic', system-ui, sans-serif;
       background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
@@ -19,58 +21,73 @@
       border-bottom: 3px solid #f4e733;
     }
     .header-right {
+      width: 100%;
+      max-width: 1170px;
+      margin: auto;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       gap: 20px;
-      padding: 20px;
+      padding: 20px 42px;
+      background-color: #111;
+      color: white;
+      box-sizing: border-box;
     }
-    .logo { height: 60px; }
-    .divider { width: 2px; height: 50px; background-color: #f4e733; }
+    .header-right img.logo { height: 70px; }
+    .divider { width: 1.5px; height: 65px; background-color: #f4e733; }
+    .header-info { text-align: center; }
     .arabic-name { font-weight: bold; font-size: 20px; }
     .english-name { font-size: 14px; color: #f4e733; }
+
     nav {
       display: flex;
       justify-content: center;
       background: #000;
       border-bottom: 2px solid #f4e733;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     nav button {
       background: none;
       border: none;
       color: #f4e733;
-      padding: 12px 20px;
+      padding: 12px 18px;
       font-size: 16px;
       cursor: pointer;
     }
-    nav button:hover {
-      background: #f4e733;
-      color: black;
-    }
-    iframe {
+    nav button.active { background: #f4e733; color: #000; border-radius: 8px; }
+
+    #frameWrap { width: 100%; }
+    #pageFrame {
       width: 100%;
-      height: calc(100vh - 220px);
       border: none;
-      background: white;
+      background: #000;
+      display: block;
     }
+
     footer {
-      background: #111;
+      background-color: #111;
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 16px;
       border-top: 3px solid #f4e733;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .header-right { padding: 10px 10px; gap: 10px; }
+      .header-right img.logo { height: 50px; }
+      .divider { height: 45px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header class="header-container">
     <div class="header-right">
-      <img src="Picture3.png" class="logo">
+      <img src="Picture3.png" alt="شعار مجلس الشارقة الرياضي" class="logo" />
       <div class="divider"></div>
-      <img src="logo.png" class="logo">
-      <div>
+      <img src="logo.png" alt="شعار نادي كلباء الرياضي الثقافي" class="logo" />
+      <div class="header-info">
         <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
         <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
       </div>
@@ -78,18 +95,20 @@
   </header>
 
   <nav>
-    <button onclick="loadPage('camp.html')">🧒 تسجيل المخيم</button>
-    <button onclick="loadPage('AttendanceScan.html')">📷 تسجيل الحضور</button>
-    <button onclick="loadPage('evaluate.html')">📝 تقييم اللاعبين</button>
-    <button onclick="loadPage('reports.html')">📊 لوحة التقارير</button>
+    <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">📷 تسجيل الحضور</button>
+    <button onclick="loadPage(this, 'reports.html')">📊 لوحة التقارير</button>
+    <button onclick="loadPage(this, 'evaluate.html')">📝 تقييم اللاعبين</button>
+    <button onclick="loadPage(this, 'camp.html')">🧒 تسجيل المخيم</button>
   </nav>
 
-  <iframe id="pageFrame" src="AttendanceScan.html"></iframe>
+  <div id="frameWrap">
+    <iframe id="pageFrame" src="camp.html" title="Club Module"></iframe>
+  </div>
 
   <footer>
     <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 12px; color: #aaa;">تم التطوير بواسطة روند أحمد الضمور</p>
-    <div>
+    <div class="social-icons">
       <a href="https://facebook.com/Kalbasc1" target="_blank"><i class="fab fa-facebook-f"></i></a>
       <a href="https://instagram.com/kalbasc" target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="https://x.com/Kalba_sc" target="_blank"><i class="fab fa-twitter"></i></a>
@@ -98,10 +117,54 @@
   </footer>
 
   <script>
-    function loadPage(page) {
-      document.getElementById('pageFrame').src = page;
+    function resizeFrame() {
+      const headerH = document.querySelector('.header-container').offsetHeight;
+      const navH = document.querySelector('nav').offsetHeight;
+      const footerH = document.querySelector('footer').offsetHeight;
+      const vh = window.innerHeight;
+      const frame = document.getElementById('pageFrame');
+      frame.style.height = (vh - headerH - navH - footerH) + 'px';
     }
-  </script>
+    window.addEventListener('resize', resizeFrame);
+    window.addEventListener('load', resizeFrame);
 
+    function loadPage(btn, page) {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const frame = document.getElementById('pageFrame');
+      frame.onload = function () {
+        try {
+          const doc = frame.contentDocument || frame.contentWindow.document;
+
+          const style = doc.createElement('style');
+          style.textContent = `
+            header.header-container,
+            .header-container,
+            .footer-container,
+            footer { display: none !important; }
+            body { background: transparent !important; }
+          `;
+          doc.head.appendChild(style);
+
+          const main = doc.querySelector('main');
+          if (main) {
+            main.style.paddingTop = '10px';
+            main.style.paddingBottom = '10px';
+          }
+        } catch (e) {
+          console.warn('Could not inject style into iframe:', e);
+        }
+        resizeFrame();
+      };
+
+      const bust = 'v=' + Date.now();
+      frame.src = page + (page.includes('?') ? '&' : '?') + bust;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPage(document.querySelector('nav button.active'), 'AttendanceScan.html');
+    });
+  </script>
 </body>
 </html>
