@@ -91,9 +91,8 @@
       border-radius: 8px;
     }
 
-    /* Main + iframe */
     main {
-      flex: 1; /* push footer to the end if content is short */
+      flex: 1; 
       width: 100%;
       box-sizing: border-box;
     }
@@ -101,13 +100,11 @@
       width: 100%;
       border: 0;
       display: block;
-      background: transparent; /* allow outer background to show if we hide inner background */
-      min-height: 420px; /* visible area while loading */
-      /* Fix mobile 1px gaps during dynamic height changes */
+      background: transparent; 
+      min-height: 420px; 
       transform: translateZ(0);
     }
 
-    /* Footer (camp style) */
     footer {
       background-color: var(--bg-dark);
       color: white;
@@ -123,7 +120,6 @@
       font-size: 18px;
     }
 
-    /* Mobile tweaks */
     @media (max-width: 768px) {
       .header-right { padding: 10px 10px; gap: 10px; }
       .header-right img.logo { height: 48px !important; max-height: 48px !important; }
@@ -133,12 +129,10 @@
 
       nav button { padding: 10px 12px; font-size: 14px; }
 
-      /* Footer smaller on phones */
       footer { padding: 12px 10px; font-size: 12px; }
       .social-icons a { font-size: 16px; }
     }
 
-    /* Ultra small */
     @media (max-width: 420px) {
       .arabic-name { font-size: 15px; }
       .english-name { font-size: 11px; }
@@ -149,7 +143,6 @@
 </head>
 <body>
 
-  <!-- Global Header -->
   <header class="header-container">
     <div class="header-right">
       <img src="Picture3.png" alt="شعار الشارقة" class="logo">
@@ -162,20 +155,17 @@
     </div>
   </header>
 
-  <!-- Global Nav -->
   <nav>
     <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">📷 تسجيل الحضور</button>
     <button onclick="loadPage(this, 'reports.html')">📊 لوحة التقارير</button>
     <button onclick="loadPage(this, 'evaluate.html')">📝 تقييم اللاعبين</button>
     <button onclick="loadPage(this, 'camp.html')">🧒 تسجيل المخيم</button>
   </nav>
-
-  <!-- Content Wrapper -->
+  
   <main>
-    <iframe id="pageFrame" src="AttendanceScan.html" title="Club Module" allowtransparency="true"></iframe>
+    <iframe id="pageFrame" src="AttendanceScan.html?embed=1" sandbox="allow-scripts" style="width:100%; border:0; display:block; background:transparent; min-height:420px;" title="Club Module" ></iframe>
   </main>
 
-  <!-- Global Footer -->
   <footer>
     <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
     <p style="font-size: 12px; color: #aaa;">تم التطوير بواسطة روند أحمد الضمور</p>
@@ -186,109 +176,33 @@
       <a href="https://youtube.com/@kalbasc" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
-
+  
   <script>
-    // ---------------------------
-    // Utilities
-    // ---------------------------
-    function setActive(btn) {
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
+  function setActive(btn) {
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 
-    // Hide the loaded page's own header/footer so we don't see doubles
-    function hideInnerHeaderFooter(doc) {
-      try {
-        const style = doc.createElement('style');
-        style.textContent = `
-          header.header-container,
-          .header-container,
-          .footer-container,
-          footer { display: none !important; }
-          /* Let the outer page show its background */
-          html, body { background: transparent !important; }
-        `;
-        doc.head.appendChild(style);
-      } catch (e) {
-        console.warn('Inject style failed (likely cross-origin):', e);
-      }
-    }
+  function loadPage(btn, page) {
+    setActive(btn);
+    const frame = document.getElementById('pageFrame');
+    const hasQuery = page.includes('?');
+    const withEmbed = hasQuery ? page : page + '?embed=1';
+    const bust = (withEmbed.includes('?') ? '&' : '?') + 'v=' + Date.now();
+    frame.src = withEmbed + bust;
+  }
 
-    function getDocHeight(doc) {
-      const b = doc.body, e = doc.documentElement;
-      return Math.max(
-        b.scrollHeight, b.offsetHeight, b.clientHeight,
-        e.scrollHeight, e.offsetHeight, e.clientHeight
-      );
-    }
+  window.addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'kalba-iframe-size') return;
+    const frame = document.getElementById('pageFrame');
+    frame.style.height = (e.data.height + 2) + 'px';
+  });
 
-    function adjustIframeHeight() {
-      const frame = document.getElementById('pageFrame');
-      try {
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        const h = getDocHeight(doc);
-        // Add a tiny buffer so no scrollbars appear due to rounding
-        frame.style.height = (h + 2) + 'px';
-      } catch (e) {
-        console.warn('Could not size iframe (cross-origin?):', e);
-      }
-    }
-
-    function observeIframe(doc) {
-      // Resize when content changes (tables render, charts animate, filters apply…)
-      const mo = new MutationObserver(() => {
-        adjustIframeHeight();
-      });
-      mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
-
-      // In case internal layout changes without mutations (e.g., images load)
-      doc.addEventListener('load', adjustIframeHeight, true);
-
-      // A few delayed checks for late content
-      setTimeout(adjustIframeHeight, 100);
-      setTimeout(adjustIframeHeight, 400);
-      setTimeout(adjustIframeHeight, 900);
-    }
-
-    function onFrameLoaded() {
-      const frame = document.getElementById('pageFrame');
-      try {
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        hideInnerHeaderFooter(doc);
-        observeIframe(doc);
-        adjustIframeHeight();
-      } catch (e) {
-        // If different origin, we can't access the iframe (shouldn't happen on same repo)
-        console.warn('iframe load hook limited due to origin:', e);
-      }
-    }
-
-    function loadPage(btn, page) {
-      setActive(btn);
-      const frame = document.getElementById('pageFrame');
-      frame.onload = onFrameLoaded;
-
-      // cache buster to avoid stale GH Pages cache
-      const bust = (page.includes('?') ? '&' : '?') + 'v=' + Date.now();
-      frame.src = page + bust;
-    }
-
-    // Initial run (default tab)
-    document.addEventListener('DOMContentLoaded', () => {
-      // Kick the onload flow to ensure injection/resize runs
-      const firstBtn = document.querySelector('nav button.active');
-      loadPage(firstBtn, 'AttendanceScan.html');
-    });
-
-    // Outer window resize/orientation -> re-fit height
-    window.addEventListener('resize', () => {
-      // debounce a bit
-      clearTimeout(window.__resizeTid);
-      window.__resizeTid = setTimeout(adjustIframeHeight, 80);
-    });
-    window.addEventListener('orientationchange', () => {
-      setTimeout(adjustIframeHeight, 120);
-    });
-  </script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstBtn = document.querySelector('nav button.active');
+    loadPage(firstBtn, 'AttendanceScan.html');
+  });
+</script>
+ 
 </body>
 </html>
