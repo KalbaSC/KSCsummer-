@@ -2,19 +2,24 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نادي كلباء - القائمة الرئيسية</title>
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نادي كلباء الرياضي الثقافي</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
+    @font-face {
+      font-family: 'NotoKufiArabic';
+      src: url('NotoKufiArabic.ttf') format('truetype');
+    }
     body {
-      font-family: 'NotoKufiArabic', sans-serif;
+      font-family: 'NotoKufiArabic', 'Cairo', sans-serif;
       margin: 0;
       background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
-      text-align: center;
     }
     .header-container {
       width: 100%;
@@ -56,80 +61,49 @@
     nav {
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
       background: #000;
       border-bottom: 2px solid #f4e733;
     }
     nav a {
       color: #f4e733;
-      padding: 12px 20px;
-      font-size: 16px;
       text-decoration: none;
+      padding: 12px 20px;
       display: block;
     }
     nav a:hover {
-      background-color: #f4e733;
+      background: #f4e733;
       color: black;
     }
     footer {
-      background: #111;
+      background-color: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
       border-top: 3px solid #f4e733;
-      padding: 10px;
-      font-size: 12px;
-      color: #aaa;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+      font-size: 14px;
     }
-        @media (max-width: 768px) {
- .header-right {
-    padding: 10px 10px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .header-info {
-    display: block;
-    text-align: center;
-  }
-
-  .header-info .arabic-name {
-    font-size: 16px;
-  }
-
-  .header-info .english-name {
-    font-size: 12px;
-  }
-
-  .header-right .divider {
-    height: 45px;
-    width: 1.5px;
-    background-color: #f4e733;
-  }
-
-  img.logo {
-    height: 50px !important;
-    max-height: 50px !important;
-  }
-      }
+    .social-icons a {
+      color: white;
+      margin: 0 8px;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
 
-<header class="header-container">
-  <div class="header-right">
-    <img src="Picture3.png" alt="شعار الشارقة" class="logo">
-    <div class="divider"></div>
-    <img src="logo.png" alt="شعار نادي كلباء" class="logo">
-    <div class="header-info">
-      <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
-      <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
+  <!-- Header -->
+  <header class="header-container">
+    <div class="header-right">
+      <img src="Picture3.png" alt="شعار الشارقة" class="logo">
+      <div class="divider"></div>
+      <img src="logo.png" alt="شعار نادي كلباء" class="logo">
+      <div class="header-info">
+        <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
+        <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
+      </div>
     </div>
-  </div>
-</header>
-
+  </header>
+  
   <nav>
     <a href="camp.html">🧒 تسجيل المخيم</a>
     <a href="AttendanceScan.html">📷 تسجيل الحضور</a>
@@ -141,9 +115,16 @@
     <h2>مرحباً بك في النظام الموحد</h2>
     <p>اختر من القائمة أعلاه للوصول إلى القسم المطلوب.</p>
   </main>
-
+  
   <footer>
-    © 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة
+    <p>© 2025 نادي كلباء الرياضي الثقافي - جميع الحقوق محفوظة</p>
+    <p style="font-size: 12px; color: #aaa;">تم التطوير بواسطة روند أحمد الضمور</p>
+    <div class="social-icons">
+      <a href="https://facebook.com/Kalbasc1" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://instagram.com/kalbasc" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/Kalba_sc" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://youtube.com/@kalbasc" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
   </footer>
 
 </body>
