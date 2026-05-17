@@ -1411,7 +1411,7 @@ const topThreeContainer = document.getElementById('topThreeContainer');
 const container = document.getElementById('rankingsContainer');
 topThreeContainer.innerHTML = '';
 container.innerHTML = '';
-
+rankings.sort((a, b) => b.average - a.average);
 const top3 = rankings.slice(0, 3);
 const others = rankings.slice(3, 50);
 
