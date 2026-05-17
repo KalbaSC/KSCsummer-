@@ -1503,14 +1503,12 @@ async function showPlayerProgress() {
     }
 
     if (progressChart) {
-      try {
-        progressChart.destroy();
-      } catch (err) {
-        console.warn('Chart destruction error:', err);
-      }
+      progressChart.destroy();
+      progressChart = null;
     }
 
     const playerId = playerSelect.value.trim();
+
     if (!playerId) {
       container.innerHTML = '<p style="color:white; text-align:center; padding:20px;">الرجاء اختيار لاعب</p>';
       return;
@@ -1521,8 +1519,10 @@ async function showPlayerProgress() {
     }
 
     const playerEvals = evaluations
-      .filter(e => String(e["Player ID"]).trim() === playerId && 
-                   e.Activity === currentCoach.activity)
+      .filter(e =>
+        String(e["Player ID"]).trim() === playerId &&
+        e.Activity === currentCoach.activity
+      )
       .sort((a, b) => new Date(a.Date) - new Date(b.Date));
 
     if (playerEvals.length === 0) {
@@ -1531,14 +1531,15 @@ async function showPlayerProgress() {
     }
 
     const dates = playerEvals.map(e => formatDate(e.Date));
+
     const percentages = playerEvals.map(e => {
       const criteria = evaluationCriteria[currentCoach.activity] || [];
       const total = criteria.reduce((sum, crit) => sum + (parseInt(e[crit]) || 0), 0);
       return Math.round((total / (criteria.length * 5)) * 100);
     });
 
-container.innerHTML = '<canvas id="progressChart"></canvas>';
-const ctx = document.getElementById('progressChart').getContext('2d');
+    container.innerHTML = '<canvas id="progressChart"></canvas>';
+    const ctx = document.getElementById('progressChart').getContext('2d');
 
     progressChart = new Chart(ctx, {
       type: 'line',
@@ -1594,7 +1595,25 @@ const ctx = document.getElementById('progressChart').getContext('2d');
             grid: { color: 'rgba(255,255,255,0.1)' }
           }
         }
-      }
+      },
+      plugins: [{
+        id: 'showPercentLabels',
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 14px NotoKufiArabic';
+          ctx.textAlign = 'center';
+
+          chart.data.datasets[0].data.forEach((value, index) => {
+            const point = chart.getDatasetMeta(0).data[index];
+            ctx.fillText(value + '%', point.x, point.y - 15);
+          });
+
+          ctx.restore();
+        }
+      }]
     });
 
   } catch (error) {
