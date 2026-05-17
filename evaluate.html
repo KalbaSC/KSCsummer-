@@ -1294,17 +1294,19 @@ async function renderEvaluatedPlayersList() {
     evaluations = processedData;
 
     const playersMap = new Map();
-    processedData.forEach(rec => { 
-      const playerId = eval.normalizedPlayerId;
-      if (!playersMap.has(playerId)) {
-        playersMap.set(playerId, {
-          id: playerId,
-          name: eval["Player Name"],
-          evaluations: []
-        });
-      }
-      playersMap.get(id).evaluations.push(rec); });
+processedData.forEach(rec => { 
+  const playerId = rec.normalizedPlayerId;
+
+  if (!playersMap.has(playerId)) {
+    playersMap.set(playerId, {
+      id: playerId,
+      name: rec["Player Name"],
+      evaluations: []
     });
+  }
+
+  playersMap.get(playerId).evaluations.push(rec);
+});
 
     container.innerHTML = '';
 
@@ -1330,7 +1332,7 @@ async function renderEvaluatedPlayersList() {
             <div class="evaluation-session">
               <p><strong>تاريخ الحضور:</strong> ${rec["Date"] || 'غير محدد'}</p>
               <p><strong>تاريخ التقييم:</strong> ${rec["Time-stamp"] || 'غير محدد'}</p>
-              <p><strong>المجموع:</strong> ${rec["Total Score"] || 0}/25 (${eval["Percentage"] || '0%'})</p>
+              <p><strong>المجموع:</strong> ${rec["Total Score"] || 0}/25 (${rec["Percentage"] || '0%'})</p>
               ${rec["Notes"] ? `<p><strong>ملاحظات:</strong> ${rec["Notes"]}</p>` : ''}
             </div>
           `).join('')}
