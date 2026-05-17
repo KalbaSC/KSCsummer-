@@ -1357,95 +1357,118 @@ processedData.forEach(rec => {
     
 async function updateRankings() {
   showLoading();
+
   try {
     const url = CONFIG.USE_CORS_PROXY 
       ? CONFIG.CORS_PROXY_URL + CONFIG.EVALUATION_SCRIPT_URL
       : CONFIG.EVALUATION_SCRIPT_URL;
 
     const response = await fetch(url);
+    const data = await response.json();
 
-    let data;
-    try {
-      const cloned = response.clone(); 
-      data = await cloned.json();
-    } catch (err) {
-      const fallback = await response.text(); 
-      throw new Error("الرد غير صالح كـ JSON:\n" + fallback);
-    }
+    const selectedActivity = document.getElementById('activityFilter')?.value || 'all';
 
-const selectedActivity = document.getElementById('activityFilter')?.value || 'all';
+    const filtered = data.filter(e => {
+      const activity = e.Activity?.trim();
 
-const filtered = data.filter(e => {
-  const matchesActivity =
-    selectedActivity === 'all' || e.Activity?.trim() === selectedActivity;
+      if (!activity) return false;
+      if (!e["Player ID"] || !e["Player Name"]) return false;
 
-  return matchesActivity;
-});
+      const criteria = evaluationCriteria[activity] || [];
 
-    const playerStats = {};
-    filtered.forEach(e => {
-      const playerId = e["Player ID"];
-      if (!playerStats[playerId]) {
-        playerStats[playerId] = {
-         name: e["Player Name"],
-        activity: e.Activity || "غير معروف",
-        total: 0,
-        count: 0
-        };
-      }
-      const percentage = Math.round(parseFloat(e.Percentage) * 100) || 0;
-      playerStats[playerId].total += percentage;
-      playerStats[playerId].count += 1;
+      const hasEvaluationScores = criteria.some(criterion => {
+        return e[criterion] !== undefined && e[criterion] !== "" && !isNaN(parseInt(e[criterion]));
+      });
+
+      if (!hasEvaluationScores) return false;
+
+      return selectedActivity === 'all' || activity === selectedActivity;
     });
 
-const rankings = Object.entries(playerStats).map(([id, player]) => ({
-  id,
-  name: player.name,
-  activity: player.activity,
-  average: Math.round(player.total / player.count)
-}));
+    const playerStats = {};
 
-const topThreeContainer = document.getElementById('topThreeContainer');
-const container = document.getElementById('rankingsContainer');
-topThreeContainer.innerHTML = '';
-container.innerHTML = '';
-rankings.sort((a, b) => b.average - a.average);
-const top3 = rankings.slice(0, 3);
-const others = rankings.slice(3, 50);
+    filtered.forEach(e => {
+      const activity = e.Activity.trim();
+      const playerId = String(e["Player ID"]).trim();
+      const criteria = evaluationCriteria[activity] || [];
 
-const orderedTop3 = [top3[1], top3[0], top3[2]];
+      let total = 0;
+      criteria.forEach(criterion => {
+        total += parseInt(e[criterion]) || 0;
+      });
 
-orderedTop3.forEach((player, index) => {
-  if (!player) return;
-  const card = document.createElement('div');
-  card.className = 'ranking-card';
+      const percentage = Math.round((total / (criteria.length * 5)) * 100);
 
-  const badges = ['🥈', '👑', '🥉'];
-  card.innerHTML = `
-    <div class="player-badge">${badges[index]}</div>
-    <img src="user-icon.png" class="player-avatar" />
-    <h3>${player.name}</h3>
-<p class="activity-label">${getActivityIcon(player.activity)} ${player.activity}</p>
-<p>ID: ${player.id}</p>
-<p>المعدل: ${player.average}%</p>
-  `;
-  if (index === 1) card.classList.add("glow"); 
-  topThreeContainer.appendChild(card);
-});
+      if (!playerStats[playerId]) {
+        playerStats[playerId] = {
+          name: e["Player Name"],
+          activity: activity,
+          total: 0,
+          count: 0
+        };
+      }
 
-others.forEach((player, index) => {
-  const card = document.createElement('div');
-  card.className = 'ranking-card';
-  card.innerHTML = `
-    <div class="player-badge">${index + 4}</div>
-    <img src="user-icon.png" class="player-avatar" />
-    <h3>${player.name}</h3>
-<p class="activity-label">${getActivityIcon(player.activity)} ${player.activity}</p>
-<p>ID: ${player.id}</p>
-<p>المعدل: ${player.average}%</p>
-  `;
-  container.appendChild(card);
-});
+      playerStats[playerId].total += percentage;
+      playerStats[playerId].count++;
+    });
+
+    const rankings = Object.entries(playerStats).map(([id, player]) => ({
+      id,
+      name: player.name,
+      activity: player.activity,
+      average: Math.round(player.total / player.count)
+    }));
+
+    rankings.sort((a, b) => b.average - a.average);
+
+    const topThreeContainer = document.getElementById('topThreeContainer');
+    const container = document.getElementById('rankingsContainer');
+
+    topThreeContainer.innerHTML = '';
+    container.innerHTML = '';
+
+    const top3 = rankings.slice(0, 3);
+    const others = rankings.slice(3, 50);
+
+    const orderedTop3 = [top3[1], top3[0], top3[2]];
+
+    orderedTop3.forEach((player, index) => {
+      if (!player) return;
+
+      const card = document.createElement('div');
+      card.className = 'ranking-card';
+
+      const badges = ['🥈', '👑', '🥉'];
+
+      card.innerHTML = `
+        <div class="player-badge">${badges[index]}</div>
+        <img src="user-icon.png" class="player-avatar" />
+        <h3>${player.name}</h3>
+        <p class="activity-label">${getActivityIcon(player.activity)} ${player.activity}</p>
+        <p>ID: ${player.id}</p>
+        <p>المعدل: ${player.average}%</p>
+      `;
+
+      if (index === 1) card.classList.add("glow");
+
+      topThreeContainer.appendChild(card);
+    });
+
+    others.forEach((player, index) => {
+      const card = document.createElement('div');
+      card.className = 'ranking-card';
+
+      card.innerHTML = `
+        <div class="player-badge">${index + 4}</div>
+        <img src="user-icon.png" class="player-avatar" />
+        <h3>${player.name}</h3>
+        <p class="activity-label">${getActivityIcon(player.activity)} ${player.activity}</p>
+        <p>ID: ${player.id}</p>
+        <p>المعدل: ${player.average}%</p>
+      `;
+
+      container.appendChild(card);
+    });
 
   } catch (err) {
     console.error("Error:", err);
