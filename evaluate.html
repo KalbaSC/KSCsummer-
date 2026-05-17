@@ -1376,12 +1376,10 @@ async function updateRankings() {
 const selectedActivity = document.getElementById('activityFilter')?.value || 'all';
 
 const filtered = data.filter(e => {
-  const matchesActivity = selectedActivity === 'all' || e.Activity?.trim() === selectedActivity;
-  const matchesCoach = !currentCoach || (
-    e.Activity?.trim() === currentCoach.activity?.trim() &&
-    e.Coach?.trim() === currentCoach.username?.trim()
-  );
-  return matchesActivity && matchesCoach;
+  const matchesActivity =
+    selectedActivity === 'all' || e.Activity?.trim() === selectedActivity;
+
+  return matchesActivity;
 });
 
     const playerStats = {};
