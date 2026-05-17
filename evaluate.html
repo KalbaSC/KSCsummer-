@@ -944,9 +944,14 @@ async function loadPlayersData() {
 
     evaluations = await fetchEvaluationsFromSheet();
 
-    renderPlayersList();
-    updatePlayerSelect();
-    renderEvaluatedPlayersList();
+renderPlayersList();
+updatePlayerSelect();
+
+document.getElementById('playerSelect')
+  .addEventListener('change', showPlayerProgress);
+
+renderEvaluatedPlayersList();
+    
   } catch (error) {
     console.error("Error loading players:", error);
     playersData = []; 
@@ -1491,10 +1496,9 @@ let progressChart = null;
 async function showPlayerProgress() {
   try {
     const container = document.getElementById('progressChartContainer');
-    const canvas = document.getElementById('progressChart');
     const playerSelect = document.getElementById('playerSelect');
-    
-    if (!container || !canvas || !playerSelect) {
+
+    if (!container || !playerSelect) {
       throw new Error('Missing required DOM elements');
     }
 
@@ -1732,7 +1736,6 @@ function showTab(tabName, event) {
       updateRankings();
       break;
     case 'progress':
-      showPlayerProgress();
       break;
   }
 }
