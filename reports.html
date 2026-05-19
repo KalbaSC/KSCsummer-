@@ -3099,6 +3099,85 @@ hideWeeklyControls();
 datePicker.style.display = 'inline-block';
 }
 }
+
+function promptForPassword() {
+  const password = prompt("أدخل كلمة المرور:");
+
+  if (password === "rwnd123") {
+    sendWeeklyAttendanceEmails();
+  } else {
+    alert("كلمة المرور غير صحيحة");
+  }
+}
+
+async function sendWeeklyAttendanceEmails() {
+  try {
+
+    const attendanceMap = {};
+
+    filteredData.forEach(row => {
+      if (!row.ID) return;
+
+      if (!attendanceMap[row.ID]) {
+        attendanceMap[row.ID] = {
+          id: row.ID,
+          name: `${row["Child Name"] || ""} ${row.Parent || ""}`.trim(),
+          email: row.Email || "",
+          days: new Set()
+        };
+      }
+
+      attendanceMap[row.ID].days.add(row.dateKey);
+    });
+
+    const finalData = [];
+
+    Object.values(attendanceMap).forEach(player => {
+
+      const daysCount = player.days.size;
+
+      let evaluation = "";
+
+      if (daysCount >= 4) {
+        evaluation = "ممتاز! نشكركم على حرصكم والتزام ابنكم.";
+      } else if (daysCount === 3) {
+        evaluation = "جيد! نأمل منكم تشجيع ابنكم على الحضور الكامل.";
+      } else if (daysCount === 2) {
+        evaluation = "يرجى تشجيع ابنكم للحضور بشكل أفضل.";
+      } else if (daysCount === 1) {
+        evaluation = "نرجو منكم تحفيز ابنكم على الالتزام بالحضور.";
+      } else {
+        evaluation = "لم يحضر ابنكم هذا الأسبوع.";
+      }
+
+      finalData.push({
+        id: player.id,
+        name: player.name,
+        email: player.email,
+        days: daysCount,
+        evaluation: evaluation
+      });
+
+    });
+
+    console.log(finalData);
+
+    await fetch("PUT_YOUR_SCRIPT_URL_HERE", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(finalData)
+    });
+
+    alert("تم إرسال تقارير الأسبوع بنجاح");
+
+  } catch (err) {
+    console.error(err);
+    alert("حدث خطأ أثناء إرسال التقارير");
+  }
+}
+  
 window.onload = initialize;
 window.addEventListener('load', checkMobileView);
 window.addEventListener('resize', checkMobileView);
