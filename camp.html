@@ -529,6 +529,9 @@ document.getElementById("cardEmailField").value = email;
 document.getElementById("cardParentField").value = parent;
 document.getElementById("cardFilenameField").value = fileName;
 
+document.getElementById("cardAgeField").value = age;
+document.getElementById("cardPhoneField").value = phone;
+document.getElementById("cardAltPhoneField").value = altPhone;  
 form.submit();
 
 setTimeout(() => {
@@ -626,7 +629,18 @@ document.getElementById('parent').value = data.parent || '';
   </div>
 </footer>
   </div>
+<iframe name="hiddenCardFrame" style="display:none;"></iframe>
 
+<form id="cardUploadForm" method="POST" target="hiddenCardFrame" style="display:none;">
+  <input type="hidden" name="cardImage" id="cardImageField">
+  <input type="hidden" name="name" id="cardNameField">
+  <input type="hidden" name="email" id="cardEmailField">
+  <input type="hidden" name="parent" id="cardParentField">
+  <input type="hidden" name="age" id="cardAgeField">
+  <input type="hidden" name="phone" id="cardPhoneField">
+  <input type="hidden" name="altPhone" id="cardAltPhoneField">
+  <input type="hidden" name="filename" id="cardFilenameField">
+</form>
 </body>
 </html>
 
