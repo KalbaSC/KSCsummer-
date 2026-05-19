@@ -3016,10 +3016,13 @@ const confirmSend = confirm(`هل تريد إرسال بريد اختباري إ
 if (!confirmSend) return;
 
 fetch('https://script.google.com/macros/s/AKfycbxpVjxcwqyTolCIOJI1mfLoy5Bbb1tQnTOP6348L06_hBMWaZmC5hwd_NQ8hZWc-mzr/exec', {
-method: 'POST',
-  body: JSON.stringify(testData)
+  method: 'POST',
+  mode: 'no-cors',
+  body: new URLSearchParams({
+    payload: JSON.stringify(testData)
+  })
 });
-
+  
 alert("تم إرسال الطلب، قد لا يظهر تأكيد بسبب وضع no-cors");
 
 } catch (error) {
