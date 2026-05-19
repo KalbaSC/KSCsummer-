@@ -3017,11 +3017,7 @@ if (!confirmSend) return;
 
 fetch('https://script.google.com/macros/s/AKfycbxpVjxcwqyTolCIOJI1mfLoy5Bbb1tQnTOP6348L06_hBMWaZmC5hwd_NQ8hZWc-mzr/exec', {
 method: 'POST',
-mode: 'no-cors',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(testData)
+  body: JSON.stringify(testData)
 });
 
 alert("تم إرسال الطلب، قد لا يظهر تأكيد بسبب وضع no-cors");
