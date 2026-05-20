@@ -128,8 +128,8 @@ main {
     }
 
 .card {
-  width: 500px; /* fixed width */
-  height: 280px; /* fixed height */
+  width: 500px; 
+  height: 280px;
   background: #000;
   color: white;
   padding: 10px;
@@ -151,7 +151,7 @@ main {
     }
 
 .card .info p {
-  font-size: 10px; /* or 15px, test what looks best */
+  font-size: 10px; 
   color: #f4e733;
   margin: 4px 0;
 }
@@ -501,11 +501,7 @@ await new Promise(resolve => setTimeout(resolve, 3000));
           .then(() => console.log("✅ Commitment file uploaded."))
           .catch(err => console.error("❌ Upload error:", err));
       };
-/*
-      if (commitmentFile) {
-        reader2.readAsDataURL(commitmentFile);
-      }
-*/
+
 html2canvas(document.getElementById('card'), {
   scale: 2
 }).then(async (canvas) => {
