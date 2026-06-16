@@ -426,12 +426,12 @@ document.addEventListener("DOMContentLoaded", loadReports);
 })();
 
   
- function getDrivePreviewLink(url) {
+function getDrivePreviewLink(url) {
   const match = url.match(/\/d\/([^/]+)/) || url.match(/id=([^&]+)/);
   if (!match) return url;
 
   const fileId = match[1];
-  return `https://drive.google.com/file/d/${fileId}/preview`;
+  return `https://drive.google.com/file/d/${fileId}/view`;
 }
 
 </script>
