@@ -180,6 +180,25 @@ a.download-btn:hover {
     padding: 8px;
   }
 }
+ .view-btn,
+.download-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 2px;
+}
+
+.view-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.download-btn {
+  background: #f4e733;
+  color: black;
+} 
 </style>
 </head>
 
@@ -360,11 +379,20 @@ function renderReports() {
       <td>${r.Staff || ""}</td>
       <td>${r.Notes || ""}</td>
       <td>${r["File Name"] || ""}</td>
-      <td>
-        <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank">
-          تحميل
-        </a>
-      </td>
+ <td>
+  <a class="view-btn"
+     href="${r["File Link"] || "#"}"
+     target="_blank">
+     👁️ عرض
+  </a>
+
+  <a class="download-btn"
+     href="${r["File Link"] || "#"}"
+     target="_blank"
+     download>
+     📥 تحميل
+  </a>
+</td>
     </tr>
   `).join("");
 }
