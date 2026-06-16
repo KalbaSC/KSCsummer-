@@ -278,7 +278,7 @@ a.download-btn:hover {
         <th>الموظف</th>
         <th>ملاحظات</th>
         <th>اسم الملف</th>
-        <th>تحميل</th>
+        <th>الإجراء</th>
       </tr>
     </thead>
     <tbody id="reportsTable">
@@ -370,7 +370,8 @@ function renderReports() {
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
 
   const filtered = reportsData.filter(r => {
-    const text = `${r.Week || ""} ${r.Activity || ""} ${r.Staff || ""} ${r.Notes || ""}`.toLowerCase();
+    const staffName = r["Staff Name"] || r.Staff || "";
+    const text = `${r.Week || ""} ${r.Activity || ""} ${staffName} ${r.Notes || ""}`.toLowerCase();
     return text.includes(search);
   });
 
@@ -383,7 +384,7 @@ function renderReports() {
     <tr>
       <td>${r.Week || ""}</td>
       <td>${r.Activity || ""}</td>
-      <td>${r.Staff || ""}</td>
+      <td>${r["Staff Name"] || r.Staff || ""}</td>
       <td>${r.Notes || ""}</td>
       <td>${r["File Name"] || ""}</td>
 <td>
