@@ -441,8 +441,11 @@ function getDrivePreviewLink(url) {
 }
 
 function openDriveFile(url) {
-  window.open(url, "_blank", "noopener,noreferrer");
-}  
+  window.parent.postMessage({
+    type: "open-drive-file",
+    url: url
+  }, "*");
+}
 </script>
 
 </body>
