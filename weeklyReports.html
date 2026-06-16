@@ -193,6 +193,13 @@ a.download-btn:hover {
 .view-btn {
   background: #2196F3;
   color: white;
+  border: none;
+  width: auto;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'NotoKufiArabic', sans-serif;
 }
 
 .download-btn {
@@ -380,11 +387,10 @@ function renderReports() {
       <td>${r.Notes || ""}</td>
       <td>${r["File Name"] || ""}</td>
 <td>
-<a class="view-btn"
-   href="${getDrivePreviewLink(r["File Link"] || "#")}"
-   target="_blank">
-   👁️ عرض
-</a>
+<button class="view-btn"
+        onclick="openDriveFile('${getDrivePreviewLink(r["File Link"] || "#")}')">
+  👁️ عرض
+</button>
 
   <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank">
     📥 تحميل
@@ -434,6 +440,9 @@ function getDrivePreviewLink(url) {
   return `https://drive.google.com/file/d/${fileId}/view`;
 }
 
+function openDriveFile(url) {
+  window.open(url, "_blank", "noopener,noreferrer");
+}  
 </script>
 
 </body>
