@@ -196,11 +196,18 @@
     frame.src = withEmbed + bust;
   }
 
-  window.addEventListener('message', (e) => {
-    if (!e.data || e.data.type !== 'kalba-iframe-size') return;
+window.addEventListener('message', (e) => {
+  if (!e.data) return;
+
+  if (e.data.type === 'kalba-iframe-size') {
     const frame = document.getElementById('pageFrame');
     frame.style.height = (e.data.height + 2) + 'px';
-  });
+  }
+
+  if (e.data.type === 'open-drive-file') {
+    window.open(e.data.url, '_blank');
+  }
+});
 
   document.addEventListener('DOMContentLoaded', () => {
     const firstBtn = document.querySelector('nav button.active');
