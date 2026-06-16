@@ -309,6 +309,11 @@ async function uploadReport() {
   }
 
   const file = fileInput.files[0];
+
+  if (file.size > 8 * 1024 * 1024) {
+  alert("حجم الملف كبير. الرجاء رفع ملف أقل من 8MB أو تحويله إلى PDF.");
+  return;
+}
   const reader = new FileReader();
 
   status.innerHTML = "⏳ جاري رفع التقرير...";
@@ -326,13 +331,28 @@ async function uploadReport() {
     data.append("fileData", base64);
 
     try {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: data
-      });
+await fetch(SCRIPT_URL, {
+  method: "POST",
+  mode: "no-cors",
+  body: data
+});
 
-      status.innerHTML = "✅ تم رفع التقرير بنجاح";
+status.innerHTML = "⏳ جاري التحقق من حفظ التقرير...";
+
+setTimeout(async () => {
+  await loadReports();
+
+  const saved = reportsData.some(r =>
+    r["File Name"] === file.name &&
+    (r["Staff Name"] === staff || r.Staff === staff)
+  );
+
+  if (saved) {
+    status.innerHTML = "✅ تم رفع التقرير بنجاح";
+  } else {
+    status.innerHTML = "❌ لم يتم حفظ التقرير. غالباً الملف كبير أو Apps Script لم يستقبل البيانات.";
+  }
+}, 4000);
 
       document.getElementById("week").value = "";
       document.getElementById("activity").value = "";
