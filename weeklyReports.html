@@ -14,97 +14,162 @@
 
 body {
   font-family: 'NotoKufiArabic', sans-serif;
-  background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
-  background-size: cover;
+  background: transparent;
   color: white;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  max-width: 1100px;
-  margin: 30px auto;
-  background: rgba(0,0,0,0.9);
-  border: 2px solid #f4e733;
-  border-radius: 12px;
-  padding: 25px;
+  max-width: 1150px;
+  margin: 25px auto;
+  padding: 20px;
 }
 
 h2 {
   text-align: center;
   color: #f4e733;
+  font-size: 28px;
+  margin-bottom: 25px;
 }
 
 .form-box, .filters {
-  background: #1e1e1e;
+  background: linear-gradient(145deg, #111, #1c1c1c);
   border: 1px solid #f4e733;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 18px rgba(244, 231, 51, 0.15);
 }
 
-input, select, textarea, button {
+.form-box h3,
+.filters h3 {
+  color: #f4e733;
+  margin-top: 0;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  color: #f4e733;
+  font-size: 14px;
+}
+
+input, select, textarea {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: 1px solid #f4e733;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 12px;
+  border: 1px solid #444;
+  background: #000;
+  color: white;
   box-sizing: border-box;
   font-family: 'NotoKufiArabic', sans-serif;
 }
 
-input, select, textarea {
-  background: #111;
-  color: white;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #f4e733;
+  box-shadow: 0 0 8px rgba(244, 231, 51, 0.4);
 }
 
 button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
   background: #f4e733;
-  color: black;
+  color: #000;
   font-weight: bold;
   cursor: pointer;
+  font-family: 'NotoKufiArabic', sans-serif;
+  transition: 0.2s;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #f4e733;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  background: #333;
-  color: #f4e733;
-}
-
-a.download-btn {
-  background: #f4e733;
-  color: black;
-  padding: 6px 12px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
+button:hover {
+  transform: translateY(-2px);
+  background: #fff36a;
 }
 
 .status {
   text-align: center;
   color: #f4e733;
-  margin-top: 10px;
+  margin-top: 12px;
+  font-weight: bold;
 }
 
-.hidden {
-  display: none;
+.table-card {
+  background: #111;
+  border: 1px solid #f4e733;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 0 18px rgba(244, 231, 51, 0.12);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+th {
+  color: #f4e733;
+  padding: 12px;
+  font-size: 14px;
+}
+
+td {
+  background: #1b1b1b;
+  padding: 13px;
+  text-align: center;
+  color: white;
+}
+
+td:first-child {
+  border-radius: 0 12px 12px 0;
+}
+
+td:last-child {
+  border-radius: 12px 0 0 12px;
+}
+
+a.download-btn {
+  background: #f4e733;
+  color: black;
+  padding: 7px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+}
+
+a.download-btn:hover {
+  background: white;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
 @media (max-width: 768px) {
   .container {
-    width: 92%;
-    padding: 15px;
+    width: 94%;
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
   }
 
   table {
@@ -112,7 +177,7 @@ a.download-btn {
   }
 
   th, td {
-    padding: 6px;
+    padding: 8px;
   }
 }
 </style>
@@ -126,9 +191,13 @@ a.download-btn {
   <div class="form-box">
     <h3 style="color:#f4e733;">رفع تقرير أسبوعي</h3>
 
+    <div class="report-grid">
+  <div>
     <label>الأسبوع</label>
     <input type="week" id="week">
-
+  </div>
+      
+ <div>
     <label>النشاط</label>
     <select id="activity">
       <option value="">اختر النشاط</option>
@@ -145,15 +214,21 @@ a.download-btn {
       <option>لياقة بدنية</option>
       <option>ورش تطبيقية</option>
     </select>
+  </div>
 
+  <div>
     <label>اسم الموظف</label>
-    <input type="text" id="staff" placeholder="مثال: رواند">
+    <input type="text" id="staff" placeholder="مثال: روند">
+  </div>
 
     <label>ملاحظات</label>
     <textarea id="notes" rows="3" placeholder="اكتب ملاحظات التقرير"></textarea>
 
-    <label>ملف التقرير PDF / Word</label>
-    <input type="file" id="reportFile" accept=".pdf,.doc,.docx,.xlsx">
+  <div>
+    <label>ملف التقرير</label>
+    <input type="file" id="reportFile" accept=".pdf,.doc,.docx,.xlsx,.ppt,.pptx">
+  </div>
+</div>
 
     <button onclick="uploadReport()">رفع التقرير</button>
 
@@ -168,6 +243,7 @@ a.download-btn {
     <button onclick="loadReports()">تحديث التقارير</button>
   </div>
 
+  <div class="table-card">
   <table>
     <thead>
       <tr>
@@ -186,6 +262,7 @@ a.download-btn {
     </tbody>
   </table>
 </div>
+  </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt35kU8xR_-hUrPXGGQT80jk17KfG1k3SR15Ei5w26ffc7s5M3wt7Fh4Yh3g-KUyKq/exec";
