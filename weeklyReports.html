@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقارير الأسبوعية - نادي كلباء</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+@font-face {
+  font-family: 'NotoKufiArabic';
+  src: url('NotoKufiArabic.ttf') format('truetype');
+}
+
+body {
+  font-family: 'NotoKufiArabic', sans-serif;
+  background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  background: rgba(0,0,0,0.9);
+  border: 2px solid #f4e733;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+h2 {
+  text-align: center;
+  color: #f4e733;
+}
+
+.form-box, .filters {
+  background: #1e1e1e;
+  border: 1px solid #f4e733;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #f4e733;
+  box-sizing: border-box;
+  font-family: 'NotoKufiArabic', sans-serif;
+}
+
+input, select, textarea {
+  background: #111;
+  color: white;
+}
+
+button {
+  background: #f4e733;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #f4e733;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #333;
+  color: #f4e733;
+}
+
+a.download-btn {
+  background: #f4e733;
+  color: black;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.status {
+  text-align: center;
+  color: #f4e733;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 92%;
+    padding: 15px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+
+  th, td {
+    padding: 6px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>📄 التقارير الأسبوعية الداخلية</h2>
+
+  <div class="form-box">
+    <h3 style="color:#f4e733;">رفع تقرير أسبوعي</h3>
+
+    <label>الأسبوع</label>
+    <input type="week" id="week">
+
+    <label>النشاط</label>
+    <select id="activity">
+      <option value="">اختر النشاط</option>
+      <option>عام</option>
+      <option>ورش</option>
+      <option>زيارات خارجية</option>
+      <option>شطرنج</option>
+      <option>كرة قدم</option>
+      <option>كرة سلة</option>
+      <option>كرة طائرة</option>
+      <option>كرة يد</option>
+      <option>العاب ثقافية</option>
+      <option>خماسي حديث</option>
+      <option>لياقة بدنية</option>
+      <option>ورش تطبيقية</option>
+    </select>
+
+    <label>اسم الموظف</label>
+    <input type="text" id="staff" placeholder="مثال: رواند">
+
+    <label>ملاحظات</label>
+    <textarea id="notes" rows="3" placeholder="اكتب ملاحظات التقرير"></textarea>
+
+    <label>ملف التقرير PDF / Word</label>
+    <input type="file" id="reportFile" accept=".pdf,.doc,.docx,.xlsx">
+
+    <button onclick="uploadReport()">رفع التقرير</button>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <div class="filters">
+    <h3 style="color:#f4e733;">البحث في التقارير</h3>
+
+    <input type="text" id="searchInput" placeholder="بحث باسم الموظف أو النشاط أو الأسبوع" onkeyup="renderReports()">
+
+    <button onclick="loadReports()">تحديث التقارير</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>الأسبوع</th>
+        <th>النشاط</th>
+        <th>الموظف</th>
+        <th>ملاحظات</th>
+        <th>اسم الملف</th>
+        <th>تحميل</th>
+      </tr>
+    </thead>
+    <tbody id="reportsTable">
+      <tr>
+        <td colspan="6">جاري تحميل التقارير...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt35kU8xR_-hUrPXGGQT80jk17KfG1k3SR15Ei5w26ffc7s5M3wt7Fh4Yh3g-KUyKq/exec";
+
+let reportsData = [];
+
+async function uploadReport() {
+  const week = document.getElementById("week").value;
+  const activity = document.getElementById("activity").value;
+  const staff = document.getElementById("staff").value.trim();
+  const notes = document.getElementById("notes").value.trim();
+  const fileInput = document.getElementById("reportFile");
+  const status = document.getElementById("status");
+
+  if (!week || !activity || !staff || !fileInput.files[0]) {
+    alert("يرجى تعبئة الأسبوع والنشاط واسم الموظف ورفع الملف.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  status.innerHTML = "⏳ جاري رفع التقرير...";
+
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(",")[1];
+
+    const data = new URLSearchParams();
+    data.append("week", week);
+    data.append("activity", activity);
+    data.append("staff", staff);
+    data.append("notes", notes);
+    data.append("fileName", file.name);
+    data.append("mimeType", file.type);
+    data.append("fileData", base64);
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+      });
+
+      status.innerHTML = "✅ تم رفع التقرير بنجاح";
+
+      document.getElementById("week").value = "";
+      document.getElementById("activity").value = "";
+      document.getElementById("staff").value = "";
+      document.getElementById("notes").value = "";
+      document.getElementById("reportFile").value = "";
+
+      setTimeout(loadReports, 2000);
+
+    } catch (err) {
+      console.error(err);
+      status.innerHTML = "❌ حدث خطأ أثناء رفع التقرير";
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function loadReports() {
+  const tbody = document.getElementById("reportsTable");
+  tbody.innerHTML = `<tr><td colspan="6">جاري تحميل التقارير...</td></tr>`;
+
+  try {
+    const res = await fetch(SCRIPT_URL);
+    reportsData = await res.json();
+    renderReports();
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML = `<tr><td colspan="6">حدث خطأ في تحميل التقارير</td></tr>`;
+  }
+}
+
+function renderReports() {
+  const tbody = document.getElementById("reportsTable");
+  const search = document.getElementById("searchInput").value.toLowerCase().trim();
+
+  const filtered = reportsData.filter(r => {
+    const text = `${r.Week || ""} ${r.Activity || ""} ${r.Staff || ""} ${r.Notes || ""}`.toLowerCase();
+    return text.includes(search);
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6">لا توجد تقارير</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.reverse().map(r => `
+    <tr>
+      <td>${r.Week || ""}</td>
+      <td>${r.Activity || ""}</td>
+      <td>${r.Staff || ""}</td>
+      <td>${r.Notes || ""}</td>
+      <td>${r["File Name"] || ""}</td>
+      <td>
+        <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank">
+          تحميل
+        </a>
+      </td>
+    </tr>
+  `).join("");
+}
+
+document.addEventListener("DOMContentLoaded", loadReports);
+</script>
+
+<script>
+(() => {
+  const isEmbedded = new URLSearchParams(location.search).has('embed');
+  if (isEmbedded) {
+    const style = document.createElement('style');
+    style.textContent = `
+      header.header-container, .header-container, .footer-container, footer { display: none !important; }
+      html, body { background: transparent !important; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const sendSize = () => {
+    const b = document.body, e = document.documentElement;
+    const h = Math.max(
+      b.scrollHeight, b.offsetHeight, b.clientHeight,
+      e.scrollHeight, e.offsetHeight, e.clientHeight
+    );
+    window.parent.postMessage({ type: 'kalba-iframe-size', height: h }, '*');
+  };
+
+  const mo = new MutationObserver(() => sendSize());
+  mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+
+  window.addEventListener('load', sendSize, true);
+  setTimeout(sendSize, 300);
+})();
+</script>
+
+</body>
+</html>
