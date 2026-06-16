@@ -327,7 +327,7 @@ if (file.size > 20 * 1024 * 1024) {
     data.append("staff", staff);
     data.append("notes", notes);
     data.append("fileName", file.name);
-    data.append("mimeType", file.type);
+    data.append("mimeType", file.type || getMimeTypeFromName(file.name));
     data.append("fileData", base64);
 
     try {
@@ -467,6 +467,22 @@ function openDriveFile(url) {
     url: url
   }, "*");
 }
+
+function getMimeTypeFromName(name) {
+  const ext = name.split(".").pop().toLowerCase();
+
+  const types = {
+    pdf: "application/pdf",
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    xls: "application/vnd.ms-excel",
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ppt: "application/vnd.ms-powerpoint",
+    pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  };
+
+  return types[ext] || "application/octet-stream";
+}  
 </script>
 
 </body>
