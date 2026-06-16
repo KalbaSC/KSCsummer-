@@ -379,18 +379,13 @@ function renderReports() {
       <td>${r.Staff || ""}</td>
       <td>${r.Notes || ""}</td>
       <td>${r["File Name"] || ""}</td>
- <td>
-  <a class="view-btn"
-     href="${r["File Link"] || "#"}"
-     target="_blank">
-     👁️ عرض
-  </a>
+<td>
+  <button onclick="openPreview('${r["File Link"] || "#"}')" style="width:auto; padding:6px 12px; margin:2px;">
+    👁️ عرض
+  </button>
 
-  <a class="download-btn"
-     href="${r["File Link"] || "#"}"
-     target="_blank"
-     download>
-     📥 تحميل
+  <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank">
+    📥 تحميل
   </a>
 </td>
     </tr>
@@ -427,7 +422,33 @@ document.addEventListener("DOMContentLoaded", loadReports);
   window.addEventListener('load', sendSize, true);
   setTimeout(sendSize, 300);
 })();
+
+  
+ function getDrivePreviewLink(url) {
+  const match = url.match(/\/d\/([^/]+)/) || url.match(/id=([^&]+)/);
+  if (!match) return url;
+
+  const fileId = match[1];
+  return `https://drive.google.com/file/d/${fileId}/preview`;
+}
+
+function openPreview(fileUrl) {
+  const previewUrl = getDrivePreviewLink(fileUrl);
+  document.getElementById("previewFrame").src = previewUrl;
+  document.getElementById("previewModal").style.display = "block";
+}
+
+function closePreview() {
+  document.getElementById("previewFrame").src = "";
+  document.getElementById("previewModal").style.display = "none";
+} 
 </script>
 
 </body>
+  <div id="previewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999;">
+  <div style="width:90%; height:90%; margin:3% auto; background:#111; border:2px solid #f4e733; border-radius:12px; padding:10px;">
+    <button onclick="closePreview()" style="width:auto; padding:8px 18px; margin-bottom:10px;">✖ إغلاق</button>
+    <iframe id="previewFrame" style="width:100%; height:88%; border:0; background:white;"></iframe>
+  </div>
+</div>
 </html>
