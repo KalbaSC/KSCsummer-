@@ -298,6 +298,17 @@ td:last-child {
     padding: 9px;
   }
 }
+
+.week-preview{
+  margin-top:10px;
+  background:rgba(244,231,51,.08);
+  border:1px solid rgba(244,231,51,.25);
+  color:#f4e733;
+  border-radius:12px;
+  padding:12px 15px;
+  font-weight:bold;
+  text-align:center;
+}  
 </style>
 </head>
 
@@ -319,6 +330,9 @@ td:last-child {
   <div>
     <label>الأسبوع</label>
     <input type="week" id="week">
+    <div class="week-preview" id="weekPreview">
+  📅 سيتم اختيار الأسبوع الحالي تلقائياً
+</div>
   </div>
       
 <div class="form-group">
@@ -584,6 +598,46 @@ function getMimeTypeFromName(name) {
 
   return types[ext] || "application/octet-stream";
 }  
+
+function getISOWeek(date) {
+  const tempDate = new Date(date);
+  tempDate.setHours(0,0,0,0);
+
+  tempDate.setDate(
+    tempDate.getDate() + 3 - ((tempDate.getDay() + 6) % 7)
+  );
+
+  const week1 = new Date(tempDate.getFullYear(), 0, 4);
+
+  return 1 + Math.round(
+    ((tempDate - week1) / 86400000
+    - 3
+    + ((week1.getDay() + 6) % 7)) / 7
+  );
+}
+
+const weekInput = document.getElementById("week");
+const weekPreview = document.getElementById("weekPreview");
+
+const today = new Date();
+const year = today.getFullYear();
+const week = getISOWeek(today);
+
+weekInput.value =
+  `${year}-W${String(week).padStart(2, "0")}`;
+
+weekPreview.innerHTML =
+  `📅 الأسبوع ${week} - ${year}`;
+
+weekInput.addEventListener("change", () => {
+  if (!weekInput.value) return;
+
+  const [selectedYear, selectedWeek] =
+    weekInput.value.split("-W");
+
+  weekPreview.innerHTML =
+    `📅 الأسبوع ${selectedWeek} - ${selectedYear}`;
+});  
 </script>
 
 </body>
