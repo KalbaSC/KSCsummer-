@@ -12,6 +12,14 @@
   src: url('NotoKufiArabic.ttf') format('truetype');
 }
 
+:root {
+  --yellow: #f4e733;
+  --black: #050505;
+  --card: rgba(15,15,15,0.95);
+  --border: rgba(244,231,51,0.55);
+  --muted: #bdbdbd;
+}
+
 body {
   font-family: 'NotoKufiArabic', sans-serif;
   background: transparent;
@@ -21,93 +29,154 @@ body {
 }
 
 .container {
-  max-width: 1150px;
+  max-width: 1180px;
   margin: 25px auto;
-  padding: 20px;
+  padding: 18px;
 }
 
-h2 {
+.page-title {
   text-align: center;
-  color: #f4e733;
-  font-size: 28px;
   margin-bottom: 25px;
 }
 
-.form-box, .filters {
-  background: linear-gradient(145deg, #111, #1c1c1c);
-  border: 1px solid #f4e733;
-  border-radius: 18px;
-  padding: 22px;
-  margin-bottom: 22px;
-  box-shadow: 0 0 18px rgba(244, 231, 51, 0.15);
+.page-title h2 {
+  color: var(--yellow);
+  font-size: 34px;
+  margin: 0;
 }
 
-.form-box h3,
-.filters h3 {
-  color: #f4e733;
-  margin-top: 0;
-  text-align: center;
+.page-title p {
+  color: #ddd;
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
+.form-box,
+.filters,
+.table-card {
+  background: linear-gradient(145deg, rgba(10,10,10,0.97), rgba(28,28,28,0.97));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 26px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 25px rgba(244,231,51,0.12);
+}
+
+.section-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--yellow);
+  font-size: 22px;
+  margin: 0 0 22px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  align-items: start;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-group.full {
+  grid-column: span 2;
 }
 
 label {
-  display: block;
-  margin-top: 12px;
-  color: #f4e733;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+  color: var(--yellow);
   font-size: 14px;
+  font-weight: bold;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  border-radius: 12px;
+  padding: 13px 14px;
+  border-radius: 13px;
   border: 1px solid #444;
   background: #000;
   color: white;
   box-sizing: border-box;
   font-family: 'NotoKufiArabic', sans-serif;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 105px;
+  resize: vertical;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #f4e733;
-  box-shadow: 0 0 8px rgba(244, 231, 51, 0.4);
+  border-color: var(--yellow);
+  box-shadow: 0 0 10px rgba(244,231,51,0.35);
+}
+
+.upload-box {
+  border: 1px dashed var(--yellow);
+  border-radius: 16px;
+  padding: 22px;
+  background: rgba(0,0,0,0.45);
+}
+
+.upload-box input {
+  border: none;
+  padding: 0;
 }
 
 button {
   width: 100%;
   margin-top: 18px;
-  padding: 13px;
+  padding: 14px;
   border: none;
-  border-radius: 12px;
-  background: #f4e733;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f4e733, #fff36a);
   color: #000;
   font-weight: bold;
   cursor: pointer;
   font-family: 'NotoKufiArabic', sans-serif;
+  font-size: 15px;
   transition: 0.2s;
 }
 
 button:hover {
   transform: translateY(-2px);
-  background: #fff36a;
+  filter: brightness(1.06);
 }
 
 .status {
   text-align: center;
-  color: #f4e733;
-  margin-top: 12px;
+  margin-top: 15px;
   font-weight: bold;
+  padding: 12px;
+  border-radius: 12px;
+  color: var(--yellow);
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 12px;
+  align-items: center;
+}
+
+.filters button {
+  margin-top: 0;
 }
 
 .table-card {
-  background: #111;
-  border: 1px solid #f4e733;
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: 0 0 18px rgba(244, 231, 51, 0.12);
   overflow-x: auto;
 }
 
@@ -118,44 +187,55 @@ table {
 }
 
 th {
-  color: #f4e733;
+  color: var(--yellow);
   padding: 12px;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 td {
-  background: #1b1b1b;
-  padding: 13px;
+  background: rgba(30,30,30,0.95);
+  padding: 14px;
   text-align: center;
   color: white;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 td:first-child {
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 14px 14px 0;
 }
 
 td:last-child {
-  border-radius: 12px 0 0 12px;
+  border-radius: 14px 0 0 14px;
 }
 
-a.download-btn {
-  background: #f4e733;
-  color: black;
-  padding: 7px 14px;
+.view-btn,
+.download-btn {
+  display: inline-block;
+  padding: 8px 14px;
   border-radius: 10px;
   text-decoration: none;
   font-weight: bold;
-  display: inline-block;
+  margin: 3px;
+  width: auto;
+  font-size: 13px;
 }
 
-a.download-btn:hover {
-  background: white;
+.view-btn {
+  background: #0d6efd;
+  color: white;
+  border: 1px solid #4da3ff;
 }
 
-.report-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+.download-btn {
+  background: var(--yellow);
+  color: black;
+}
+
+.empty-cell {
+  color: var(--muted);
+  padding: 25px;
 }
 
 @media (max-width: 768px) {
@@ -164,67 +244,59 @@ a.download-btn:hover {
     padding: 10px;
   }
 
-  h2 {
-    font-size: 22px;
+  .page-title h2 {
+    font-size: 24px;
   }
 
-  .report-grid {
+  .form-box,
+  .filters,
+  .table-card {
+    padding: 18px;
+  }
+
+  .report-grid,
+  .filters-row {
     grid-template-columns: 1fr;
+  }
+
+  .form-group.full {
+    grid-column: span 1;
   }
 
   table {
     font-size: 11px;
   }
 
-  th, td {
-    padding: 8px;
+  th,
+  td {
+    padding: 9px;
   }
 }
- .view-btn,
-.download-btn {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  margin: 2px;
-}
-
-.view-btn {
-  background: #2196F3;
-  color: white;
-  border: none;
-  width: auto;
-  padding: 7px 14px;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: 'NotoKufiArabic', sans-serif;
-}
-
-.download-btn {
-  background: #f4e733;
-  color: black;
-} 
 </style>
 </head>
 
 <body>
 
 <div class="container">
+ <div class="page-title">
   <h2>📄 التقارير الأسبوعية الداخلية</h2>
+  <p>قم بتعبئة بيانات التقرير ورفع الملف الأسبوعي</p>
+</div>
 
   <div class="form-box">
-    <h3 style="color:#f4e733;">رفع تقرير أسبوعي</h3>
+<h3 class="section-title">
+  <i class="fa-solid fa-file-arrow-up"></i>
+  رفع تقرير أسبوعي
+</h3>
 
-    <div class="report-grid">
+<div class="report-grid">
   <div>
     <label>الأسبوع</label>
     <input type="week" id="week">
   </div>
       
- <div>
-    <label>النشاط</label>
+<div class="form-group">
+  <label>النشاط</label>
     <select id="activity">
       <option value="">اختر النشاط</option>
       <option>عام</option>
@@ -242,31 +314,43 @@ a.download-btn:hover {
     </select>
   </div>
 
-  <div>
-    <label>اسم الموظف</label>
+<div class="form-group">
+  <label>اسم الموظف</label>
     <input type="text" id="staff" placeholder="مثال: روند">
   </div>
 
-    <label>ملاحظات</label>
-    <textarea id="notes" rows="3" placeholder="اكتب ملاحظات التقرير"></textarea>
+<div class="form-group">
+  <label><i class="fa-solid fa-pen"></i> ملاحظات</label>
+  <textarea id="notes" rows="3" placeholder="اكتب ملاحظات التقرير هنا..."></textarea>
+</div>
 
-  <div>
-    <label>ملف التقرير</label>
+<div class="form-group full">
+  <label><i class="fa-solid fa-paperclip"></i> ملف التقرير</label>
+  <div class="upload-box">
     <input type="file" id="reportFile" accept=".pdf,.doc,.docx,.xlsx,.ppt,.pptx">
   </div>
 </div>
+</div>
 
-    <button onclick="uploadReport()">رفع التقرير</button>
-
+<button onclick="uploadReport()">
+  رفع التقرير <i class="fa-solid fa-cloud-arrow-up"></i>
+</button>
+    
     <div id="status" class="status"></div>
   </div>
 
   <div class="filters">
-    <h3 style="color:#f4e733;">البحث في التقارير</h3>
+<h3 class="section-title">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  البحث في التقارير
+</h3>
 
-    <input type="text" id="searchInput" placeholder="بحث باسم الموظف أو النشاط أو الأسبوع" onkeyup="renderReports()">
-
-    <button onclick="loadReports()">تحديث التقارير</button>
+<div class="filters-row">
+  <input type="text" id="searchInput" placeholder="ابحث باسم الموظف أو النشاط أو الأسبوع..." onkeyup="renderReports()">
+  <button onclick="loadReports()">
+    تحديث <i class="fa-solid fa-rotate-right"></i>
+  </button>
+</div>
   </div>
 
   <div class="table-card">
