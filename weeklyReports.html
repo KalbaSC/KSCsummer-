@@ -308,6 +308,46 @@ td:last-child {
   padding:12px 15px;
   font-weight:bold;
   text-align:center;
+} 
+
+.file-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  padding: 30px;
+}
+
+.file-modal-box {
+  width: 90%;
+  height: 90vh;
+  margin: auto;
+  background: #111;
+  border: 1px solid #f4e733;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+}
+
+.file-modal iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 45px;
+  height: 45px;
+  margin: 0;
+  border-radius: 50%;
+  background: #f4e733;
+  color: #000;
+  font-size: 26px;
+  z-index: 2;
 }  
 </style>
 </head>
@@ -577,10 +617,13 @@ function getDrivePreviewLink(url) {
 }
 
 function openDriveFile(url) {
-  window.parent.postMessage({
-    type: "open-drive-file",
-    url: url
-  }, "*");
+  document.getElementById("filePreviewFrame").src = url;
+  document.getElementById("fileModal").style.display = "block";
+}
+
+function closeFileModal() {
+  document.getElementById("filePreviewFrame").src = "";
+  document.getElementById("fileModal").style.display = "none";
 }
 
 function getMimeTypeFromName(name) {
@@ -640,6 +683,12 @@ weekInput.addEventListener("change", () => {
 });  
 </script>
 
+<div id="fileModal" class="file-modal">
+  <div class="file-modal-box">
+    <button class="close-modal" onclick="closeFileModal()">×</button>
+    <iframe id="filePreviewFrame" src=""></iframe>
+  </div>
+</div>  
 </body>
 
 </html>
