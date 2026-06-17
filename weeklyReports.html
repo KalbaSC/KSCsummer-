@@ -331,28 +331,19 @@ if (file.size > 20 * 1024 * 1024) {
     data.append("fileData", base64);
 
     try {
-await fetch(SCRIPT_URL, {
+const response = await fetch(SCRIPT_URL, {
   method: "POST",
-  mode: "no-cors",
   body: data
 });
 
-status.innerHTML = "⏳ جاري التحقق من حفظ التقرير...";
+const result = await response.text();
 
-setTimeout(async () => {
+if (result.trim() === "success") {
+  status.innerHTML = "✅ تم رفع التقرير بنجاح";
   await loadReports();
-
-  const saved = reportsData.some(r =>
-    r["File Name"] === file.name &&
-    (r["Staff Name"] === staff || r.Staff === staff)
-  );
-
-  if (saved) {
-    status.innerHTML = "✅ تم رفع التقرير بنجاح";
-  } else {
-    status.innerHTML = "❌ لم يتم حفظ التقرير. غالباً الملف كبير أو Apps Script لم يستقبل البيانات.";
-  }
-}, 4000);
+} else {
+  status.innerHTML = "❌ " + result;
+}
 
       document.getElementById("week").value = "";
       document.getElementById("activity").value = "";
