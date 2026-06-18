@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>معرض الصور</title>
+
 <style>
 body{
   margin:0;
@@ -11,89 +12,45 @@ body{
   color:white;
   font-family:Arial,sans-serif;
 }
+
 .container{
   max-width:1200px;
   margin:auto;
-  padding:30px 20px;
+  padding:25px;
 }
+
 h1{
-  text-align:center;
   color:#f4e733;
+  text-align:center;
+  font-size:36px;
 }
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:20px;
-}
-.card{
-  background:#111;
-  border:1px solid rgba(244,231,51,.45);
+
+.gallery-frame{
+  width:100%;
+  height:80vh;
+  border:1px solid #f4e733;
   border-radius:18px;
   overflow:hidden;
-  cursor:pointer;
+  background:white;
 }
-.card img{
+
+.gallery-frame iframe{
   width:100%;
-  height:220px;
-  object-fit:cover;
-  display:block;
-}
-.card div{
-  padding:10px;
-  text-align:center;
-  color:#f4e733;
-  font-weight:bold;
+  height:100%;
+  border:0;
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
   <h1>📸 معرض الصور</h1>
-  <div id="gallery" class="gallery">جاري تحميل الصور...</div>
+
+  <div class="gallery-frame">
+    <iframe src="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true"></iframe>
+  </div>
 </div>
 
-<script>
-const MYCLOUD_API = "https://device-local-94b6f0cf-9618-41ab-a0ea-0faafe415d09.remotewd.com:4430/sdk/v2/filesSearch/parents?pretty=false&ids=sus7f6bjnjm3jziysimoxwll&fields=pageToken%2Cid%2CcTime%2CmTime%2CmimeType%2Cname%2CparentID%2Cextension%2Csize%2CpubliclyShared%2CprivatelyShared%2Cvideo%2Caudio%2Cimage%2Ctrashed%2Ctags%2Cdocument%2Cfamily%2CautoTags%2Cdescription%2CstorageType%2CstorageID&limit=50&pageToken=&orderBy=name&order=asc";
-
-const BASE = "https://device-local-94b6f0cf-9618-41ab-a0ea-0faafe415d09.remotewd.com:4430";
-
-async function loadGallery(){
-  const gallery = document.getElementById("gallery");
-
-  try{
-    const res = await fetch(MYCLOUD_API);
-    const data = await res.json();
-
-    const fileList = data.files || data[0]?.files || [];
-
-const images = fileList.filter(file =>
-      file.mimeType && file.mimeType.startsWith("image/")
-    );
-
-    if(images.length === 0){
-      gallery.innerHTML = "لا توجد صور حالياً";
-      return;
-    }
-
-    gallery.innerHTML = images.map(file => {
-      const imgUrl = `${BASE}/sdk/v3/files/${file.id}/content?size=480h&cacheControlMaxAge=600`;
-
-      return `
-        <div class="card" onclick="window.open('${imgUrl}', '_blank')">
-          <img src="${imgUrl}" alt="${file.name}">
-          <div>${file.name}</div>
-        </div>
-      `;
-    }).join("");
-
-  }catch(err){
-    console.error(err);
-    gallery.innerHTML = "حدث خطأ في تحميل الصور من MyCloud";
-  }
-}
-
-loadGallery();
-</script>
 </body>
 </html>
