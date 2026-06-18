@@ -3,46 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>معرض الصور</title>
+<title>معرض الصور - نادي كلباء</title>
+
 <style>
+@font-face {
+  font-family: 'NotoKufiArabic';
+  src: url('NotoKufiArabic.ttf') format('truetype');
+}
+
+:root{
+  --yellow:#f4e733;
+  --black:#000;
+}
+
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
-  background:#000;
+  min-height:100vh;
+  font-family:'NotoKufiArabic', Arial, sans-serif;
   color:white;
-  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.82)),
+    url('black_and_yellow_grunge_background.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
 }
-.box{
-  max-width:700px;
-  margin:80px auto;
-  padding:40px;
+
+.gallery-card{
+  width:100%;
+  max-width:780px;
   text-align:center;
-  background:#111;
-  border:1px solid #f4e733;
-  border-radius:24px;
+  background:rgba(0,0,0,.72);
+  border:1px solid rgba(244,231,51,.55);
+  border-radius:30px;
+  padding:55px 35px;
+  box-shadow:
+    0 0 35px rgba(244,231,51,.18),
+    inset 0 0 45px rgba(255,255,255,.03);
+  backdrop-filter:blur(12px);
 }
-h1{color:#f4e733;}
-p{color:#ccc;}
-a{
-  display:inline-block;
-  margin-top:25px;
-  padding:16px 35px;
-  background:#f4e733;
-  color:#000;
-  border-radius:14px;
-  text-decoration:none;
+
+.logo-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.logo-row img{
+  height:70px;
+  object-fit:contain;
+}
+
+.icon{
+  font-size:70px;
+  margin-bottom:10px;
+}
+
+h1{
+  color:var(--yellow);
+  font-size:46px;
+  margin:0 0 15px;
+  text-shadow:0 0 14px rgba(244,231,51,.35);
+}
+
+p{
+  color:#ddd;
+  font-size:18px;
+  line-height:1.9;
+  max-width:600px;
+  margin:0 auto 35px;
+}
+
+.info-box{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:30px 0;
+}
+
+.info-item{
+  background:rgba(244,231,51,.08);
+  border:1px solid rgba(244,231,51,.25);
+  border-radius:16px;
+  padding:15px 10px;
+  color:var(--yellow);
   font-weight:bold;
+  font-size:14px;
+}
+
+.gallery-btn{
+  display:inline-block;
+  padding:18px 50px;
+  background:linear-gradient(135deg,#f4e733,#fff36a);
+  color:#000;
+  border-radius:18px;
+  text-decoration:none;
+  font-size:20px;
+  font-weight:bold;
+  transition:.25s;
+  box-shadow:0 8px 20px rgba(244,231,51,.2);
+}
+
+.gallery-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(244,231,51,.38);
+}
+
+.note{
+  margin-top:22px;
+  font-size:13px;
+  color:#aaa;
+}
+
+@media(max-width:700px){
+  .gallery-card{
+    padding:40px 22px;
+  }
+
+  h1{
+    font-size:32px;
+  }
+
+  p{
+    font-size:15px;
+  }
+
+  .info-box{
+    grid-template-columns:1fr;
+  }
+
+  .logo-row img{
+    height:55px;
+  }
+
+  .gallery-btn{
+    width:100%;
+    padding:16px;
+    font-size:17px;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<div class="box">
-  <h1>📸 معرض الصور</h1>
-  <p>اضغط على الزر لفتح صور الفعاليات من MyCloud.</p>
+<div class="gallery-card">
 
-  <a href="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true" target="_blank">
+  <div class="logo-row">
+    <img src="Picture3.png" alt="شعار الشارقة">
+    <img src="logo.png" alt="شعار نادي كلباء">
+  </div>
+
+  <div class="icon">📸</div>
+
+  <h1>معرض الصور</h1>
+
+  <p>
+    استعرض صور فعاليات وأنشطة نادي كلباء الرياضي الثقافي
+    وصيف الشارقة الرياضي من خلال معرض الصور الرسمي.
+  </p>
+
+  <div class="info-box">
+    <div class="info-item">صور الفعاليات</div>
+    <div class="info-item">أنشطة النادي</div>
+    <div class="info-item">تحديث مستمر</div>
+  </div>
+
+  <a class="gallery-btn"
+     href="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true"
+     target="_blank">
     فتح معرض الصور
   </a>
+
+  <div class="note">
+    سيتم فتح الصور في نافذة جديدة عبر MyCloud
+  </div>
+
 </div>
 
 </body>
