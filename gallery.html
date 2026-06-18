@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>معرض الصور</title>
-
 <style>
 body{
   margin:0;
@@ -12,44 +11,38 @@ body{
   color:white;
   font-family:Arial,sans-serif;
 }
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:25px;
-}
-
-h1{
-  color:#f4e733;
+.box{
+  max-width:700px;
+  margin:80px auto;
+  padding:40px;
   text-align:center;
-  font-size:36px;
-}
-
-.gallery-frame{
-  width:100%;
-  height:80vh;
+  background:#111;
   border:1px solid #f4e733;
-  border-radius:18px;
-  overflow:hidden;
-  background:white;
+  border-radius:24px;
 }
-
-.gallery-frame iframe{
-  width:100%;
-  height:100%;
-  border:0;
+h1{color:#f4e733;}
+p{color:#ccc;}
+a{
+  display:inline-block;
+  margin-top:25px;
+  padding:16px 35px;
+  background:#f4e733;
+  color:#000;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:bold;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="box">
   <h1>📸 معرض الصور</h1>
+  <p>اضغط على الزر لفتح صور الفعاليات من MyCloud.</p>
 
-  <div class="gallery-frame">
-    <iframe src="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true"></iframe>
-  </div>
+  <a href="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true" target="_blank">
+    فتح معرض الصور
+  </a>
 </div>
 
 </body>
