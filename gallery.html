@@ -65,7 +65,9 @@ async function loadGallery(){
     const res = await fetch(MYCLOUD_API);
     const data = await res.json();
 
-    const images = data.files.filter(file =>
+    const fileList = data.files || data[0]?.files || [];
+
+const images = fileList.filter(file =>
       file.mimeType && file.mimeType.startsWith("image/")
     );
 
