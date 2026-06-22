@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>طلبات المبالغ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+@font-face {
+  font-family: 'NotoKufiArabic';
+  src: url('NotoKufiArabic.ttf') format('truetype');
+}
+
+:root{
+  --yellow:#f4e733;
+  --card:rgba(0,0,0,.86);
+  --border:rgba(244,231,51,.45);
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:25px;
+  background:transparent;
+  color:white;
+  font-family:'NotoKufiArabic', Arial, sans-serif;
+}
+
+.container{
+  max-width:1180px;
+  margin:auto;
+  padding:18px;
+  position:relative;
+}
+
+.container::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  border-radius:30px;
+  backdrop-filter:blur(6px);
+  z-index:-1;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:25px;
+  margin-bottom:22px;
+  box-shadow:0 0 22px rgba(244,231,51,.12);
+}
+
+.title{
+  text-align:center;
+  color:var(--yellow);
+  margin-bottom:25px;
+}
+
+.title h1{
+  margin:0;
+  font-size:34px;
+}
+
+.title p{
+  color:#ddd;
+  margin-top:8px;
+}
+
+.login-box{
+  max-width:430px;
+  margin:50px auto;
+}
+
+label{
+  color:var(--yellow);
+  display:block;
+  margin:12px 0 6px;
+  font-weight:bold;
+}
+
+input, textarea, select, button{
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  font-family:'NotoKufiArabic', Arial, sans-serif;
+  font-size:14px;
+}
+
+input, textarea, select{
+  background:#000;
+  border:1px solid #444;
+  color:white;
+}
+
+textarea{
+  resize:vertical;
+  min-height:90px;
+}
+
+button{
+  margin-top:15px;
+  border:none;
+  background:linear-gradient(135deg,#f4e733,#fff36a);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  filter:brightness(1.05);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.full{
+  grid-column:span 2;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.logout{
+  max-width:150px;
+  background:#333;
+  color:white;
+}
+
+.section-title{
+  color:var(--yellow);
+  text-align:center;
+  margin:0 0 20px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0 10px;
+}
+
+th{
+  color:var(--yellow);
+  padding:12px;
+  white-space:nowrap;
+}
+
+td{
+  background:rgba(30,30,30,.96);
+  padding:12px;
+  text-align:center;
+}
+
+td:first-child{border-radius:0 12px 12px 0;}
+td:last-child{border-radius:12px 0 0 12px;}
+
+.badge{
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:bold;
+  font-size:12px;
+}
+
+.Pending{background:#555;color:white;}
+.Approved{background:#1565c0;color:white;}
+.Paid{background:#f4e733;color:#000;}
+.Rejected{background:#b71c1c;color:white;}
+.ReceiptUploaded{background:#2e7d32;color:white;}
+.Closed{background:#4a148c;color:white;}
+
+.action-btn{
+  width:auto;
+  margin:3px;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.link-btn{
+  color:#000;
+  background:#f4e733;
+  padding:7px 12px;
+  border-radius:9px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.status{
+  text-align:center;
+  color:var(--yellow);
+  margin-top:12px;
+  font-weight:bold;
+}
+
+.hidden{display:none;}
+
+@media(max-width:768px){
+  body{padding:10px;}
+  .grid{grid-template-columns:1fr;}
+  .full{grid-column:span 1;}
+  .topbar{flex-direction:column;}
+  table{font-size:11px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="loginView" class="card login-box">
+    <div class="title">
+      <h1>💵 طلبات المبالغ</h1>
+      <p>تسجيل الدخول للموظفين والإدارة</p>
+    </div>
+
+    <label>اسم المستخدم</label>
+    <input type="text" id="username" placeholder="مثال: admin">
+
+    <label>كلمة المرور</label>
+    <input type="password" id="password" placeholder="••••">
+
+    <button onclick="login()">دخول</button>
+    <div id="loginStatus" class="status"></div>
+  </div>
+
+  <div id="appView" class="hidden">
+
+    <div class="card topbar">
+      <div>
+        <strong style="color:#f4e733;">مرحباً، <span id="userName"></span></strong>
+        <div id="userRole" style="color:#ccc;font-size:13px;"></div>
+      </div>
+      <button class="logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+
+    <div id="staffPanel" class="card hidden">
+      <h2 class="section-title">إرسال طلب مبلغ</h2>
+
+      <div class="grid">
+        <div>
+          <label>المبلغ المطلوب</label>
+          <input type="number" id="amount" placeholder="مثال: 150">
+        </div>
+
+        <div>
+          <label>الغرض من المبلغ</label>
+          <input type="text" id="purpose" placeholder="مثال: شراء أدوات">
+        </div>
+
+        <div class="full">
+          <label>ملاحظات</label>
+          <textarea id="notes" placeholder="أي تفاصيل إضافية"></textarea>
+        </div>
+      </div>
+
+      <button onclick="submitRequest()">إرسال الطلب</button>
+      <div id="requestStatus" class="status"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">📋 الطلبات</h2>
+
+      <button onclick="loadRequests()">تحديث البيانات</button>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>رقم الطلب</th>
+              <th>الموظف</th>
+              <th>المبلغ المطلوب</th>
+              <th>الغرض</th>
+              <th>الحالة</th>
+              <th>مبلغ الإيصال</th>
+              <th>الإيصال</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTable">
+            <tr><td colspan="8">جاري التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1eKwU4gL3mHqnZfp5Yo0eqznhP6G5kcf7w0qAwFUV6_OhNpcCox6IWM3CuQ0JMYx59w/exec";
+
+let currentUser = null;
+let requests = [];
+
+async function login(){
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const status = document.getElementById("loginStatus");
+
+  status.innerHTML = "جاري التحقق...";
+
+  const url = `${SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if(!data.success){
+    status.innerHTML = "❌ " + data.message;
+    return;
+  }
+
+  currentUser = data;
+  localStorage.setItem("moneyUser", JSON.stringify(currentUser));
+
+  showApp();
+}
+
+function showApp(){
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("appView").classList.remove("hidden");
+
+  document.getElementById("userName").innerHTML = currentUser.name;
+  document.getElementById("userRole").innerHTML =
+    currentUser.role === "admin" ? "حساب الإدارة" : "حساب موظف";
+
+  if(currentUser.role === "staff"){
+    document.getElementById("staffPanel").classList.remove("hidden");
+  }
+
+  loadRequests();
+  sendSize();
+}
+
+function logout(){
+  localStorage.removeItem("moneyUser");
+  location.reload();
+}
+
+async function submitRequest(){
+  const amount = document.getElementById("amount").value;
+  const purpose = document.getElementById("purpose").value.trim();
+  const notes = document.getElementById("notes").value.trim();
+  const status = document.getElementById("requestStatus");
+
+  if(!amount || !purpose){
+    alert("يرجى إدخال المبلغ والغرض.");
+    return;
+  }
+
+  const body = new URLSearchParams();
+  body.append("action", "requestMoney");
+  body.append("username", currentUser.username);
+  body.append("name", currentUser.name);
+  body.append("amount", amount);
+  body.append("purpose", purpose);
+  body.append("notes", notes);
+
+  status.innerHTML = "جاري إرسال الطلب...";
+
+  const res = await fetch(SCRIPT_URL, {
+    method:"POST",
+    body
+  });
+
+  const data = await res.json();
+
+  status.innerHTML = data.success ? "✅ " + data.message : "❌ " + data.message;
+
+  document.getElementById("amount").value = "";
+  document.getElementById("purpose").value = "";
+  document.getElementById("notes").value = "";
+
+  loadRequests();
+}
+
+async function loadRequests(){
+  const url = `${SCRIPT_URL}?action=list&username=${encodeURIComponent(currentUser.username)}&role=${encodeURIComponent(currentUser.role)}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  requests = data.data || [];
+  renderRequests();
+}
+
+function renderRequests(){
+  const tbody = document.getElementById("requestsTable");
+
+  if(!requests.length){
+    tbody.innerHTML = `<tr><td colspan="8">لا توجد طلبات</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = requests.reverse().map(r => {
+    const statusClass = String(r.Status || "").replace(/\s/g,"");
+    const receiptLink = r["Receipt Link"]
+      ? `<a class="link-btn" href="${r["Receipt Link"]}" target="_blank">عرض</a>`
+      : "-";
+
+    return `
+      <tr>
+        <td>${r.ID || ""}</td>
+        <td>${r["Staff Name"] || ""}</td>
+        <td>${money(r["Amount Requested"])}</td>
+        <td>${r.Purpose || ""}</td>
+        <td><span class="badge ${statusClass}">${translateStatus(r.Status)}</span></td>
+        <td>${r["Amount Spent"] ? money(r["Amount Spent"]) : "-"}</td>
+        <td>${receiptLink}</td>
+        <td>${actionsHTML(r)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  sendSize();
+}
+
+function actionsHTML(r){
+  if(currentUser.role === "admin"){
+    return `
+      <button class="action-btn" onclick="changeStatus('${r.ID}','Approved')">موافقة</button>
+      <button class="action-btn" onclick="changeStatus('${r.ID}','Paid')">تم التسليم</button>
+      <button class="action-btn" onclick="changeStatus('${r.ID}','Rejected')">رفض</button>
+      <button class="action-btn" onclick="changeStatus('${r.ID}','Closed')">إغلاق</button>
+    `;
+  }
+
+  if(r.Status === "Paid" || r.Status === "Approved"){
+    return `
+      <button class="action-btn" onclick="showReceiptUpload('${r.ID}')">رفع إيصال</button>
+    `;
+  }
+
+  return "-";
+}
+
+async function changeStatus(id, status){
+  const adminNote = prompt("ملاحظة الإدارة اختياري:", "") || "";
+
+  const body = new URLSearchParams();
+  body.append("action", "updateStatus");
+  body.append("id", id);
+  body.append("status", status);
+  body.append("adminNote", adminNote);
+
+  const res = await fetch(SCRIPT_URL, {
+    method:"POST",
+    body
+  });
+
+  const data = await res.json();
+  alert(data.message);
+  loadRequests();
+}
+
+function showReceiptUpload(id){
+  const amountSpent = prompt("أدخل المبلغ المصروف:");
+  if(!amountSpent) return;
+
+  const notes = prompt("ملاحظات الإيصال:") || "";
+
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*,.pdf";
+
+  input.onchange = () => {
+    const file = input.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async e => {
+      const base64 = e.target.result.split(",")[1];
+
+      const body = new URLSearchParams();
+      body.append("action", "uploadReceipt");
+      body.append("id", id);
+      body.append("fileName", file.name);
+      body.append("mimeType", file.type || "application/octet-stream");
+      body.append("fileData", base64);
+      body.append("amountSpent", amountSpent);
+      body.append("receiptNotes", notes);
+
+      alert("جاري رفع الإيصال...");
+
+      const res = await fetch(SCRIPT_URL, {
+        method:"POST",
+        body
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      loadRequests();
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  input.click();
+}
+
+function money(value){
+  return Number(value || 0).toLocaleString("ar-AE", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  }) + " د.إ";
+}
+
+function translateStatus(status){
+  const map = {
+    Pending:"قيد الانتظار",
+    Approved:"موافق عليه",
+    Paid:"تم تسليم المبلغ",
+    Rejected:"مرفوض",
+    "Receipt Uploaded":"تم رفع الإيصال",
+    Closed:"مغلق"
+  };
+
+  return map[status] || status || "";
+}
+
+function sendSize(){
+  setTimeout(() => {
+    const h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    window.parent.postMessage({
+      type:"kalba-iframe-size",
+      height:h
+    }, "*");
+  }, 200);
+}
+
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("moneyUser");
+  if(saved){
+    currentUser = JSON.parse(saved);
+    showApp();
+  }
+
+  sendSize();
+});
+</script>
+
+</body>
+</html>
