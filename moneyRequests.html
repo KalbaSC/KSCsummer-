@@ -477,7 +477,27 @@ function showReceiptUpload(id){
   input.type = "file";
   input.accept = "image/*,.pdf";
 
-  input.onchange = () => {
+  input.style.display = "block";
+  input.style.margin = "20px auto";
+  input.style.maxWidth = "350px";
+
+  const uploadBox = document.createElement("div");
+  uploadBox.className = "card";
+  uploadBox.innerHTML = `
+    <h2 class="section-title">رفع الإيصال</h2>
+    <p style="text-align:center;color:#ddd;">اختر صورة أو PDF للإيصال</p>
+  `;
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "إلغاء";
+  closeBtn.onclick = () => uploadBox.remove();
+
+  uploadBox.appendChild(input);
+  uploadBox.appendChild(closeBtn);
+
+  document.querySelector(".container").appendChild(uploadBox);
+
+  input.onchange = async () => {
     const file = input.files[0];
     if(!file) return;
 
@@ -495,7 +515,7 @@ function showReceiptUpload(id){
       body.append("amountSpent", amountSpent);
       body.append("receiptNotes", notes);
 
-      alert("جاري رفع الإيصال...");
+      uploadBox.innerHTML = `<div class="status">⏳ جاري رفع الإيصال...</div>`;
 
       const res = await fetch(SCRIPT_URL, {
         method:"POST",
@@ -503,14 +523,18 @@ function showReceiptUpload(id){
       });
 
       const data = await res.json();
-      alert(data.message);
+
+      uploadBox.innerHTML = `<div class="status">${data.success ? "✅" : "❌"} ${data.message}</div>`;
+
       loadRequests();
+
+      setTimeout(() => uploadBox.remove(), 2000);
     };
 
     reader.readAsDataURL(file);
   };
 
-  input.click();
+  sendSize();
 }
 
 function money(value){
