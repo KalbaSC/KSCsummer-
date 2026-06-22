@@ -526,9 +526,17 @@ function showReceiptUpload(id){
 
       uploadBox.innerHTML = `<div class="status">${data.success ? "✅" : "❌"} ${data.message}</div>`;
 
-      loadRequests();
+loadRequests();
 
-      setTimeout(() => uploadBox.remove(), 2000);
+setTimeout(() => {
+  uploadBox.remove();
+
+  window.parent.postMessage({
+    type: "go-to-page",
+    page: "accounts.html"
+  }, "*");
+
+}, 2000);
     };
 
     reader.readAsDataURL(file);
