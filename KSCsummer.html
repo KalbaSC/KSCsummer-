@@ -202,6 +202,15 @@
 window.addEventListener('message', (e) => {
   if (!e.data) return;
 
+  if (e.data.type === 'go-to-page') {
+    const targetBtn = [...document.querySelectorAll('nav button')]
+      .find(btn => btn.getAttribute('onclick')?.includes(e.data.page));
+
+    if (targetBtn) {
+      loadPage(targetBtn, e.data.page);
+    }
+  }
+
   if (e.data.type === 'kalba-iframe-size') {
     const frame = document.getElementById('pageFrame');
     frame.style.height = (e.data.height + 2) + 'px';
