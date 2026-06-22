@@ -22,19 +22,14 @@
 
 body{
   margin:0;
-  min-height:100vh;
+  min-height:auto;
   font-family:'NotoKufiArabic', Arial, sans-serif;
   color:white;
-  background:
-    linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.82)),
-    url('black_and_yellow_grunge_background.jpg');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
+  background:transparent;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:25px;
+  padding:35px 20px;
 }
 
 .gallery-card{
@@ -152,6 +147,16 @@ p{
     font-size:17px;
   }
 }
+.badge{
+  display:inline-block;
+  padding:8px 18px;
+  border:1px solid rgba(244,231,51,.4);
+  border-radius:999px;
+  color:#f4e733;
+  background:rgba(244,231,51,.08);
+  margin-bottom:18px;
+  font-weight:bold;
+}  
 </style>
 </head>
 
@@ -159,14 +164,9 @@ p{
 
 <div class="gallery-card">
 
-  <div class="logo-row">
-    <img src="Picture3.png" alt="شعار الشارقة">
-    <img src="logo.png" alt="شعار نادي كلباء">
-  </div>
-
   <div class="icon">📸</div>
 
-  <h1>معرض الصور</h1>
+  <div class="badge">المركز الإعلامي</div>
 
   <p>
     استعرض صور فعاليات وأنشطة نادي كلباء الرياضي الثقافي
@@ -179,15 +179,15 @@ p{
     <div class="info-item">تحديث مستمر</div>
   </div>
 
-  <a class="gallery-btn"
-     href="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true"
-     target="_blank">
-    فتح معرض الصور
-  </a>
-
-  <div class="note">
-    سيتم فتح الصور في نافذة جديدة عبر MyCloud
-  </div>
+ <a class="gallery-btn"
+   href="https://os5.mycloud.com/public/04312f54-c1c0-416b-8e98-ebb10fa0ca97/folders/sus7f6bjnjm3jziysimoxwll?single=true"
+   target="_blank"
+   rel="noopener noreferrer">
+  استعراض الصور
+</a>
+<div class="note">
+  سيتم فتح الصور في نافذة جديدة عبر 
+</div>
 
 </div>
 
