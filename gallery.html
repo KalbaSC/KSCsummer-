@@ -34,12 +34,12 @@ body{
 
 .gallery-card{
   width:100%;
-  max-width:780px;
+  max-width:900px;
   text-align:center;
   background:rgba(0,0,0,.72);
   border:1px solid rgba(244,231,51,.55);
   border-radius:30px;
-  padding:55px 35px;
+  padding:70px 45px;
   box-shadow:
     0 0 35px rgba(244,231,51,.18),
     inset 0 0 45px rgba(255,255,255,.03);
@@ -190,6 +190,40 @@ p{
 </div>
 
 </div>
+<script>
+(() => {
+  const isEmbedded = new URLSearchParams(location.search).has('embed');
 
+  if (!isEmbedded) return;
+
+  function sendSize() {
+    const b = document.body;
+    const e = document.documentElement;
+
+    const h = Math.max(
+      b.scrollHeight,
+      b.offsetHeight,
+      e.scrollHeight,
+      e.offsetHeight
+    );
+
+    window.parent.postMessage({
+      type: 'kalba-iframe-size',
+      height: h
+    }, '*');
+  }
+
+  window.addEventListener('load', sendSize);
+
+  const observer = new MutationObserver(sendSize);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true
+  });
+
+  setTimeout(sendSize, 300);
+})();
+</script>
 </body>
 </html>
