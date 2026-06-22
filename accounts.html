@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حسابات المعسكر</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+@font-face {
+  font-family: 'NotoKufiArabic';
+  src: url('NotoKufiArabic.ttf') format('truetype');
+}
+
+:root{
+  --yellow:#f4e733;
+  --dark:#050505;
+  --card:rgba(0,0,0,.84);
+  --border:rgba(244,231,51,.45);
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'NotoKufiArabic', Arial, sans-serif;
+  color:white;
+  background:transparent;
+  padding:25px;
+}
+
+.container{
+  max-width:1180px;
+  margin:auto;
+  position:relative;
+  padding:18px;
+}
+
+.container::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  border-radius:30px;
+  backdrop-filter:blur(6px);
+  z-index:-1;
+}
+
+.page-title{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.page-title h1{
+  color:var(--yellow);
+  margin:0;
+  font-size:34px;
+}
+
+.page-title p{
+  color:#ddd;
+  margin-top:8px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-bottom:22px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:24px;
+  text-align:center;
+  box-shadow:0 0 20px rgba(244,231,51,.1);
+}
+
+.card i{
+  color:var(--yellow);
+  font-size:28px;
+  margin-bottom:12px;
+}
+
+.card h3{
+  margin:0 0 10px;
+  color:#ddd;
+  font-size:15px;
+}
+
+.card .value{
+  color:var(--yellow);
+  font-size:28px;
+  font-weight:bold;
+}
+
+.section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:22px;
+  box-shadow:0 0 20px rgba(244,231,51,.1);
+}
+
+.section-title{
+  color:var(--yellow);
+  text-align:center;
+  margin:0 0 18px;
+  font-size:22px;
+}
+
+.tools{
+  display:grid;
+  grid-template-columns:1fr 160px;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+input, button{
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  font-family:'NotoKufiArabic', Arial, sans-serif;
+  font-size:14px;
+}
+
+input{
+  background:#000;
+  border:1px solid #444;
+  color:white;
+}
+
+button{
+  border:none;
+  background:linear-gradient(135deg,#f4e733,#fff36a);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0 10px;
+}
+
+th{
+  color:var(--yellow);
+  padding:12px;
+  white-space:nowrap;
+}
+
+td{
+  background:rgba(30,30,30,.96);
+  padding:13px;
+  text-align:center;
+  color:white;
+}
+
+td:first-child{
+  border-radius:0 13px 13px 0;
+}
+
+td:last-child{
+  border-radius:13px 0 0 13px;
+}
+
+.amount{
+  color:var(--yellow);
+  font-weight:bold;
+}
+
+.loading{
+  text-align:center;
+  color:var(--yellow);
+  padding:25px;
+}
+
+@media(max-width:768px){
+  body{padding:10px;}
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .tools{
+    grid-template-columns:1fr;
+  }
+
+  .page-title h1{
+    font-size:25px;
+  }
+
+  table{
+    font-size:11px;
+  }
+
+  th,td{
+    padding:9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="page-title">
+    <h1>💰 حسابات المعسكر</h1>
+    <p>ملخص الدفعات والمصروفات الخاصة ببرنامج صيف الشارقة الرياضي</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <h3>إجمالي الدفعات</h3>
+      <div class="value" id="totalPayments">0</div>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <h3>إجمالي المصروفات</h3>
+      <div class="value" id="totalExpenses">0</div>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-wallet"></i>
+      <h3>المبلغ المتبقي</h3>
+      <div class="value" id="balance">0</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">📥 الدفعات المستلمة</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>المبلغ</th>
+            <th>طريقة الاستلام</th>
+          </tr>
+        </thead>
+        <tbody id="paymentsTable">
+          <tr><td colspan="3" class="loading">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">📤 المصروفات</h2>
+
+    <div class="tools">
+      <input type="text" id="searchInput" placeholder="ابحث باسم المادة أو التاريخ..." onkeyup="renderExpenses()">
+      <button onclick="loadAccounts()">تحديث</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم الفاتورة</th>
+            <th>التاريخ</th>
+            <th>المادة</th>
+            <th>مبلغ التحويل</th>
+            <th>العدد</th>
+            <th>المبلغ</th>
+          </tr>
+        </thead>
+        <tbody id="expensesTable">
+          <tr><td colspan="6" class="loading">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+let accountsData = {
+  payments: [],
+  expenses: []
+};
+
+function money(value){
+  return Number(value || 0).toLocaleString("ar-AE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + " د.إ";
+}
+
+async function loadAccounts(){
+  try{
+    const res = await fetch(SCRIPT_URL);
+    accountsData = await res.json();
+
+    document.getElementById("totalPayments").innerHTML =
+      money(accountsData.totalPayments);
+
+    document.getElementById("totalExpenses").innerHTML =
+      money(accountsData.totalExpenses);
+
+    document.getElementById("balance").innerHTML =
+      money(accountsData.balance);
+
+    renderPayments();
+    renderExpenses();
+
+    sendSizeToParent();
+  }catch(err){
+    console.error(err);
+    document.getElementById("paymentsTable").innerHTML =
+      `<tr><td colspan="3">حدث خطأ في تحميل البيانات</td></tr>`;
+    document.getElementById("expensesTable").innerHTML =
+      `<tr><td colspan="6">حدث خطأ في تحميل البيانات</td></tr>`;
+  }
+}
+
+function renderPayments(){
+  const tbody = document.getElementById("paymentsTable");
+
+  if(!accountsData.payments.length){
+    tbody.innerHTML = `<tr><td colspan="3">لا توجد دفعات</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = accountsData.payments.map(r => `
+    <tr>
+      <td>${r.date || ""}</td>
+      <td class="amount">${money(r.amount)}</td>
+      <td>${r.method || ""}</td>
+    </tr>
+  `).join("");
+}
+
+function renderExpenses(){
+  const tbody = document.getElementById("expensesTable");
+  const search = document.getElementById("searchInput").value.toLowerCase().trim();
+
+  const filtered = accountsData.expenses.filter(r => {
+    const text = `${r.invoice} ${r.date} ${r.item} ${r.amount}`.toLowerCase();
+    return text.includes(search);
+  });
+
+  if(!filtered.length){
+    tbody.innerHTML = `<tr><td colspan="6">لا توجد مصروفات</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td>${r.invoice || ""}</td>
+      <td>${r.date || ""}</td>
+      <td>${r.item || ""}</td>
+      <td class="amount">${r.transfer ? money(r.transfer) : "-"}</td>
+      <td>${r.quantity || ""}</td>
+      <td class="amount">${money(r.amount)}</td>
+    </tr>
+  `).join("");
+
+  sendSizeToParent();
+}
+
+function sendSizeToParent(){
+  setTimeout(() => {
+    const h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    window.parent.postMessage({
+      type: "kalba-iframe-size",
+      height: h
+    }, "*");
+  }, 100);
+}
+
+window.addEventListener("load", loadAccounts);
+</script>
+
+</body>
+</html>
