@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة حسابات المعسكر</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+@font-face{font-family:'NotoKufiArabic';src:url('NotoKufiArabic.ttf') format('truetype');}
+:root{--yellow:#f4e733;--yellow2:#fff36a;--bg:#050505;--card:rgba(0,0,0,.86);--soft:rgba(255,255,255,.08);--border:rgba(244,231,51,.42);--muted:#d8d8d8;--danger:#b71c1c;--ok:#2e7d32;--blue:#1565c0;}
+*{box-sizing:border-box}body{margin:0;padding:24px;background:transparent;color:#fff;font-family:'NotoKufiArabic',Arial,sans-serif}.hidden{display:none!important}.container{max-width:1220px;margin:auto;position:relative;padding:18px}.container::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.82),rgba(20,20,20,.68));border:1px solid rgba(244,231,51,.22);border-radius:32px;backdrop-filter:blur(8px);z-index:-1}.card,.section{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:24px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.25),0 0 22px rgba(244,231,51,.09)}.hero{text-align:center;padding:28px}.hero h1,.page-title h1{color:var(--yellow);font-size:34px;margin:0}.hero p,.page-title p{color:var(--muted);margin:9px 0 0}.login-box{max-width:450px;margin:44px auto}.mini-note{font-size:12px;color:#bbb;line-height:1.8;margin-top:12px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.user-pill{background:var(--soft);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px 15px}.user-pill strong{color:var(--yellow)}.tabs{display:flex;gap:10px;flex-wrap:wrap}.tab-btn,.logout,.secondary{width:auto;margin:0;padding:11px 16px;border-radius:14px}.tab-btn{background:#181818;color:#fff;border:1px solid rgba(255,255,255,.16)}.tab-btn.active{background:linear-gradient(135deg,var(--yellow),var(--yellow2));color:#000;border:0}.logout{background:#333;color:#fff}.section-title{color:var(--yellow);text-align:center;margin:0 0 18px;font-size:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.full{grid-column:span 2}label{color:var(--yellow);display:block;margin:10px 0 6px;font-weight:700}input,textarea,select,button{width:100%;padding:13px;border-radius:14px;font-family:'NotoKufiArabic',Arial,sans-serif;font-size:14px}input,textarea,select{background:#050505;border:1px solid #444;color:#fff;outline:0}input:focus,textarea:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(244,231,51,.12)}textarea{resize:vertical;min-height:88px}button{border:0;background:linear-gradient(135deg,var(--yellow),var(--yellow2));color:#000;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.05)}button:disabled{opacity:.6;cursor:not-allowed}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.summary-card{text-align:center}.summary-card i{color:var(--yellow);font-size:27px;margin-bottom:10px}.summary-card h3{margin:0 0 8px;color:#ddd;font-size:14px}.summary-card .value{color:var(--yellow);font-size:27px;font-weight:900}.tools{display:grid;grid-template-columns:1fr 160px;gap:12px;margin-bottom:12px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:separate;border-spacing:0 10px}th{color:var(--yellow);padding:11px;white-space:nowrap;font-size:13px}td{background:rgba(30,30,30,.96);padding:12px;text-align:center;color:#fff;vertical-align:middle}td:first-child{border-radius:0 13px 13px 0}td:last-child{border-radius:13px 0 0 13px}.amount{color:var(--yellow);font-weight:900}.badge{display:inline-block;padding:6px 11px;border-radius:999px;font-weight:800;font-size:12px}.Pending{background:#555}.Approved{background:var(--blue)}.Paid{background:var(--yellow);color:#000}.Rejected{background:var(--danger)}.ReceiptUploaded{background:var(--ok)}.Closed{background:#4a148c}.action-btn{width:auto;margin:3px;padding:8px 10px;border-radius:10px;font-size:12px}.reject{background:#8a1111;color:#fff}.dark-btn{background:#333;color:#fff}.link-btn{display:inline-block;color:#000;background:var(--yellow);padding:7px 12px;border-radius:9px;text-decoration:none;font-weight:900}.status{text-align:center;color:var(--yellow);margin-top:12px;font-weight:900}.toast{position:fixed;left:20px;bottom:20px;background:#111;border:1px solid var(--border);color:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 8px 30px rgba(0,0,0,.35);z-index:99}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:18px;z-index:90}.modal{max-width:520px;width:100%;background:#080808;border:1px solid var(--border);border-radius:24px;padding:24px}.modal-actions{display:flex;gap:10px;margin-top:12px}.modal-actions button{margin-top:0}.empty{color:#ddd;padding:22px!important}.loading{color:var(--yellow);padding:22px!important}@media(max-width:780px){body{padding:10px}.container{padding:10px}.hero h1,.page-title h1{font-size:25px}.grid,.cards,.tools{grid-template-columns:1fr}.full{grid-column:span 1}.topbar{align-items:stretch}.tab-btn,.logout,.secondary{width:100%}table{font-size:11px}th,td{padding:8px}.modal-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="loginView" class="card login-box">
+    <div class="hero">
+      <h1>بوابة حسابات المعسكر</h1>
+      <p>تسجيل الدخول للطلبات والحسابات حسب الصلاحية</p>
+    </div>
+    <label>اسم المستخدم</label><input type="text" id="username" autocomplete="username" placeholder="مثال: admin">
+    <label>كلمة المرور</label><input type="password" id="password" autocomplete="current-password" placeholder="••••">
+    <button id="loginBtn" onclick="login()">دخول</button>
+    <div id="loginStatus" class="status"></div>
+    <div class="mini-note">ملاحظة: حساب الموظف يرى طلباته فقط. حساب الإدارة يرى جميع الطلبات وحسابات المعسكر.</div>
+  </div>
+
+  <div id="appView" class="hidden">
+    <div class="card topbar">
+      <div class="user-pill">
+        <strong>مرحباً، <span id="userName"></span></strong>
+        <div id="userRole" style="color:#ccc;font-size:13px;margin-top:3px"></div>
+      </div>
+      <div class="tabs">
+        <button id="tabRequestsBtn" class="tab-btn active" onclick="showTab('requests')"><i class="fa-solid fa-list-check"></i> طلبات المبالغ</button>
+        <button id="tabAccountsBtn" class="tab-btn hidden" onclick="showTab('accounts')"><i class="fa-solid fa-wallet"></i> حسابات المعسكر</button>
+        <button class="logout" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+
+    <section id="requestsPage">
+      <div id="staffPanel" class="card hidden">
+        <h2 class="section-title">إرسال طلب مبلغ</h2>
+        <div class="grid">
+          <div><label>المبلغ المطلوب</label><input type="number" id="amount" min="1" placeholder="مثال: 150"></div>
+          <div><label>الغرض من المبلغ</label><input type="text" id="purpose" placeholder="مثال: شراء أدوات"></div>
+          <div class="full"><label>ملاحظات</label><textarea id="notes" placeholder="أي تفاصيل إضافية"></textarea></div>
+        </div>
+        <button id="submitRequestBtn" onclick="submitRequest()">إرسال الطلب</button>
+        <div id="requestStatus" class="status"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">📋 الطلبات</h2>
+        <div class="tools"><input type="text" id="requestSearch" placeholder="ابحث برقم الطلب أو الموظف أو الغرض..." onkeyup="renderRequests()"><button onclick="loadRequests()">تحديث البيانات</button></div>
+        <div class="table-wrap"><table><thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>الموظف</th><th>المبلغ</th><th>الغرض</th><th>الحالة</th><th>مبلغ الإيصال</th><th>الإيصال</th><th>الإجراء</th></tr></thead><tbody id="requestsTable"><tr><td colspan="9" class="loading">جاري التحميل...</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="accountsPage" class="hidden">
+      <div class="page-title"><h1>💰 حسابات المعسكر</h1><p>ملخص الدفعات والمصروفات الخاصة ببرنامج صيف الشارقة الرياضي</p></div>
+      <div class="cards">
+        <div class="card summary-card"><i class="fa-solid fa-money-bill-wave"></i><h3>إجمالي الدفعات</h3><div class="value" id="totalPayments">0</div></div>
+        <div class="card summary-card"><i class="fa-solid fa-cart-shopping"></i><h3>إجمالي المصروفات</h3><div class="value" id="totalExpenses">0</div></div>
+        <div class="card summary-card"><i class="fa-solid fa-wallet"></i><h3>المبلغ المتبقي</h3><div class="value" id="balance">0</div></div>
+      </div>
+      <div class="section"><h2 class="section-title">📥 الدفعات المستلمة</h2><div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>طريقة الاستلام</th></tr></thead><tbody id="paymentsTable"><tr><td colspan="3" class="loading">جاري التحميل...</td></tr></tbody></table></div></div>
+      <div class="section"><h2 class="section-title">📤 المصروفات</h2><div class="tools"><input type="text" id="accountsSearch" placeholder="ابحث باسم المادة أو التاريخ..." onkeyup="renderExpenses()"><button onclick="loadAccounts()">تحديث</button></div><div class="table-wrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>المادة</th><th>مبلغ التحويل</th><th>العدد</th><th>المبلغ</th></tr></thead><tbody id="expensesTable"><tr><td colspan="6" class="loading">جاري التحميل...</td></tr></tbody></table></div></div>
+    </section>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<div id="receiptModal" class="modal-backdrop hidden"><div class="modal"><h2 class="section-title">رفع الإيصال</h2><label>المبلغ المصروف</label><input type="number" id="receiptAmount" min="0" placeholder="مثال: 120"><label>ملاحظات الإيصال</label><textarea id="receiptNotes" placeholder="اختياري"></textarea><label>ملف الإيصال</label><input type="file" id="receiptFile" accept="image/*,.pdf"><div id="receiptStatus" class="status"></div><div class="modal-actions"><button onclick="uploadReceipt()">رفع الإيصال</button><button class="dark-btn" onclick="closeReceiptModal()">إلغاء</button></div></div></div>
+<script>
+const REQUESTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1eKwU4gL3mHqnZfp5Yo0eqznhP6G5kcf7w0qAwFUV6_OhNpcCox6IWM3CuQ0JMYx59w/exec";
+const ACCOUNTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3pLpMg8rwFywX-N8puqKeHTmZgvWA_h4pfcDM5KIAGJI79ArzULnePMIE-0Ja6z0pWg/exec";
+let currentUser=null, requests=[], accountsData={payments:[],expenses:[]}, selectedReceiptId=null, accountsLoaded=false;
+const $=id=>document.getElementById(id);
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2600)}
+function safe(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+async function apiGet(base,params={}){const url=base+'?'+new URLSearchParams(params);const res=await fetch(url);if(!res.ok)throw new Error('Network error');return res.json()}
+async function apiPost(base,params={}){const res=await fetch(base,{method:'POST',body:new URLSearchParams(params)});if(!res.ok)throw new Error('Network error');return res.json()}
+async function login(){const username=$('username').value.trim(),password=$('password').value.trim(),status=$('loginStatus');if(!username||!password){status.textContent='يرجى إدخال اسم المستخدم وكلمة المرور';return}$('loginBtn').disabled=true;status.textContent='جاري التحقق...';try{const data=await apiGet(REQUESTS_SCRIPT_URL,{action:'login',username,password});if(!data.success){status.textContent='❌ '+(data.message||'فشل تسجيل الدخول');return}currentUser=data;localStorage.setItem('campPortalUser',JSON.stringify(currentUser));showApp()}catch(e){status.textContent='حدث خطأ في الاتصال'}finally{$('loginBtn').disabled=false;sendSize()}}
+function showApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userName').textContent=currentUser.name||currentUser.username;$('userRole').textContent=currentUser.role==='admin'?'حساب الإدارة - جميع الصلاحيات':'حساب موظف - الطلبات الخاصة بك فقط';$('staffPanel').classList.toggle('hidden',currentUser.role!=='staff');$('tabAccountsBtn').classList.toggle('hidden',currentUser.role!=='admin');showTab('requests');loadRequests()}
+function logout(){localStorage.removeItem('campPortalUser');location.reload()}
+function showTab(tab){$('requestsPage').classList.toggle('hidden',tab!=='requests');$('accountsPage').classList.toggle('hidden',tab!=='accounts');$('tabRequestsBtn').classList.toggle('active',tab==='requests');$('tabAccountsBtn').classList.toggle('active',tab==='accounts');if(tab==='accounts'&&currentUser.role==='admin'&&!accountsLoaded)loadAccounts();sendSize()}
+async function submitRequest(){const amount=$('amount').value,purpose=$('purpose').value.trim(),notes=$('notes').value.trim(),status=$('requestStatus');if(!amount||Number(amount)<=0||!purpose){status.textContent='يرجى إدخال مبلغ صحيح والغرض.';return}$('submitRequestBtn').disabled=true;status.textContent='جاري إرسال الطلب...';try{const data=await apiPost(REQUESTS_SCRIPT_URL,{action:'requestMoney',username:currentUser.username,name:currentUser.name,amount,purpose,notes});status.textContent=(data.success?'✅ ':'❌ ')+(data.message||'');if(data.success){$('amount').value='';$('purpose').value='';$('notes').value='';loadRequests()}}catch(e){status.textContent='حدث خطأ أثناء إرسال الطلب'}finally{$('submitRequestBtn').disabled=false;sendSize()}}
+async function loadRequests(){if(!currentUser)return;$('requestsTable').innerHTML='<tr><td colspan="9" class="loading">جاري التحميل...</td></tr>';try{const data=await apiGet(REQUESTS_SCRIPT_URL,{action:'list',username:currentUser.username,role:currentUser.role});requests=(data.data||[]).slice().reverse();renderRequests()}catch(e){$('requestsTable').innerHTML='<tr><td colspan="9" class="empty">حدث خطأ في تحميل الطلبات</td></tr>'}sendSize()}
+function renderRequests(){const tbody=$('requestsTable'),q=($('requestSearch').value||'').toLowerCase().trim();const filtered=requests.filter(r=>`${r.ID} ${r['Staff Name']} ${r.Purpose} ${r.Status}`.toLowerCase().includes(q));if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" class="empty">لا توجد طلبات</td></tr>';return}tbody.innerHTML=filtered.map(r=>{const statusClass=String(r.Status||'').replace(/\s/g,'');const link=r['Receipt Link']?`<a class="link-btn" href="${safe(r['Receipt Link'])}" target="_blank">عرض</a>`:'-';return `<tr><td>${safe(r.ID)}</td><td>${safe(formatDate(r.Timestamp||r.Date||''))}</td><td>${safe(r['Staff Name']||'')}</td><td class="amount">${money(r['Amount Requested'])}</td><td>${safe(r.Purpose||'')}</td><td><span class="badge ${statusClass}">${translateStatus(r.Status)}</span></td><td>${r['Amount Spent']?money(r['Amount Spent']):'-'}</td><td>${link}</td><td>${actionsHTML(r)}</td></tr>`}).join('');sendSize()}
+function actionsHTML(r){if(currentUser.role==='admin')return `<button class="action-btn" onclick="changeStatus('${safe(r.ID)}','Approved')">موافقة</button><button class="action-btn" onclick="changeStatus('${safe(r.ID)}','Paid')">تم التسليم</button><button class="action-btn reject" onclick="changeStatus('${safe(r.ID)}','Rejected')">رفض</button><button class="action-btn dark-btn" onclick="changeStatus('${safe(r.ID)}','Closed')">إغلاق</button>`;if(['Paid','Approved'].includes(r.Status))return `<button class="action-btn" onclick="openReceiptModal('${safe(r.ID)}')">رفع إيصال</button>`;return '-'}
+async function changeStatus(id,status){const adminNote=prompt('ملاحظة الإدارة اختياري:','')||'';try{const data=await apiPost(REQUESTS_SCRIPT_URL,{action:'updateStatus',id,status,adminNote});toast(data.message||'تم التحديث');loadRequests()}catch(e){toast('حدث خطأ أثناء تحديث الحالة')}}
+function openReceiptModal(id){selectedReceiptId=id;$('receiptAmount').value='';$('receiptNotes').value='';$('receiptFile').value='';$('receiptStatus').textContent='';$('receiptModal').classList.remove('hidden');sendSize()}
+function closeReceiptModal(){$('receiptModal').classList.add('hidden');selectedReceiptId=null;sendSize()}
+async function uploadReceipt(){const amount=$('receiptAmount').value,notes=$('receiptNotes').value.trim(),file=$('receiptFile').files[0],status=$('receiptStatus');if(!selectedReceiptId||!amount||Number(amount)<0||!file){status.textContent='يرجى إدخال المبلغ واختيار ملف الإيصال';return}status.textContent='جاري تجهيز الملف...';const reader=new FileReader();reader.onload=async e=>{try{status.textContent='جاري رفع الإيصال...';const base64=e.target.result.split(',')[1];const data=await apiPost(REQUESTS_SCRIPT_URL,{action:'uploadReceipt',id:selectedReceiptId,fileName:file.name,mimeType:file.type||'application/octet-stream',fileData:base64,amountSpent:amount,receiptNotes:notes});status.textContent=(data.success?'✅ ':'❌ ')+(data.message||'');if(data.success){await loadRequests();setTimeout(()=>{closeReceiptModal();if(currentUser.role==='admin'){showTab('accounts');loadAccounts()}},1200)}}catch(err){status.textContent='حدث خطأ أثناء رفع الإيصال'}};reader.readAsDataURL(file)}
+async function loadAccounts(){if(currentUser?.role!=='admin')return;$('paymentsTable').innerHTML='<tr><td colspan="3" class="loading">جاري التحميل...</td></tr>';$('expensesTable').innerHTML='<tr><td colspan="6" class="loading">جاري التحميل...</td></tr>';try{accountsData=await apiGet(ACCOUNTS_SCRIPT_URL);accountsLoaded=true;$('totalPayments').textContent=money(accountsData.totalPayments);$('totalExpenses').textContent=money(accountsData.totalExpenses);$('balance').textContent=money(accountsData.balance);renderPayments();renderExpenses()}catch(e){$('paymentsTable').innerHTML='<tr><td colspan="3" class="empty">حدث خطأ في تحميل البيانات</td></tr>';$('expensesTable').innerHTML='<tr><td colspan="6" class="empty">حدث خطأ في تحميل البيانات</td></tr>'}sendSize()}
+function renderPayments(){const tbody=$('paymentsTable');const rows=accountsData.payments||[];if(!rows.length){tbody.innerHTML='<tr><td colspan="3" class="empty">لا توجد دفعات</td></tr>';return}tbody.innerHTML=rows.map(r=>`<tr><td>${safe(r.date)}</td><td class="amount">${money(r.amount)}</td><td>${safe(r.method)}</td></tr>`).join('')}
+function renderExpenses(){const tbody=$('expensesTable'),q=($('accountsSearch').value||'').toLowerCase().trim();const rows=(accountsData.expenses||[]).filter(r=>`${r.invoice} ${r.date} ${r.item} ${r.amount}`.toLowerCase().includes(q));if(!rows.length){tbody.innerHTML='<tr><td colspan="6" class="empty">لا توجد مصروفات</td></tr>';return}tbody.innerHTML=rows.map(r=>`<tr><td>${safe(r.invoice)}</td><td>${safe(r.date)}</td><td>${safe(r.item)}</td><td class="amount">${r.transfer?money(r.transfer):'-'}</td><td>${safe(r.quantity||'')}</td><td class="amount">${money(r.amount)}</td></tr>`).join('');sendSize()}
+function money(v){return Number(v||0).toLocaleString('ar-AE',{minimumFractionDigits:2,maximumFractionDigits:2})+' د.إ'}
+function translateStatus(s){return {Pending:'قيد الانتظار',Approved:'موافق عليه',Paid:'تم تسليم المبلغ',Rejected:'مرفوض','Receipt Uploaded':'تم رفع الإيصال',Closed:'مغلق'}[s]||safe(s||'')}
+function formatDate(v){if(!v)return '';if(v instanceof Date)return v.toISOString().slice(0,10);return String(v).slice(0,10)}
+function sendSize(){setTimeout(()=>{const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);window.parent.postMessage({type:'kalba-iframe-size',height:h},'*')},150)}
+window.addEventListener('load',()=>{try{const saved=localStorage.getItem('campPortalUser');if(saved){currentUser=JSON.parse(saved);showApp()}}catch(e){localStorage.removeItem('campPortalUser')}sendSize()});
+window.addEventListener('resize',sendSize);
+</script>
+</body>
+</html>
