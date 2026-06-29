@@ -1955,14 +1955,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const publicRankings = urlParams.get('view') === 'rankings';
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (isInIframe || publicRankings) {
+  if (publicRankings) {
     const loginView = document.getElementById('loginView');
     const coachPortal = document.getElementById('coachPortal');
 
     if (loginView) loginView.classList.add('hidden');
     if (coachPortal) coachPortal.classList.remove('hidden');
 
-    currentCoach = null; 
+    currentCoach = null;
     setTimeout(() => showTab('rankings'), 100);
   }
 });
