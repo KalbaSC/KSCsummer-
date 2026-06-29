@@ -212,13 +212,13 @@ window.addEventListener('message', (e) => {
 
   if (e.data.type === 'kalba-iframe-size') {
     const frame = document.getElementById('pageFrame');
-    const frame = document.getElementById('pageFrame');
-const newHeight = e.data.height + 2;
-const currentHeight = parseInt(frame.style.height || 0);
 
-if (Math.abs(newHeight - currentHeight) > 50) {
-  frame.style.height = newHeight + 'px';
-}
+    const newHeight = e.data.height + 2;
+    const currentHeight = parseInt(frame.style.height || frame.offsetHeight || 0);
+
+    if (Math.abs(newHeight - currentHeight) > 80) {
+      frame.style.height = newHeight + 'px';
+    }
   }
 
   if (e.data.type === 'open-drive-file') {
