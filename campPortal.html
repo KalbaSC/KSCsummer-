@@ -150,9 +150,9 @@ function closeReceiptModal(){$('receiptModal').classList.add('hidden');selectedR
       : '❌ ' + data.message;
 
     if(data.success){
-      $('paymentDate').value = '';
-      $('paymentAmount').value = '';
-      $('paymentMethod').value = '';
+$('paymentDate').value = new Date().toISOString().split('T')[0];
+$('paymentAmount').value = '';
+$('paymentMethod').selectedIndex = 0;
 
       accountsLoaded = false;
       await loadAccounts();
@@ -246,7 +246,25 @@ function formatDate(v){if(!v)return '';if(v instanceof Date)return v.toISOString
   }, '*');
 }
   
-window.addEventListener('load',()=>{try{const saved=localStorage.getItem('campPortalUser');if(saved){currentUser=JSON.parse(saved);showApp()}}catch(e){localStorage.removeItem('campPortalUser')}sendSize()});
+window.addEventListener('load', () => {
+
+  $('paymentDate').value = new Date().toISOString().split('T')[0];
+
+  try{
+    const saved = localStorage.getItem('campPortalUser');
+
+    if(saved){
+      currentUser = JSON.parse(saved);
+      showApp();
+    }
+
+  }catch(e){
+    localStorage.removeItem('campPortalUser');
+  }
+
+  sendSize();
+});
+  
 window.addEventListener('resize',sendSize);
 </script>
 </body>
