@@ -523,15 +523,26 @@ function showReceiptUpload(id){
       body.append("receiptNotes", notes);
 
       uploadBox.innerHTML = `<div class="status">⏳ جاري رفع الإيصال...</div>`;
+const res = await fetch(SCRIPT_URL, {
+  method: "POST",
+  body
+});
 
-      const res = await fetch(SCRIPT_URL, {
-        method:"POST",
-        body
-      });
+const data = await res.json();
 
-      const data = await res.json();
+uploadBox.innerHTML = `<div class="status">${data.success ? "✅" : "❌"} ${data.message}</div>`;
 
-      uploadBox.innerHTML = `<div class="status">${data.success ? "✅" : "❌"} ${data.message}</div>`;
+if (data.success) {
+  await fetch("https://script.google.com/macros/s/AKfycby3pLpMg8rwFywX-N8puqKeHTmZgvWA_h4pfcDM5KIAGJI79ArzULnePMIE-0Ja6z0pWg/exec", {
+    method: "POST",
+    body: new URLSearchParams({
+      action: "addExpense",
+      invoice: id,
+      item: "إيصال طلب مبلغ",
+      amount: amountSpent
+    })
+  });
+}
 
 loadRequests();
 
