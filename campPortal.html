@@ -154,13 +154,26 @@ async function uploadReceipt(){
 
   reader.readAsDataURL(file);
 }
+  
 async function loadAccounts(){if(currentUser?.role!=='admin')return;$('paymentsTable').innerHTML='<tr><td colspan="3" class="loading">جاري التحميل...</td></tr>';$('expensesTable').innerHTML='<tr><td colspan="6" class="loading">جاري التحميل...</td></tr>';try{accountsData=await apiGet(ACCOUNTS_SCRIPT_URL);accountsLoaded=true;$('totalPayments').textContent=money(accountsData.totalPayments);$('totalExpenses').textContent=money(accountsData.totalExpenses);$('balance').textContent=money(accountsData.balance);renderPayments();renderExpenses()}catch(e){$('paymentsTable').innerHTML='<tr><td colspan="3" class="empty">حدث خطأ في تحميل البيانات</td></tr>';$('expensesTable').innerHTML='<tr><td colspan="6" class="empty">حدث خطأ في تحميل البيانات</td></tr>'}sendSize()}
 function renderPayments(){const tbody=$('paymentsTable');const rows=accountsData.payments||[];if(!rows.length){tbody.innerHTML='<tr><td colspan="3" class="empty">لا توجد دفعات</td></tr>';return}tbody.innerHTML=rows.map(r=>`<tr><td>${safe(r.date)}</td><td class="amount">${money(r.amount)}</td><td>${safe(r.method)}</td></tr>`).join('')}
 function renderExpenses(){const tbody=$('expensesTable'),q=($('accountsSearch').value||'').toLowerCase().trim();const rows=(accountsData.expenses||[]).filter(r=>`${r.invoice} ${r.date} ${r.item} ${r.amount}`.toLowerCase().includes(q));if(!rows.length){tbody.innerHTML='<tr><td colspan="6" class="empty">لا توجد مصروفات</td></tr>';return}tbody.innerHTML=rows.map(r=>`<tr><td>${safe(r.invoice)}</td><td>${safe(r.date)}</td><td>${safe(r.item)}</td><td class="amount">${r.transfer?money(r.transfer):'-'}</td><td>${safe(r.quantity||'')}</td><td class="amount">${money(r.amount)}</td></tr>`).join('');sendSize()}
 function money(v){return Number(v||0).toLocaleString('ar-AE',{minimumFractionDigits:2,maximumFractionDigits:2})+' د.إ'}
 function translateStatus(s){return {Pending:'قيد الانتظار',Approved:'موافق عليه',Paid:'تم تسليم المبلغ',Rejected:'مرفوض','Receipt Uploaded':'تم رفع الإيصال',Closed:'مغلق'}[s]||safe(s||'')}
 function formatDate(v){if(!v)return '';if(v instanceof Date)return v.toISOString().slice(0,10);return String(v).slice(0,10)}
-function sendSize(){setTimeout(()=>{const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);window.parent.postMessage({type:'kalba-iframe-size',height:h},'*')},150)}
+
+  function sendSize(){
+  const h = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+
+  window.parent.postMessage({
+    type:'kalba-iframe-size',
+    height:h
+  }, '*');
+}
+  
 window.addEventListener('load',()=>{try{const saved=localStorage.getItem('campPortalUser');if(saved){currentUser=JSON.parse(saved);showApp()}}catch(e){localStorage.removeItem('campPortalUser')}sendSize()});
 window.addEventListener('resize',sendSize);
 </script>
