@@ -223,12 +223,14 @@ async function uploadReceipt(){
         return;
       }
 
-      await apiPost(ACCOUNTS_SCRIPT_URL, {
-    action: "addExpense",
-    invoice: id,
-    amount: amountSpent,
-    item: request.purpose
-      });
+const selectedRequest = requests.find(r => r.ID === selectedReceiptId);
+
+await apiPost(ACCOUNTS_SCRIPT_URL, {
+  action: "addExpense",
+  invoice: selectedReceiptId,
+  amount: amount,
+  item: selectedRequest ? selectedRequest.Purpose : "إيصال طلب"
+});
 
       status.textContent = '✅ تم رفع الإيصال وإضافته للمصروفات';
 
