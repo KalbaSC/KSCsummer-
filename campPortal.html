@@ -130,7 +130,7 @@
 <script>
 const REQUESTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1eKwU4gL3mHqnZfp5Yo0eqznhP6G5kcf7w0qAwFUV6_OhNpcCox6IWM3CuQ0JMYx59w/exec";
 const ACCOUNTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3pLpMg8rwFywX-N8puqKeHTmZgvWA_h4pfcDM5KIAGJI79ArzULnePMIE-0Ja6z0pWg/exec";
-let currentUser=null, requests=[], accountsData={payments:[],expenses:[]}, selectedReceiptId=null, accountsLoaded=false;
+let currentUser=null, requests=[], accountsData={payments:[],expenses:[]}, selectedReceiptId=null, selectedReceiptPurpose="", accountsLoaded=false;
 const $=id=>document.getElementById(id);
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2600)}
 function safe(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
@@ -145,7 +145,22 @@ async function loadRequests(){if(!currentUser)return;$('requestsTable').innerHTM
 function renderRequests(){const tbody=$('requestsTable'),q=($('requestSearch').value||'').toLowerCase().trim();const filtered=requests.filter(r=>`${r.ID} ${r['Staff Name']} ${r.Purpose} ${r.Status}`.toLowerCase().includes(q));if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" class="empty">لا توجد طلبات</td></tr>';return}tbody.innerHTML=filtered.map(r=>{const statusClass=String(r.Status||'').replace(/\s/g,'');const link=r['Receipt Link']?`<a class="link-btn" href="${safe(r['Receipt Link'])}" target="_blank">عرض</a>`:'-';return `<tr><td>${safe(r.ID)}</td><td>${safe(formatDate(r.Timestamp||r.Date||''))}</td><td>${safe(r['Staff Name']||'')}</td><td class="amount">${money(r['Amount Requested'])}</td><td>${safe(r.Purpose||'')}</td><td><span class="badge ${statusClass}">${translateStatus(r.Status)}</span></td><td>${r['Amount Spent']?money(r['Amount Spent']):'-'}</td><td>${link}</td><td>${actionsHTML(r)}</td></tr>`}).join('');sendSize()}
 function actionsHTML(r){if(currentUser.role==='admin')return `<button class="action-btn" onclick="changeStatus('${safe(r.ID)}','Approved')">موافقة</button><button class="action-btn" onclick="changeStatus('${safe(r.ID)}','Paid')">تم التسليم</button><button class="action-btn reject" onclick="changeStatus('${safe(r.ID)}','Rejected')">رفض</button><button class="action-btn dark-btn" onclick="changeStatus('${safe(r.ID)}','Closed')">إغلاق</button>`;if(['Paid','Approved'].includes(r.Status))return `<button class="action-btn" onclick="openReceiptModal('${safe(r.ID)}')">رفع إيصال</button>`;return '-'}
 async function changeStatus(id,status){const adminNote=prompt('ملاحظة الإدارة اختياري:','')||'';try{const data=await apiPost(REQUESTS_SCRIPT_URL,{action:'updateStatus',id,status,adminNote});toast(data.message||'تم التحديث');loadRequests()}catch(e){toast('حدث خطأ أثناء تحديث الحالة')}}
-function openReceiptModal(id){selectedReceiptId=id;$('receiptAmount').value='';$('receiptNotes').value='';$('receiptFile').value='';$('receiptStatus').textContent='';$('receiptModal').classList.remove('hidden');sendSize()}
+
+  function openReceiptModal(id){
+  selectedReceiptId = id;
+
+  const selectedRequest = requests.find(r => r.ID === id);
+  selectedReceiptPurpose = selectedRequest ? (selectedRequest.Purpose || "") : "";
+
+  $('receiptAmount').value = '';
+  $('receiptNotes').value = '';
+  $('receiptFile').value = '';
+  $('receiptStatus').textContent = '';
+  $('receiptModal').classList.remove('hidden');
+
+  sendSize();
+}
+  
 function closeReceiptModal(){$('receiptModal').classList.add('hidden');selectedReceiptId=null;sendSize()}
  
   async function addPayment(){
@@ -223,15 +238,12 @@ async function uploadReceipt(){
         return;
       }
 
-const selectedRequest = requests.find(r => r.ID === selectedReceiptId);
-
 await apiPost(ACCOUNTS_SCRIPT_URL, {
   action: "addExpense",
   invoice: selectedReceiptId,
   amount: amount,
-  item: selectedRequest ? selectedRequest.Purpose : "إيصال طلب"
+  item: selectedReceiptPurpose || "إيصال طلب"
 });
-
       status.textContent = '✅ تم رفع الإيصال وإضافته للمصروفات';
 
       accountsLoaded = false;
