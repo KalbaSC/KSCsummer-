@@ -65,6 +65,31 @@
         <div class="card summary-card"><i class="fa-solid fa-wallet"></i><h3>المبلغ المتبقي</h3><div class="value" id="balance">0</div></div>
       </div>
       <div class="section"><h2 class="section-title">📥 الدفعات المستلمة</h2><div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>طريقة الاستلام</th></tr></thead><tbody id="paymentsTable"><tr><td colspan="3" class="loading">جاري التحميل...</td></tr></tbody></table></div></div>
+
+      <div class="section">
+  <h2 class="section-title">➕ إضافة دفعة جديدة</h2>
+
+  <div class="grid">
+    <div>
+      <label>التاريخ</label>
+      <input type="date" id="paymentDate">
+    </div>
+
+    <div>
+      <label>المبلغ</label>
+      <input type="number" id="paymentAmount" placeholder="مثال: 1000">
+    </div>
+
+    <div class="full">
+      <label>طريقة الاستلام</label>
+      <input type="text" id="paymentMethod" placeholder="مثال: تحويل بنكي">
+    </div>
+  </div>
+
+  <button onclick="addPayment()">إضافة الدفعة</button>
+  <div id="paymentStatus" class="status"></div>
+</div>
+      
       <div class="section"><h2 class="section-title">📤 المصروفات</h2><div class="tools"><input type="text" id="accountsSearch" placeholder="ابحث باسم المادة أو التاريخ..." onkeyup="renderExpenses()"><button onclick="loadAccounts()">تحديث</button></div><div class="table-wrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>المادة</th><th>مبلغ التحويل</th><th>العدد</th><th>المبلغ</th></tr></thead><tbody id="expensesTable"><tr><td colspan="6" class="loading">جاري التحميل...</td></tr></tbody></table></div></div>
     </section>
   </div>
@@ -91,6 +116,46 @@ function actionsHTML(r){if(currentUser.role==='admin')return `<button class="act
 async function changeStatus(id,status){const adminNote=prompt('ملاحظة الإدارة اختياري:','')||'';try{const data=await apiPost(REQUESTS_SCRIPT_URL,{action:'updateStatus',id,status,adminNote});toast(data.message||'تم التحديث');loadRequests()}catch(e){toast('حدث خطأ أثناء تحديث الحالة')}}
 function openReceiptModal(id){selectedReceiptId=id;$('receiptAmount').value='';$('receiptNotes').value='';$('receiptFile').value='';$('receiptStatus').textContent='';$('receiptModal').classList.remove('hidden');sendSize()}
 function closeReceiptModal(){$('receiptModal').classList.add('hidden');selectedReceiptId=null;sendSize()}
+ 
+  async function addPayment(){
+  const date = $('paymentDate').value;
+  const amount = $('paymentAmount').value;
+  const method = $('paymentMethod').value.trim();
+  const status = $('paymentStatus');
+
+  if(!date || !amount || !method){
+    status.textContent = 'يرجى إدخال التاريخ والمبلغ وطريقة الاستلام';
+    return;
+  }
+
+  status.textContent = 'جاري إضافة الدفعة...';
+
+  try{
+    const data = await apiPost(ACCOUNTS_SCRIPT_URL, {
+      action: 'addPayment',
+      date,
+      amount,
+      method
+    });
+
+    status.textContent = data.success
+      ? '✅ ' + data.message
+      : '❌ ' + data.message;
+
+    if(data.success){
+      $('paymentDate').value = '';
+      $('paymentAmount').value = '';
+      $('paymentMethod').value = '';
+
+      accountsLoaded = false;
+      await loadAccounts();
+    }
+
+  }catch(e){
+    status.textContent = 'حدث خطأ أثناء إضافة الدفعة';
+  }
+}
+  
 async function uploadReceipt(){
   const amount = $('receiptAmount').value;
   const notes = $('receiptNotes').value.trim();
