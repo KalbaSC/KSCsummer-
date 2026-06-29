@@ -902,12 +902,7 @@ function formatDate(dateStr) {
         sessionDateInput.valueAsDate = new Date();
       }
       setupEventListeners();
-      const savedUsername = localStorage.getItem('coachUsername');
-      const savedPassword = localStorage.getItem('coachPassword');
-      if (savedUsername && savedPassword) {
-        document.getElementById('username').value = savedUsername;
-        document.getElementById('password').value = savedPassword;
-      }
+
     });
 
     function setupEventListeners() {
@@ -992,10 +987,8 @@ async function handleLogin(e) {
           activity: coaches[username].activity
         };
 
-        if (document.getElementById('rememberMe').checked) {
-          localStorage.setItem('coachUsername', username);
-          localStorage.setItem('coachPassword', password);
-        }
+    localStorage.removeItem('coachUsername');
+    localStorage.removeItem('coachPassword');
 
         const key = `playerEvaluations_${username}`;
         evaluations = JSON.parse(localStorage.getItem(key)) || [];
