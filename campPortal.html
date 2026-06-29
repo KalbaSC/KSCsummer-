@@ -66,10 +66,11 @@
       </div>
       <div class="section"><h2 class="section-title">📥 الدفعات المستلمة</h2><div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>طريقة الاستلام</th></tr></thead><tbody id="paymentsTable"><tr><td colspan="3" class="loading">جاري التحميل...</td></tr></tbody></table></div></div>
 
-      <div class="section">
+<div class="section">
   <h2 class="section-title">➕ إضافة دفعة جديدة</h2>
 
   <div class="grid">
+
     <div>
       <label>التاريخ</label>
       <input type="date" id="paymentDate">
@@ -82,8 +83,14 @@
 
     <div class="full">
       <label>طريقة الاستلام</label>
-      <input type="text" id="paymentMethod" placeholder="مثال: تحويل بنكي">
+
+      <select id="paymentMethod">
+        <option value="">اختر طريقة الاستلام</option>
+        <option value="تحويل بنكي">تحويل بنكي</option>
+        <option value="شيك">شيك</option>
+      </select>
     </div>
+
   </div>
 
   <button onclick="addPayment()">إضافة الدفعة</button>
