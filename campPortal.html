@@ -224,10 +224,10 @@ async function uploadReceipt(){
       }
 
       await apiPost(ACCOUNTS_SCRIPT_URL, {
-        action:'addExpense',
-        invoice:selectedReceiptId,
-        item:'إيصال طلب مبلغ',
-        amount:amount
+    action: "addExpense",
+    invoice: id,
+    amount: amountSpent,
+    item: request.purpose
       });
 
       status.textContent = '✅ تم رفع الإيصال وإضافته للمصروفات';
