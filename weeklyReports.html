@@ -441,14 +441,23 @@ td:last-child {
     padding:8px;
   }
 
-  .view-btn,
-  .download-btn{
-    display:block;
-    width:100%;
-    margin:5px 0;
-    text-align:center;
-  }
+.view-btn,
+.download-btn{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
 
+    width:92px;
+    height:42px;
+
+    margin:4px;
+    border-radius:10px;
+}
+
+  td:last-child{
+      white-space:nowrap;
+  }
+  
   .file-modal{
     padding:10px;
   }
