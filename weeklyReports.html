@@ -376,14 +376,43 @@ td:last-child {
 
 <body>
 
-<div class="container">
+<div id="loginView" class="container" style="max-width:450px;">
+
+<div class="form-box">
+<h2 class="section-title">
+🔐 تسجيل الدخول
+</h2>
+
+<label>اسم المستخدم</label>
+<input id="loginUsername" type="text">
+
+<label>كلمة المرور</label>
+<input id="loginPassword" type="password">
+
+<button onclick="loginWeekly()">
+دخول
+</button>
+
+<div id="loginStatus" class="status"></div>
+
+</div>
+</div>
+
+<div class="container" id="reportsApp" style="display:none;">
  <div class="page-title">
   <h2>📄 التقارير الأسبوعية الداخلية</h2>
+   <button
+style="width:170px;margin:20px auto;display:block;"
+onclick="logoutWeekly()">
+
+تسجيل الخروج
+
+</button>
   <p>قم بتعبئة بيانات التقرير ورفع الملف الأسبوعي</p>
 </div>
 
-  <div class="form-box">
-<h3 class="section-title">
+  <div class="form-box" id="uploadReportBox">
+  <h3 class="section-title">
   <i class="fa-solid fa-file-arrow-up"></i>
   رفع تقرير أسبوعي
 </h3>
@@ -477,10 +506,69 @@ td:last-child {
   </div>
 
 <script>
+  const WEEKLY_USERS = {
+  admin:   { password: "1234", role: "admin" },
+  staff:   { password: "1234", role: "staff" },
+  manager: { password: "1234", role: "manager" }
+};
+  
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt35kU8xR_-hUrPXGGQT80jk17KfG1k3SR15Ei5w26ffc7s5M3wt7Fh4Yh3g-KUyKq/exec";
 
 let reportsData = [];
 
+function loginWeekly(){
+
+    const username =
+    document.getElementById("loginUsername").value.trim();
+
+    const password =
+    document.getElementById("loginPassword").value.trim();
+
+    const status =
+    document.getElementById("loginStatus");
+
+    const user = WEEKLY_USERS[username];
+
+    if(!user || user.password !== password){
+        status.innerHTML =
+        "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+        return;
+    }
+
+    localStorage.setItem(
+        "weeklyUser",
+        JSON.stringify({
+            username,
+            role:user.role
+        })
+    );
+
+    document.getElementById("loginView").style.display="none";
+    document.getElementById("reportsApp").style.display="block";
+
+    applyWeeklyRole(user.role);
+
+    loadReports();
+}
+
+function applyWeeklyRole(role){
+
+    if(role==="manager"){
+        document.getElementById("uploadReportBox").style.display="none";
+    }else{
+        document.getElementById("uploadReportBox").style.display="block";
+    }
+
+}
+
+function logoutWeekly(){
+
+    localStorage.removeItem("weeklyUser");
+
+    location.reload();
+
+}
+  
 async function uploadReport() {
   const week = document.getElementById("week").value;
   const activity = document.getElementById("activity").value;
@@ -598,7 +686,26 @@ function renderReports() {
   `).join("");
 }
 
-document.addEventListener("DOMContentLoaded", loadReports);
+document.addEventListener("DOMContentLoaded",()=>{
+
+    const saved =
+    localStorage.getItem("weeklyUser");
+
+    if(saved){
+
+        const user = JSON.parse(saved);
+
+        document.getElementById("loginView").style.display="none";
+        document.getElementById("reportsApp").style.display="block";
+
+        applyWeeklyRole(user.role);
+
+        loadReports();
+
+    }
+
+});
+  
 </script>
 
 <script>
