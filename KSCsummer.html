@@ -161,10 +161,63 @@
   display:block;
 }
 
+.mobile-menu-btn{
+  display:none;
+}
+
 @media(max-width:768px){
-  nav{
+  body{
+    background-attachment:scroll;
+    overflow-x:hidden;
+  }
+
+  .header-right{
+    padding:10px 8px;
+    gap:8px;
+  }
+
+  .header-right img.logo{
+    height:44px !important;
+  }
+
+  .divider{
+    height:38px;
+  }
+
+  .arabic-name{
+    font-size:15px;
+  }
+
+  .english-name{
+    font-size:11px;
+  }
+
+  .mobile-menu-btn{
     display:block;
+    width:92%;
+    margin:12px auto 8px;
+    padding:14px;
+    border:0;
+    border-radius:16px;
+    background:linear-gradient(135deg,#f4e733,#fff36a);
+    color:#000;
+    font-size:16px;
+    font-weight:bold;
+    font-family:'NotoKufiArabic',sans-serif;
+  }
+
+  nav{
+    display:none;
+    width:92%;
+    margin:0 auto 10px;
     padding:10px;
+    background:rgba(0,0,0,.94);
+    border:1px solid var(--brand);
+    border-radius:18px;
+  }
+
+  nav.show{
+    display:block;
   }
 
   nav button,
@@ -172,16 +225,21 @@
     display:block;
     width:100%;
     margin:7px 0;
-    min-height:46px;
+    padding:13px;
     border-radius:14px;
     background:#151515;
     color:var(--brand);
+    font-size:14px;
     text-align:center;
   }
 
   nav button.active{
     background:var(--brand);
     color:#000;
+  }
+
+  .dropdown{
+    width:100%;
   }
 
   .dropdown-content{
@@ -192,6 +250,25 @@
     border-radius:14px;
     margin-top:8px;
     background:#080808;
+  }
+
+  .dropdown.open .dropdown-content{
+    display:block;
+  }
+
+  .dropdown-content button{
+    text-align:center;
+    background:#222;
+    color:#fff;
+  }
+
+  #pageFrame{
+    min-height:700px;
+  }
+
+  footer{
+    font-size:11px;
+    padding:10px;
   }
 }
   </style>
@@ -209,8 +286,12 @@
       </div>
     </div>
   </header>
+
+<button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+  ☰ القائمة
+</button>
   
-<nav>
+<nav id="mainNav">
     <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">📷 تسجيل الحضور</button>
     <button onclick="loadPage(this, 'reports.html')">📊 لوحة التقارير</button>
     <button onclick="loadPage(this, 'evaluate.html')">📝 تقييم اللاعبين</button>
@@ -270,6 +351,7 @@
     const withEmbed = hasQuery ? page : page + '?embed=1';
     const bust = (withEmbed.includes('?') ? '&' : '?') + 'v=' + Date.now();
     frame.src = withEmbed + bust;
+    document.getElementById('mainNav').classList.remove('show');
    document.querySelectorAll('.dropdown.open')
   .forEach(d => d.classList.remove('open')); 
   }
@@ -316,7 +398,9 @@ document.addEventListener('click', () => {
   document.querySelectorAll('.dropdown.open')
     .forEach(d => d.classList.remove('open'));
 });
-    
+function toggleMobileMenu(){
+  document.getElementById('mainNav').classList.toggle('show');
+}    
 </script>
  
 </body>
