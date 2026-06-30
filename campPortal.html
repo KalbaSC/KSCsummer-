@@ -433,16 +433,19 @@ function money(v){return Number(v||0).toLocaleString('ar-AE',{minimumFractionDig
 function translateStatus(s){return {Pending:'قيد الانتظار',Approved:'موافق عليه',Paid:'تم تسليم المبلغ',Rejected:'مرفوض','Receipt Uploaded':'تم رفع الإيصال',Closed:'مغلق'}[s]||safe(s||'')}
 function formatDate(v){if(!v)return '';if(v instanceof Date)return v.toISOString().slice(0,10);return String(v).slice(0,10)}
 
-  function sendSize(){
-  const h = Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight
-  );
+function sendSize(){
+  setTimeout(() => {
+    const container = document.querySelector('.container');
 
-  window.parent.postMessage({
-    type:'kalba-iframe-size',
-    height:h
-  }, '*');
+    const h = container
+      ? container.offsetHeight + 20
+      : document.body.scrollHeight;
+
+    window.parent.postMessage({
+      type:'kalba-iframe-size',
+      height:h
+    }, '*');
+  }, 100);
 }
   
 window.addEventListener('load', () => {
