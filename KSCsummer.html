@@ -116,8 +116,49 @@
       font-size: 18px;
     }
 
-.mobile-menu-btn{
+.dropdown{
+  position:relative;
+}
+
+.dropdown-btn{
+  background:none;
+  border:none;
+  color:var(--brand);
+  padding:12px 18px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.dropdown-content{
   display:none;
+  position:absolute;
+  right:0;
+  top:100%;
+  min-width:240px;
+  background:#111;
+  border:2px solid var(--brand);
+  border-radius:12px;
+  overflow:hidden;
+  z-index:999;
+}
+
+.dropdown-content button{
+  width:100%;
+  text-align:right;
+  background:#111;
+  color:white;
+  border:none;
+  padding:14px 18px;
+  cursor:pointer;
+}
+
+.dropdown-content button:hover{
+  background:var(--brand);
+  color:#000;
+}
+
+.dropdown:hover .dropdown-content{
+  display:block;
 }
 
 @media(max-width:768px){
@@ -147,40 +188,25 @@
     font-size:11px;
   }
 
-  .mobile-menu-btn{
-    display:block;
-    width:100%;
+  nav{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:10px;
     background:#000;
-    color:var(--brand);
-    border:0;
     border-top:2px solid var(--brand);
     border-bottom:2px solid var(--brand);
-    padding:14px;
-    font-size:16px;
-    font-family:'NotoKufiArabic', sans-serif;
-  }
-
-  nav{
-    display:none;
-    flex-direction:column;
-    align-items:stretch;
-    background:#000;
-    border-bottom:2px solid var(--brand);
-    padding:8px;
-  }
-
-  nav.show{
-    display:flex;
   }
 
   nav button,
   .dropdown-btn{
     width:100%;
-    text-align:center;
-    margin:4px 0;
-    padding:13px;
-    font-size:14px;
+    min-height:44px;
+    padding:10px 8px;
+    font-size:13px;
     border-radius:12px;
+    text-align:center;
+    white-space:normal;
   }
 
   .dropdown{
@@ -188,15 +214,20 @@
   }
 
   .dropdown-content{
-    display:block;
     position:static;
+    display:none;
     width:100%;
-    border:1px solid var(--brand);
-    margin-top:5px;
+    margin-top:8px;
+    min-width:0;
+  }
+
+  .dropdown:hover .dropdown-content{
+    display:block;
   }
 
   .dropdown-content button{
     text-align:center;
+    font-size:12px;
   }
 
   #pageFrame{
@@ -223,12 +254,8 @@
       </div>
     </div>
   </header>
-
-<button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-  ☰ القائمة
-</button>
   
-<nav id="mainNav">
+<nav>
     <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">📷 تسجيل الحضور</button>
     <button onclick="loadPage(this, 'reports.html')">📊 لوحة التقارير</button>
     <button onclick="loadPage(this, 'evaluate.html')">📝 تقييم اللاعبين</button>
@@ -322,10 +349,7 @@ window.addEventListener('message', (e) => {
     const firstBtn = document.querySelector('nav button.active');
     loadPage(firstBtn, 'AttendanceScan.html');
   });
-
-function toggleMobileMenu(){
-  document.getElementById('mainNav').classList.toggle('show');
-}    
+    
 </script>
  
 </body>
