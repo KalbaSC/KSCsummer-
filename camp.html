@@ -541,24 +541,33 @@ setTimeout(() => {
       });
     }, 600);
   };
-  if (photoFile) {
-  if (photoFile) {
+if (photoFile) {
   reader.readAsDataURL(photoFile);
 } else {
-  fetch(DEFAULT_PHOTO)
-    .then(res => res.blob())
-    .then(blob => {
-      const defaultReader = new FileReader();
-      defaultReader.onload = reader.onload;
-      defaultReader.readAsDataURL(blob);
-    });
-}
-} else {
-  reader.onload({
-    target: {
-      result: ""
-    }
+  document.getElementById("cardPhoto").src = "boy.png";
+
+  const uniqueId = Date.now();
+
+  document.getElementById('cardName').innerText = 'اسم اللاعب: ' + name + ' ' + parent;
+  document.getElementById('cardAge').innerText = 'العمر: ' + age;
+  document.getElementById('cardPhone').innerText = 'رقم الهاتف: ' + phone;
+  document.getElementById('cardId').innerText = 'كود اللاعب: KalbaSC-' + uniqueId;
+
+  const qrcodeContainer = document.getElementById("qrcode");
+  qrcodeContainer.innerHTML = "";
+
+  const firstName = (name.trim().split(" ")[0] || "Unknown");
+  const parentFirstName = (parent.trim().split(" ")[0] || "Guardian");
+
+  new QRCode(qrcodeContainer,{
+      text:`KalbaSC-${uniqueId}|${firstName}|${parentFirstName}`,
+      width:120,
+      height:120
   });
+
+  setTimeout(() => {
+      document.getElementById("campForm").requestSubmit();
+  },100);
 }
 });
 
