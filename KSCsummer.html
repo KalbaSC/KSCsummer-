@@ -387,10 +387,23 @@ window.addEventListener('message', (e) => {
   }
 });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const firstBtn = document.querySelector('nav button.active');
-    loadPage(firstBtn, 'AttendanceScan.html');
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  const page = params.get("page");
+
+  if (page) {
+    const targetBtn = [...document.querySelectorAll('nav button')]
+      .find(btn => btn.getAttribute('onclick')?.includes(page));
+
+    if (targetBtn) {
+      loadPage(targetBtn, page);
+      return;
+    }
+  }
+
+  const firstBtn = document.querySelector('nav button.active');
+  loadPage(firstBtn, 'AttendanceScan.html');
+});
 
 function toggleAdminMenu(event){
   event.stopPropagation();
