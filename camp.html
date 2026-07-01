@@ -390,6 +390,7 @@ try {
   const phone = document.getElementById('phone').value.trim();
   const altPhone = document.getElementById('altPhone').value.trim();
   const photoFile = document.getElementById('photo').files[0];
+const DEFAULT_PHOTO = "boy.png";
 
   if (!name || !age || !parent || !phone || !email || !altPhone || !idnum) {
     alert("يرجى تعبئة جميع الحقول وتحميل الملفات المطلوبة.");
@@ -541,7 +542,17 @@ setTimeout(() => {
     }, 600);
   };
   if (photoFile) {
+  if (photoFile) {
   reader.readAsDataURL(photoFile);
+} else {
+  fetch(DEFAULT_PHOTO)
+    .then(res => res.blob())
+    .then(blob => {
+      const defaultReader = new FileReader();
+      defaultReader.onload = reader.onload;
+      defaultReader.readAsDataURL(blob);
+    });
+}
 } else {
   reader.onload({
     target: {
