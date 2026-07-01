@@ -260,9 +260,15 @@
 <div id="receiptModal" class="modal-backdrop hidden"><div class="modal"><h2 class="section-title">رفع الإيصال</h2><label>المبلغ المصروف</label><input type="number" id="receiptAmount" min="0" placeholder="مثال: 120"><label>ملاحظات الإيصال</label><textarea id="receiptNotes" placeholder="اختياري"></textarea><label>ملف الإيصال</label><input type="file" id="receiptFile" accept="image/*,.pdf"><div id="receiptStatus" class="status"></div><div class="modal-actions"><button onclick="uploadReceipt()">رفع الإيصال</button><button class="dark-btn" onclick="closeReceiptModal()">إلغاء</button></div></div></div>
 <script>
 
-if (window.top === window.self && !location.search.includes("embed=1")) {
-  location.href = "KSCsummer.html?page=campPortal.html";
+function forceInsideMainPortal(){
+  if (window.top === window.self) {
+    window.location.replace("KSCsummer.html?page=campPortal.html");
+  }
 }
+
+forceInsideMainPortal();
+
+window.addEventListener("pageshow", forceInsideMainPortal);
   
 const REQUESTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1eKwU4gL3mHqnZfp5Yo0eqznhP6G5kcf7w0qAwFUV6_OhNpcCox6IWM3CuQ0JMYx59w/exec";
 const ACCOUNTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3pLpMg8rwFywX-N8puqKeHTmZgvWA_h4pfcDM5KIAGJI79ArzULnePMIE-0Ja6z0pWg/exec";
