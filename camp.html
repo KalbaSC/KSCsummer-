@@ -273,7 +273,7 @@ footer p {
 <div class="container">
   <h2>التسجيل في صيف الشارقة الرياضي (عطلتنا غير)</h2>
   <form id="campForm">
-    <label> الهوية: (الرجاء إدخال رقم الهوية 784xxxxxxxxxxxx)<input type="number" id="idnum" autocomplete="off" required>
+    <label> الهوية: (الرجاء إدخال رقم الهوية 784xxxxxxxxxxxx)<input type="text" id="idnum" autocomplete="off" inputmode="numeric" required>
 </label>
     <label>اسم الطفل:   
   <div style="display: flex; align-items: center; gap: 5px;">
@@ -540,7 +540,15 @@ setTimeout(() => {
       });
     }, 600);
   };
+  if (photoFile) {
   reader.readAsDataURL(photoFile);
+} else {
+  reader.onload({
+    target: {
+      result: ""
+    }
+  });
+}
 });
 
 function downloadCard() {
@@ -555,7 +563,7 @@ function downloadCard() {
 const LOOKUP_URL = "https://script.google.com/macros/s/AKfycbwl8RzWIdUzQjaB4hUgheQxMOuC_yvIQ3nUl-rfzBwYiQA58-R8BejMrF7iXuB3WKIq/exec";
 
 document.getElementById('idnum').addEventListener('input', async function () {
-  const id = this.value.replace(/\D/g, '').trim();
+  const id = this.value.replace(/[^0-9]/g, '').trim();
 
   if (id.length < 15) return;
 
