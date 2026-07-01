@@ -552,35 +552,50 @@ function downloadCard() {
   });
 }
 
-document.getElementById('idnum').addEventListener('change', function () {
-  const id = this.value;
-  if (!id) return;
+const LOOKUP_URL = "https://script.google.com/macros/s/AKfycbwl8RzWIdUzQjaB4hUgheQxMOuC_yvIQ3nUl-rfzBwYiQA58-R8BejMrF7iXuB3WKIq/exec";
+
+document.getElementById('idnum').addEventListener('input', async function () {
+  const id = this.value.replace(/\D/g, '').trim();
+
+  if (id.length < 15) return;
 
   const idPattern = /^784\d{12}$/;
+
   if (!idPattern.test(id)) {
     alert("⚠️ رقم الهوية غير صحيح. يجب أن يبدأ بـ 784 ويتكون من 15 رقمًا.");
-    this.value = '';
+    this.value = "";
     return;
   }
 
-  fetch(`https://script.google.com/macros/s/AKfycbwl8RzWIdUzQjaB4hUgheQxMOuC_yvIQ3nUl-rfzBwYiQA58-R8BejMrF7iXuB3WKIq/exec?id=${id}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) {
-        alert("لم يتم العثور على البيانات لهذا الرقم.");
-        return;
-      }
+  try {
+    const res = await fetch(`${LOOKUP_URL}?id=${encodeURIComponent(id)}`);
+    const data = await res.json();
 
-document.getElementById('name').value = data.name || '';
-document.getElementById('age').value = String(data.age || '').replace(/[^\d]/g, '');
-document.getElementById('phone').value = data.phone || '';
-document.getElementById('altPhone').value = data.parentPhone || '';
-document.getElementById('parent').value = data.parent || '';
+    if (data.error) {
+      alert("لم يتم العثور على البيانات لهذا الرقم.");
+      clearAutoFields();
+      return;
+    }
 
+    document.getElementById('name').value = data.name || "";
+    document.getElementById('age').value = String(data.age || "").replace(/[^\d]/g, "");
+    document.getElementById('parent').value = data.parent || "";
+    document.getElementById('phone').value = data.phone || "";
+    document.getElementById('altPhone').value = data.parentPhone || "";
 
-    })
-    .catch(err => console.error("Fetch error:", err));
+  } catch (err) {
+    console.error(err);
+    alert("حدث خطأ أثناء جلب البيانات.");
+  }
 });
+
+function clearAutoFields(){
+  document.getElementById('name').value = "";
+  document.getElementById('age').value = "";
+  document.getElementById('parent').value = "";
+  document.getElementById('phone').value = "";
+  document.getElementById('altPhone').value = "";
+}
 </script>
     <script>
 (() => {
