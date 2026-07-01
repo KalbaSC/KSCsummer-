@@ -392,7 +392,7 @@ try {
   const photoFile = document.getElementById('photo').files[0];
 
   if (!name || !age || !parent || !phone || !email || !altPhone || !idnum) {
-    alert("يرجى تعبئة جميع الحقول وتحميل الملفات المطلوبة.");
+    alert("يرجى تعبئة جميع الحقول المطلوبة.");
     return;
   }
 
@@ -484,23 +484,27 @@ if (!regData.includes("success")) {
 }
 
 await new Promise(resolve => setTimeout(resolve, 3000));
-     
-      const commitmentFile = document.getElementById('commitmentFile').files[0];
-      const reader2 = new FileReader();
+     const commitmentFile = document.getElementById('commitmentFile').files[0];
 
-      reader2.onload = function (e) {
-        const base64Data = e.target.result.split(',')[1];
+if (commitmentFile) {
+  const reader2 = new FileReader();
 
-        fetch('https://script.google.com/macros/s/AKfycbyju28FbRe9WeLRmUcG-UR1aKzm9y9S-lPKyRhGgiqy9St68a9PmFt27CSSbiDKEvt4/exec', {
-          method: 'POST',
-          body: new URLSearchParams({
-            filename: `تعهد_${uniqueId}.pdf`,
-            filedata: base64Data
-          })
-        })
-          .then(() => console.log("✅ Commitment file uploaded."))
-          .catch(err => console.error("❌ Upload error:", err));
-      };
+  reader2.onload = function (e) {
+    const base64Data = e.target.result.split(',')[1];
+
+    fetch('https://script.google.com/macros/s/AKfycbyju28FbRe9WeLRmUcG-UR1aKzm9y9S-lPKyRhGgiqy9St68a9PmFt27CSSbiDKEvt4/exec', {
+      method: 'POST',
+      body: new URLSearchParams({
+        filename: `تعهد_${uniqueId}.pdf`,
+        filedata: base64Data
+      })
+    })
+    .then(() => console.log("✅ Commitment file uploaded."))
+    .catch(err => console.error("❌ Upload error:", err));
+  };
+
+  reader2.readAsDataURL(commitmentFile);
+}
 
 html2canvas(document.getElementById('card'), {
   scale: 2
