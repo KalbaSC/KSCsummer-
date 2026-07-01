@@ -301,7 +301,7 @@ footer p {
     <input type="tel" id="altPhone" required readonly>
     <span title="هذا الحقل لا يمكن تعديله"></span>
   </div></label>
-    <label>الصورة الشخصية: <input type="file" id="photo" accept="image/*" required></label>
+    <label>الصورة الشخصية: <input type="file" id="photo" accept="image/*"></label>
     <label> التعهد (PDF فقط): 
     <input type="file" id="commitmentFile" accept="application/pdf" >
     </label>
@@ -391,7 +391,7 @@ try {
   const altPhone = document.getElementById('altPhone').value.trim();
   const photoFile = document.getElementById('photo').files[0];
 
-  if (!name || !age || !parent || !phone || !email || !altPhone || !idnum || !photoFile) {
+  if (!name || !age || !parent || !phone || !email || !altPhone || !idnum) {
     alert("يرجى تعبئة جميع الحقول وتحميل الملفات المطلوبة.");
     return;
   }
@@ -582,6 +582,7 @@ document.getElementById('idnum').addEventListener('input', async function () {
     document.getElementById('parent').value = data.parent || "";
     document.getElementById('phone').value = data.phone || "";
     document.getElementById('altPhone').value = data.parentPhone || "";
+    document.getElementById('email').value = data.email || "";
 
   } catch (err) {
     console.error(err);
