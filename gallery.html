@@ -191,6 +191,15 @@ p{
 
 </div>
 <script>
+  function forceInsideMainPortal() {
+  if (window.top === window.self) {
+    window.location.replace("KSCsummer.html?page=" + location.pathname.split("/").pop());
+  }
+}
+
+forceInsideMainPortal();
+window.addEventListener("pageshow", forceInsideMainPortal);
+  
 (() => {
   const isEmbedded = new URLSearchParams(location.search).has('embed');
 
