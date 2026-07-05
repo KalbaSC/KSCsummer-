@@ -318,11 +318,8 @@ footer p {
   </div>
 
   <script>
-
-   const params = new URLSearchParams(location.search);
-
-if (!params.has("embed") && window.top === window.self) {
-    location.replace("KSCsummer.html?page=AttendanceScan.html");
+if (window.top === window.self) {
+  window.location.replace("KSCsummer.html?page=AttendanceScan.html");
 }
     
     const USERS = {
