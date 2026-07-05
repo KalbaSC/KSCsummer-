@@ -1088,7 +1088,7 @@ if (filteredPlayers.length === 0) {
   loadPlayersTable(filteredPlayers);     
   renderPlayersList(filteredPlayers);    
 }
-
+renderEvaluatedPlayersList();
 }
     function handleDateChange() {
       const selectedDate = document.getElementById('sessionDate').value;
@@ -1279,9 +1279,16 @@ async function renderEvaluatedPlayersList() {
 
     let data = await response.json();
 
-    const processedData = data
-     .filter(rec => rec.Activity === currentCoach.activity)
-.map(rec => {
+const selectedDate =
+  document.getElementById("filterDate").value ||
+  document.getElementById("sessionDate").value;
+
+const processedData = data
+  .filter(rec =>
+    rec.Activity === currentCoach.activity &&
+    formatDate(rec.Date) === selectedDate
+  )
+  .map(rec => {
   let total = 0;
   const criteria = evaluationCriteria[currentCoach.activity] || [];
   criteria.forEach(criterion => { total += parseInt(rec[criterion]) || 0; });
