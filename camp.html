@@ -350,7 +350,14 @@ footer p {
 
 </div>
 <script>
+function forceInsideMainPortal() {
+  if (window.top === window.self) {
+    window.location.replace("KSCsummer.html?page=" + location.pathname.split("/").pop());
+  }
+}
 
+forceInsideMainPortal();
+window.addEventListener("pageshow", forceInsideMainPortal);
 
 document.getElementById('campForm').addEventListener('submit', async function (e) {
   e.preventDefault();
