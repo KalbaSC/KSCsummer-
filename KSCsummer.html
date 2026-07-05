@@ -389,7 +389,7 @@ window.addEventListener('message', (e) => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+function initializePortal() {
   const params = new URLSearchParams(location.search);
   const page = params.get("page");
 
@@ -405,7 +405,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const firstBtn = document.querySelector('nav button.active');
   loadPage(firstBtn, 'AttendanceScan.html');
-});
+}
+
+document.addEventListener("DOMContentLoaded", initializePortal);
+window.addEventListener("pageshow", initializePortal);
+
+window.addEventListener("pageshow", function (e) {
+    const frame = document.getElementById("pageFrame");
+
+    if (e.persisted && frame) {
+        frame.src = frame.src.split("&v=")[0] + "&v=" + Date.now();
+    }
+});    
 
 function toggleAdminMenu(event){
   event.stopPropagation();
