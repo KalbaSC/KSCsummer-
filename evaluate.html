@@ -828,6 +828,14 @@
     </div>
   </div>
   <script>
+    function forceInsideMainPortal(){
+  if (window.top === window.self && !location.search.includes("view=rankings")) {
+    window.location.replace("KSCsummer.html?page=evaluate.html");
+  }
+}
+
+forceInsideMainPortal();
+window.addEventListener("pageshow", forceInsideMainPortal);
 const CONFIG = {
   EVALUATION_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec',
   ATTENDANCE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec',
