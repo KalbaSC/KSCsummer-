@@ -349,6 +349,15 @@ if (window.top === window.self) {
     function markAttendance(code) {
       const parts = code.split('|');
       const id = parts[0] || "UNKNOWN";
+      const transport = await checkTransportation(id);
+
+if (!transport) {
+  const choice = prompt("طريقة النقل؟ اكتب: سيارة أو باص");
+
+  if (choice === "سيارة" || choice === "باص") {
+    await saveTransportation(id, choice);
+  }
+}
       const encodedName = parts[1] || "UNKNOWN";
       const encodedParent = parts[2] || "UNKNOWN";
       const name = decodeURIComponent(encodedName);
