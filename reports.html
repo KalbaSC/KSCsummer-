@@ -1452,7 +1452,7 @@ $('#filter-activity').val(null).trigger('change');
 
 $('#activeFilters').empty();
 
-const today = new Date().toISOString().split('T')[0];
+const today = getDubaiDateKey(new Date());
 document.getElementById("datePicker").value = today;
 document.getElementById('datePicker').style.display = 'inline-block';
 
