@@ -376,9 +376,9 @@ async function saveTransportation(id,type){
       const transport = await checkTransportation(id);
 
 if (!transport) {
-  const choice = prompt("طريقة النقل؟ اكتب: سيارة أو باص");
+  const choice = prompt("طريقة النقل؟ اكتب: سيارة أو حافلة");
 
-  if (choice === "سيارة" || choice === "باص") {
+  if (choice === "سيارة" || choice === "حافلة") {
     await saveTransportation(id, choice);
   }
 }
