@@ -384,8 +384,19 @@ if (!transport) {
 }
       const encodedName = parts[1] || "UNKNOWN";
       const encodedParent = parts[2] || "UNKNOWN";
-      const name = decodeURIComponent(encodedName);
-      const parent = decodeURIComponent(encodedParent);
+let name = decodeURIComponent(encodedName);
+let parent = decodeURIComponent(encodedParent);
+
+try {
+  const cleanId = id.replace("KalbaSC-", "");
+  const res = await fetch(`${REGISTRATION_SCRIPT}?id=${encodeURIComponent(cleanId)}&v=${Date.now()}`);
+  const fullData = await res.json();
+
+  if (fullData.name) name = fullData.name;
+  if (fullData.parent) parent = fullData.parent;
+} catch (err) {
+  console.log("Could not fetch full parent name", err);
+}
       const timestamp = new Date().toISOString();
       const activity = document.getElementById("activity").value.trim();
       
