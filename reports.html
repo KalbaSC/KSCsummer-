@@ -1042,6 +1042,13 @@ formatted = formatted.replace("AM", "ص").replace("PM", "م");
 return formatted;
 }
 
+  function getDubaiDateKey(value) {
+  const date = new Date(value);
+  return date.toLocaleDateString("en-CA", {
+    timeZone: "Asia/Dubai"
+  });
+}
+  
 function processRawData(rawData) {
 if (!Array.isArray(rawData)) return [];
 
@@ -1062,7 +1069,7 @@ const isGeneral = item.General === "✔️ حضر" || item.General === "حضر";
 return {
 ...item,
 isGeneral: isGeneral,
-dateKey: new Date(item.Timestamp).toISOString().split('T')[0],
+dateKey: getDubaiDateKey(item.Timestamp),
 isDuplicate: false
 };
 });
@@ -1185,7 +1192,7 @@ async function fetchData() {
 
     allData = processRawData(rawData);
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = getDubaiDateKey(new Date());
     document.getElementById("datePicker").value = today;
     filteredData = allData.filter(row => row.dateKey === today);
 
@@ -1572,7 +1579,7 @@ document.getElementById("filterType").value = "";
 $('#filter-staff').val(null).trigger('change');
 $('#filter-activity').val(null).trigger('change');
 
-const today = new Date().toISOString().split('T')[0];
+const today = getDubaiDateKey(new Date());
 document.getElementById("datePicker").value = today;
 document.getElementById('datePicker').style.display = 'inline-block';
 
@@ -3050,7 +3057,7 @@ btn.style.display = isMobile ? 'none' : 'inline-block';
 }
 
 function initialize() {
-const today = new Date().toISOString().split('T')[0];
+const today = getDubaiDateKey(new Date());
 document.getElementById("datePicker").value = today;
 
 document.getElementById("filter-name").value = "";
