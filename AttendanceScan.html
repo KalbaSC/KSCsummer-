@@ -350,11 +350,13 @@ const REGISTRATION_SCRIPT =
 "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
 
 async function checkTransportation(id){
-    const r = await fetch(
-        `${REGISTRATION_SCRIPT}?action=checkTransportation&id=${encodeURIComponent(id)}`
-    );
-    const d = await r.json();
-    return d.transportation || "";
+  const url =
+    `${REGISTRATION_SCRIPT}?action=checkTransportation&id=${encodeURIComponent(id)}&v=${Date.now()}`;
+
+  const r = await fetch(url, { cache: "no-store" });
+  const d = await r.json();
+
+  return String(d.transportation || "").trim();
 }
 
 async function saveTransportation(id,type){
