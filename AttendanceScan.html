@@ -346,7 +346,29 @@ if (window.top === window.self) {
       }
     }
 
-    function markAttendance(code) {
+const REGISTRATION_SCRIPT =
+"https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
+
+async function checkTransportation(id){
+    const r = await fetch(
+        `${REGISTRATION_SCRIPT}?action=checkTransportation&id=${encodeURIComponent(id)}`
+    );
+    const d = await r.json();
+    return d.transportation || "";
+}
+
+async function saveTransportation(id,type){
+    const body = new URLSearchParams();
+    body.append("action","saveTransportation");
+    body.append("id",id);
+    body.append("transportation",type);
+
+    await fetch(REGISTRATION_SCRIPT,{
+        method:"POST",
+        body
+    });
+}    
+    async function markAttendance(code) {
       const parts = code.split('|');
       const id = parts[0] || "UNKNOWN";
       const transport = await checkTransportation(id);
