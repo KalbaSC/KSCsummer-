@@ -282,6 +282,20 @@ footer p {
         <button onclick="startScanner()">📷 بدء تشغيل الكاميرا</button>
         <div id="reader"></div>
         <div id="status">يرجى توجيه الكاميرا نحو رمز QR الخاص باللاعب</div>
+
+        <div id="transportChoice" style="display:none;margin-top:20px;">
+  <h3 style="color:#f4e733;">اختر وسيلة النقل</h3>
+
+  <button id="carBtn"
+          style="background:#28a745;color:white;font-size:22px;margin-bottom:12px;">
+    🚗 سيارة
+  </button>
+
+  <button id="busBtn"
+          style="background:#007bff;color:white;font-size:22px;">
+    🚌 حافلة
+  </button>
+</div>
         
 <label for="activity">اختر النشاط (اختياري):</label>
 <select id="activity" style="width: 100%; padding: 10px; border-radius: 8px; margin-top: 10px;">
@@ -387,11 +401,32 @@ async function saveTransportation(id,type){
       const transport = await checkTransportation(id);
 
 if (!transport) {
-  const choice = prompt("طريقة النقل؟ اكتب: سيارة أو حافلة");
 
-  if (choice === "سيارة" || choice === "حافلة") {
-    await saveTransportation(id, choice);
-  }
+  document.getElementById("status").innerHTML = `
+    <h2 style="color:#f4e733;">
+      لأول مرة يتم تسجيل هذا الطفل
+    </h2>
+    <p>يرجى اختيار وسيلة النقل</p>
+  `;
+
+  document.getElementById("transportChoice").style.display = "block";
+
+  return new Promise(resolve => {
+
+    document.getElementById("carBtn").onclick = async () => {
+      await saveTransportation(id,"سيارة");
+      document.getElementById("transportChoice").style.display = "none";
+      resolve(markAttendance(code));
+    };
+
+    document.getElementById("busBtn").onclick = async () => {
+      await saveTransportation(id,"حافلة");
+      document.getElementById("transportChoice").style.display = "none";
+      resolve(markAttendance(code));
+    };
+
+  });
+
 }
       const encodedName = parts[1] || "UNKNOWN";
       const encodedParent = parts[2] || "UNKNOWN";
