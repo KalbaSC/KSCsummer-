@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رضا أولياء الأمور</title>
 
+<style>
+@font-face{
+  font-family:'NotoKufiArabic';
+  src:url('NotoKufiArabic.ttf') format('truetype');
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:'NotoKufiArabic',Arial,sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.8)),
+    url("black_and_yellow_grunge_background.jpg");
+  background-size:cover;
+  background-position:center;
+  color:white;
+  padding:30px;
+}
+
+.container{
+  max-width:850px;
+  margin:auto;
+  background:rgba(0,0,0,.88);
+  border:2px solid #f4e733;
+  border-radius:28px;
+  padding:35px;
+  box-shadow:0 0 30px rgba(244,231,51,.18);
+}
+
+h1{
+  text-align:center;
+  color:#f4e733;
+  margin:0 0 10px;
+  font-size:36px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#ddd;
+  margin-bottom:30px;
+  font-size:18px;
+}
+
+label{
+  display:block;
+  color:#f4e733;
+  margin:20px 0 10px;
+  font-weight:bold;
+  font-size:18px;
+}
+
+input, textarea{
+  width:100%;
+  padding:15px;
+  border-radius:14px;
+  border:1px solid #555;
+  background:#080808;
+  color:white;
+  font-family:'NotoKufiArabic',Arial,sans-serif;
+  font-size:17px;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.rating{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.rating button{
+  width:70px;
+  height:60px;
+  border-radius:16px;
+  border:1px solid #f4e733;
+  background:#111;
+  color:#f4e733;
+  font-size:25px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.rating button.active{
+  background:#f4e733;
+  color:#000;
+}
+
+.submit-btn{
+  margin-top:30px;
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,#f4e733,#fff36a);
+  color:#000;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  font-family:'NotoKufiArabic',Arial,sans-serif;
+}
+
+.thanks{
+  display:none;
+  text-align:center;
+  padding:60px 20px;
+}
+
+.thanks h2{
+  color:#f4e733;
+  font-size:38px;
+}
+
+.thanks p{
+  font-size:20px;
+  color:#ddd;
+}
+
+@media(max-width:700px){
+  body{padding:15px}
+  .container{padding:22px}
+  h1{font-size:28px}
+  .rating button{
+    width:55px;
+    height:52px;
+    font-size:21px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <form id="feedbackForm">
+    <h1>رضا أولياء الأمور</h1>
+    <div class="subtitle">
+      نُسعد بمشاركتكم تقييمكم لتطوير خدماتنا وبرامجنا
+    </div>
+
+    <label>اسم ولي الأمر / اختياري</label>
+    <input type="text" id="parentName" placeholder="اكتب الاسم">
+
+    <label>رقم الهاتف / اختياري</label>
+    <input type="tel" id="phone" placeholder="05xxxxxxxx">
+
+    <label>التقييم العام</label>
+    <div class="rating" data-name="overall"></div>
+
+    <label>سهولة التسجيل</label>
+    <div class="rating" data-name="registration"></div>
+
+    <label>الاستقبال والتعامل</label>
+    <div class="rating" data-name="reception"></div>
+
+    <label>الأنشطة والبرنامج</label>
+    <div class="rating" data-name="activities"></div>
+
+    <label>التنظيم العام</label>
+    <div class="rating" data-name="organization"></div>
+
+    <label>ملاحظاتكم</label>
+    <textarea id="notes" placeholder="اكتب ملاحظاتك هنا..."></textarea>
+
+    <button type="submit" class="submit-btn">إرسال التقييم</button>
+  </form>
+
+  <div id="thanks" class="thanks">
+    <h2>شكراً لكم 🌟</h2>
+    <p>تم إرسال تقييمكم بنجاح</p>
+  </div>
+
+</div>
+
+<script>
+function forceInsideMainPortal() {
+  if (window.top === window.self) {
+    window.location.replace("KSCsummer.html?page=" + location.pathname.split("/").pop());
+  }
+}
+
+forceInsideMainPortal();
+window.addEventListener("pageshow", forceInsideMainPortal);
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGDIAJXMEr7XbGQHIdfZSxqHCEc5zw8yOjUUNipK8G3YeOR9m1FB94kGWeiJoTjh1j/exec";
+
+const values = {
+  overall:"",
+  registration:"",
+  reception:"",
+  activities:"",
+  organization:""
+};
+
+document.querySelectorAll(".rating").forEach(group => {
+  const name = group.dataset.name;
+
+  for(let i = 1; i <= 5; i++){
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = "★".repeat(i);
+    btn.onclick = () => {
+      values[name] = i;
+      group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    };
+    group.appendChild(btn);
+  }
+});
+
+document.getElementById("feedbackForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if(!values.overall){
+    alert("يرجى اختيار التقييم العام.");
+    return;
+  }
+
+  const body = new URLSearchParams();
+  body.append("parentName", document.getElementById("parentName").value.trim());
+  body.append("phone", document.getElementById("phone").value.trim());
+  body.append("overall", values.overall);
+  body.append("registration", values.registration);
+  body.append("reception", values.reception);
+  body.append("activities", values.activities);
+  body.append("organization", values.organization);
+  body.append("notes", document.getElementById("notes").value.trim());
+
+  await fetch(SCRIPT_URL, {
+    method:"POST",
+    mode:"no-cors",
+    body
+  });
+
+  document.getElementById("feedbackForm").style.display = "none";
+  document.getElementById("thanks").style.display = "block";
+
+  setTimeout(() => {
+    location.reload();
+  }, 5000);
+});
+</script>
+
+<script>
+(() => {
+  const isEmbedded = new URLSearchParams(location.search).has('embed');
+  if (isEmbedded) {
+    const style = document.createElement('style');
+    style.textContent = `
+      html, body { background: transparent !important; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const sendSize = () => {
+    const h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    window.parent.postMessage({
+      type:'kalba-iframe-size',
+      height:h
+    }, '*');
+  };
+
+  window.addEventListener('load', sendSize);
+  new MutationObserver(sendSize).observe(document.body, {
+    childList:true,
+    subtree:true,
+    attributes:true
+  });
+})();
+</script>
+
+</body>
+</html>
