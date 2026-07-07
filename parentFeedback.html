@@ -23,7 +23,7 @@ body{
     linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.65)),
     url("black_and_yellow_grunge_background.jpg");
   background-size:cover;
-  background-position:center;
+  background-position:center;f
   color:white;
   padding:24px;
 }
@@ -369,12 +369,24 @@ document.getElementById("feedbackForm").addEventListener("submit", async e => {
     body
   });
 
-  document.getElementById("feedbackForm").style.display = "none";
-  document.getElementById("thanks").style.display = "block";
+document.getElementById("feedbackForm").style.display = "none";
+document.getElementById("thanks").style.display = "block";
 
-  setTimeout(() => {
-    location.reload();
-  }, 5000);
+window.scrollTo({
+  top: 0,
+  behavior: "smooth"
+});
+
+setTimeout(() => {
+  window.parent.postMessage({
+    type: "kalba-iframe-size",
+    height: document.body.scrollHeight
+  }, "*");
+}, 300);
+
+setTimeout(() => {
+  location.reload();
+}, 5000);
 });
 </script>
 
