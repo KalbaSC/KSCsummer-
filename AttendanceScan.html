@@ -282,6 +282,16 @@ footer p {
         <button onclick="startScanner()">📷 بدء تشغيل الكاميرا</button>
         <div id="reader"></div>
         <div id="status">يرجى توجيه الكاميرا نحو رمز QR الخاص باللاعب</div>
+        <div style="margin-top:20px;">
+  <button onclick="setScanMode('attendance')" id="attendanceModeBtn">
+    ✅ تسجيل حضور
+  </button>
+
+  <button onclick="setScanMode('departure')" id="departureModeBtn"
+          style="background:#007bff;color:white;">
+    🚪 تسجيل خروج
+  </button>
+</div>
 
         <div id="transportChoice" style="display:none;margin-top:20px;">
   <h3 style="color:#f4e733;">اختر وسيلة النقل</h3>
@@ -350,6 +360,23 @@ if (window.top === window.self) {
     };
 
 let loggedInUser = localStorage.getItem("attendanceUser");
+    let scanMode = localStorage.getItem("scanMode") || "attendance";
+
+function setScanMode(mode){
+  scanMode = mode;
+  localStorage.setItem("scanMode", mode);
+
+  document.getElementById("attendanceModeBtn").style.background =
+    mode === "attendance" ? "#f4e733" : "#444";
+
+  document.getElementById("departureModeBtn").style.background =
+    mode === "departure" ? "#007bff" : "#444";
+
+  document.getElementById("status").innerHTML =
+    mode === "attendance"
+      ? "✅ وضع تسجيل الحضور مفعل"
+      : "🚪 وضع تسجيل الخروج مفعل";
+}
 
 if (loggedInUser) {
   document.getElementById("login-section").style.display = "none";
@@ -373,7 +400,9 @@ if (loggedInUser) {
 
 const REGISTRATION_SCRIPT =
 "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
-
+const DEPARTURE_SCRIPT =
+"https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
+    
 async function checkTransportation(id){
   const url =
     `${REGISTRATION_SCRIPT}?action=checkTransportation&id=${encodeURIComponent(id)}&v=${Date.now()}`;
@@ -399,7 +428,38 @@ async function saveTransportation(id,type){
       const parts = code.split('|');
       const id = parts[0] || "UNKNOWN";
       const transport = await checkTransportation(id);
+if (scanMode === "departure") {
+  const encodedName = parts[1] || "UNKNOWN";
+  const encodedParent = parts[2] || "UNKNOWN";
 
+  let name = decodeURIComponent(encodedName);
+  let parent = decodeURIComponent(encodedParent);
+
+  try {
+    const cleanId = id.replace("KalbaSC-", "");
+    const res = await fetch(`${REGISTRATION_SCRIPT}?id=${encodeURIComponent(cleanId)}&v=${Date.now()}`);
+    const fullData = await res.json();
+
+    if (fullData.name) name = fullData.name;
+    if (fullData.parent) parent = fullData.parent;
+  } catch (err) {}
+
+  document.getElementById("status").innerHTML = `
+    <div style="font-size:28px;font-weight:bold;">
+      🚪 تم تسجيل الخروج
+    </div>
+    <br>
+    الاسم: ${name}<br>
+    ولي الأمر: ${parent}<br>
+    المعرف: ${id}<br>
+    <div style="font-size:42px;margin-top:15px;color:#f4e733;">
+      ${transport === "حافلة" ? "🚌 حافلة" : "🚗 سيارة"}
+    </div>
+  `;
+
+  setTimeout(() => startScanner(), 4000);
+  return;
+}
 if (!transport) {
 
   document.getElementById("status").innerHTML = `
