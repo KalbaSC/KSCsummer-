@@ -193,14 +193,31 @@ function formatTime(value){
   }).replace("AM","ص").replace("PM","م");
 }
 
-async function loadData(){
-  const res = await fetch(DEPARTURE_SCRIPT + "?v=" + Date.now());
-  allData = await res.json();
+function loadData(){
 
-  allData = allData.filter(r => r["Timestamp"] && r["ID"]);
+  const callbackName = "departureCallback_" + Date.now();
 
-  populateStaff();
-  renderTable();
+  window[callbackName] = function(data){
+
+    allData = data.filter(r => r["Timestamp"] && r["ID"]);
+
+    populateStaff();
+    renderTable();
+
+    delete window[callbackName];
+    script.remove();
+  };
+
+  const script = document.createElement("script");
+
+  script.src =
+    DEPARTURE_SCRIPT +
+    "?callback=" +
+    callbackName +
+    "&v=" +
+    Date.now();
+
+  document.body.appendChild(script);
 }
 
 function populateStaff(){
