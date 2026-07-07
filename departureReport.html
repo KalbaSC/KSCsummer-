@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير خروج الأطفال</title>
+
+<style>
+@font-face{
+  font-family:'NotoKufiArabic';
+  src:url('NotoKufiArabic.ttf') format('truetype');
+}
+
+body{
+  margin:0;
+  font-family:'NotoKufiArabic',Arial,sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.85)),
+    url("black_and_yellow_grunge_background.jpg");
+  background-size:cover;
+  color:white;
+  padding:25px;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  background:rgba(0,0,0,.9);
+  border:2px solid #f4e733;
+  border-radius:18px;
+  padding:25px;
+}
+
+h1{
+  text-align:center;
+  color:#f4e733;
+}
+
+.filters{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+input, select, button{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #f4e733;
+  background:#111;
+  color:white;
+  font-family:'NotoKufiArabic';
+}
+
+button{
+  background:#f4e733;
+  color:#000;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.card{
+  background:#111;
+  border:1px solid #f4e733;
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+}
+
+.card strong{
+  color:#f4e733;
+  font-size:26px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#000;
+}
+
+th, td{
+  border:1px solid #f4e733;
+  padding:10px;
+  text-align:center;
+}
+
+th{
+  background:#222;
+  color:#f4e733;
+}
+
+.car{
+  color:#28a745;
+  font-weight:bold;
+}
+
+.bus{
+  color:#4da3ff;
+  font-weight:bold;
+}
+
+@media(max-width:768px){
+  body{padding:10px}
+  .container{padding:12px}
+  table{font-size:11px}
+  th,td{padding:6px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🚪 تقرير خروج الأطفال</h1>
+
+  <div class="filters">
+    <input type="date" id="dateFilter" onchange="renderTable()">
+
+    <select id="transportFilter" onchange="renderTable()">
+      <option value="">كل وسائل النقل</option>
+      <option value="سيارة">🚗 سيارة</option>
+      <option value="حافلة">🚌 حافلة</option>
+    </select>
+
+    <select id="staffFilter" onchange="renderTable()">
+      <option value="">كل الموظفين</option>
+    </select>
+
+    <button onclick="loadData()">تحديث</button>
+  </div>
+
+  <div class="cards">
+    <div class="card">الإجمالي<br><strong id="totalCount">0</strong></div>
+    <div class="card">🚗 سيارة<br><strong id="carCount">0</strong></div>
+    <div class="card">🚌 حافلة<br><strong id="busCount">0</strong></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>الوقت</th>
+        <th>اسم الطفل</th>
+        <th>ولي الأمر</th>
+        <th>المعرف</th>
+        <th>طريقة الخروج</th>
+        <th>تم المسح بواسطة</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr><td colspan="6">جاري تحميل البيانات...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function forceInsideMainPortal() {
+  if (window.top === window.self) {
+    window.location.replace("KSCsummer.html?page=" + location.pathname.split("/").pop());
+  }
+}
+
+forceInsideMainPortal();
+window.addEventListener("pageshow", forceInsideMainPortal);
+
+const DEPARTURE_SCRIPT =
+"https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
+
+let allData = [];
+
+function getDubaiDateKey(value){
+  const d = new Date(value);
+  return d.toLocaleDateString("en-CA", { timeZone:"Asia/Dubai" });
+}
+
+function formatTime(value){
+  const d = new Date(value);
+  return d.toLocaleString("ar-EG", {
+    timeZone:"Asia/Dubai",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit",
+    hour:"2-digit",
+    minute:"2-digit",
+    hour12:true
+  }).replace("AM","ص").replace("PM","م");
+}
+
+async function loadData(){
+  const res = await fetch(DEPARTURE_SCRIPT + "?v=" + Date.now());
+  allData = await res.json();
+
+  allData = allData.filter(r => r["Timestamp"] && r["ID"]);
+
+  populateStaff();
+  renderTable();
+}
+
+function populateStaff(){
+  const select = document.getElementById("staffFilter");
+  const current = select.value;
+
+  const staff = [...new Set(allData.map(r => r["Scanned By"]).filter(Boolean))];
+
+  select.innerHTML = `<option value="">كل الموظفين</option>`;
+  staff.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s;
+    opt.textContent = s;
+    select.appendChild(opt);
+  });
+
+  select.value = current;
+}
+
+function renderTable(){
+  const date = document.getElementById("dateFilter").value;
+  const transport = document.getElementById("transportFilter").value;
+  const staff = document.getElementById("staffFilter").value;
+
+  let data = allData.filter(r => {
+    const rowDate = getDubaiDateKey(r["Timestamp"]);
+
+    return (!date || rowDate === date) &&
+           (!transport || r["Transportation"] === transport) &&
+           (!staff || r["Scanned By"] === staff);
+  });
+
+  data.sort((a,b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"]));
+
+  document.getElementById("totalCount").innerText = data.length;
+  document.getElementById("carCount").innerText =
+    data.filter(r => r["Transportation"] === "سيارة").length;
+  document.getElementById("busCount").innerText =
+    data.filter(r => r["Transportation"] === "حافلة").length;
+
+  const tbody = document.getElementById("tableBody");
+
+  if(data.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">لا توجد بيانات خروج</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td>${formatTime(r["Timestamp"])}</td>
+      <td>${r["Child Name"] || ""}</td>
+      <td>${r["Parent"] || ""}</td>
+      <td>${r["ID"] || ""}</td>
+      <td class="${r["Transportation"] === "حافلة" ? "bus" : "car"}">
+        ${r["Transportation"] === "حافلة" ? "🚌 حافلة" : "🚗 سيارة"}
+      </td>
+      <td>${r["Scanned By"] || ""}</td>
+    </tr>
+  `).join("");
+}
+
+document.getElementById("dateFilter").value = getDubaiDateKey(new Date());
+loadData();
+</script>
+
+<script>
+(() => {
+  const sendSize = () => {
+    const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    window.parent.postMessage({ type:'kalba-iframe-size', height:h }, '*');
+  };
+
+  window.addEventListener('load', sendSize);
+  new MutationObserver(sendSize).observe(document.body, {
+    childList:true,
+    subtree:true,
+    attributes:true
+  });
+})();
+</script>
+
+</body>
+</html>
