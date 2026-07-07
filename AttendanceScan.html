@@ -457,6 +457,19 @@ if (scanMode === "departure") {
     </div>
   `;
 
+const departureData = new URLSearchParams();
+departureData.append("id", id);
+departureData.append("name", name);
+departureData.append("parent", parent);
+departureData.append("transportation", transport);
+departureData.append("staff", loggedInUser.toUpperCase());
+
+fetch(DEPARTURE_SCRIPT, {
+  method: "POST",
+  mode: "no-cors",
+  body: departureData
+});
+  
   setTimeout(() => startScanner(), 4000);
   return;
 }
