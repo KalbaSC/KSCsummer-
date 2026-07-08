@@ -58,16 +58,16 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,.04);
 }
 
-.header-right {
-  width: 100%;
-  max-width: 1500px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 18px;
-  padding: 18px 48px;
-  color: var(--text);
+.header-right{
+    max-width:1600px;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+
+    gap:18px;
+
+    padding:18px 40px;
 }
 
 .header-right img.logo {
@@ -98,49 +98,60 @@ body {
 }
 
 /* Navigation */
-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
-  flex: 1;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  margin: 0;
-  padding: 0;
+nav{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:28px;
+
+    margin-right:55px;
+
+    flex:1;
+
+    justify-content:flex-start;
+
+    background:none;
+
+    border:none;
+
+    box-shadow:none;
 }
 
 nav button,
-.dropdown-btn {
-  background: transparent;
-  border: none;
-  color: #4b5563;
-  padding: 10px 4px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 0;
-  font-family: 'NotoKufiArabic', sans-serif;
-  transition: .2s;
-  font-weight: 600;
+.dropdown-btn{
+
+    background:none;
+
+    border:none;
+
+    color:#5b5b5b;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    padding:12px 0;
+
+    cursor:pointer;
+
+    transition:.25s;
 }
 
 nav button:hover,
-.dropdown-btn:hover {
-  background: transparent;
-  color: #0b3551;
-  transform: none;
+.dropdown-btn:hover{
+
+    color:#003865;
 }
 
-nav button.active {
-  background: transparent;
-  color: #0b3551;
-  border-bottom: 3px solid #c79a43;
-  font-weight: bold;
-  box-shadow: none;
+nav button.active{
+
+    color:#003865;
+
+    border-bottom:3px solid #d6a93b;
 }
 
-/* Dropdown */
 .dropdown {
   position: relative;
 }
@@ -355,48 +366,71 @@ footer p {
 </head>
 <body>
 
-  <header class="header-container">
-    <div class="header-right">
-      <img src="Picture3.png" alt="شعار الشارقة" class="logo">
-      <div class="divider"></div>
-      <img src="logo.png" alt="شعار نادي كلباء" class="logo">
-      <div class="header-info">
-        <div class="arabic-name">نادي كلباء الرياضي الثقافي</div>
-        <div class="english-name">KALBA SPORTS & CULTURAL CLUB</div>
-      </div>
-    </div>
-  </header>
+<header class="header-container">
 
 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-  ☰ القائمة
-</button>
-  
-<nav id="mainNav">
-    <button class="active" onclick="loadPage(this, 'AttendanceScan.html')">تسجيل الحضور</button>
-    <button onclick="loadPage(this, 'reports.html')">لوحة التقارير</button>
-    <button onclick="loadPage(this, 'evaluate.html')">تقييم اللاعبين</button>
-    <button onclick="loadPage(this, 'camp.html')">تسجيل المخيم</button>
-    <button onclick="loadPage(this, 'gallery.html')">المركز الإعلامي</button>
-    <button onclick="loadPage(this, 'parentFeedback.html')">رضا أولياء الأمور</button>
-  <button onclick="loadPage(this, 'departureReport.html')">تقرير الخروج</button>
-<div class="dropdown">
-
-<button class="dropdown-btn" onclick="toggleAdminMenu(event)">
-  ⚙️ صفحات الإدارة ▾
+☰ القائمة
 </button>
 
-  <div class="dropdown-content">
-    <button onclick="loadPage(this,'weeklyReports.html')">
-      📄 التقارير الأسبوعية
-    </button>
+<div class="header-right">
 
-    <button onclick="loadPage(this,'campPortal.html')">
-      💰 حسابات المعسكر
-    </button>
-  </div>
+    <img src="Picture3.png" class="logo">
+
+    <div class="divider"></div>
+
+    <img src="logo.png" class="logo">
+
+    <div class="header-info">
+        <div class="arabic-name">
+            نادي كلباء الرياضي الثقافي
+        </div>
+
+        <div class="english-name">
+            KALBA SPORTS & CULTURAL CLUB
+        </div>
+    </div>
+
+    <nav id="mainNav">
+
+        <button class="active" onclick="loadPage(this,'AttendanceScan.html')">تسجيل الحضور</button>
+
+        <button onclick="loadPage(this,'reports.html')">لوحة التقارير</button>
+
+        <button onclick="loadPage(this,'evaluate.html')">تقييم اللاعبين</button>
+
+        <button onclick="loadPage(this,'camp.html')">تسجيل المخيم</button>
+
+        <button onclick="loadPage(this,'gallery.html')">المركز الإعلامي</button>
+
+        <button onclick="loadPage(this,'parentFeedback.html')">رضا أولياء الأمور</button>
+
+        <button onclick="loadPage(this,'departureReport.html')">تقرير الخروج</button>
+
+        <div class="dropdown">
+
+            <button class="dropdown-btn" onclick="toggleAdminMenu(event)">
+                ⚙️ صفحات الإدارة ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <button onclick="loadPage(this,'weeklyReports.html')">
+                    📄 التقارير الأسبوعية
+                </button>
+
+                <button onclick="loadPage(this,'campPortal.html')">
+                    💰 حسابات المعسكر
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
 
 </div>
-  </nav>
+
+</header>
   
   <main>
     <iframe
