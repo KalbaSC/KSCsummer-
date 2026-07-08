@@ -291,6 +291,17 @@ footer p {
           style="background:#007bff;color:white;">
     🚪 تسجيل خروج
   </button>
+
+  <div id="departureTypeBox" style="display:none;margin-top:15px;">
+  <label style="color:#f4e733;font-weight:bold;">طريقة الخروج:</label>
+
+  <select id="departureType"
+          style="width:90%;max-width:300px;padding:12px;border-radius:10px;margin-top:10px;">
+    <option value="سيارة">🚗 سيارة</option>
+    <option value="حافلة">🚌 حافلة</option>
+  </select>
+</div>
+          
 </div>
 
         <div id="transportChoice" style="display:none;margin-top:20px;">
@@ -376,6 +387,8 @@ function setScanMode(mode){
     mode === "attendance"
       ? "✅ وضع تسجيل الحضور مفعل"
       : "🚪 وضع تسجيل الخروج مفعل";
+  document.getElementById("departureTypeBox").style.display =
+  mode === "departure" ? "block" : "none";
 }
 
 if (loggedInUser) {
@@ -429,6 +442,7 @@ async function saveTransportation(id,type){
       const id = parts[0] || "UNKNOWN";
       const transport = await checkTransportation(id);
 if (scanMode === "departure") {
+  const departureType = document.getElementById("departureType").value;
   const encodedName = parts[1] || "UNKNOWN";
   const encodedParent = parts[2] || "UNKNOWN";
 
@@ -453,7 +467,7 @@ if (scanMode === "departure") {
     ولي الأمر: ${parent}<br>
     المعرف: ${id}<br>
     <div style="font-size:42px;margin-top:15px;color:#f4e733;">
-      ${transport === "حافلة" ? "🚌 حافلة" : "🚗 سيارة"}
+      ${departureType === "حافلة" ? "🚌 حافلة" : "🚗 سيارة"}
     </div>
   `;
 
@@ -461,7 +475,7 @@ const departureData = new URLSearchParams();
 departureData.append("id", id);
 departureData.append("name", name);
 departureData.append("parent", parent);
-departureData.append("transportation", transport);
+departureData.append("transportation", departureType);
 departureData.append("staff", loggedInUser.toUpperCase());
 
 fetch(DEPARTURE_SCRIPT, {
