@@ -1120,32 +1120,56 @@ function getActivityRecords(rawData) {
 }
 
 function updateTodayStats(data = filteredData) {
-const today = new Date().toDateString();
-const todayData = data.filter(row => 
-new Date(row.Timestamp).toDateString() === today
-);
+  const unique = {};
 
-const staffToday = {};
-let early = 0, late = 0;
+  data.forEach(row => {
+    if (!row.ID || !row.dateKey) return;
 
-todayData.forEach(row => {
-const name = row["Scanned By"] || "غير معروف";
-staffToday[name] = (staffToday[name] || 0) + 1;
+    const key = `${row.ID}_${row.dateKey}`;
 
-const time = new Date(row.Timestamp);
-const totalMinutes = time.getHours() * 60 + time.getMinutes();
-(totalMinutes < (17 * 60 + 11)) ? early++ : late++;
-});
+    if (!unique[key]) {
+      unique[key] = row;
+    } else {
+      if (new Date(row.Timestamp) < new Date(unique[key].Timestamp)) {
+        unique[key] = row;
+      }
+    }
+  });
 
-const staffList = Object.entries(staffToday)
-.map(([name, count]) => `${name}: ${count}`)
-.join("<br>");
+  const todayData = Object.values(unique);
 
-document.getElementById("todayStats").innerHTML = `
-      <p><strong>حسب الموظف:</strong><br>${staffList || "لا يوجد بيانات"}</p>
-      <p><strong>حسب الوقت:</strong><br>بالوقت: ${early} | متأخر: ${late}</p>
-      <p><strong>إجمالي اليوم:</strong> ${todayData.length}</p>
-    `;
+  const staffToday = {};
+  let early = 0, late = 0;
+
+  todayData.forEach(row => {
+    const name = row["Scanned By"] || "غير معروف";
+    staffToday[name] = (staffToday[name] || 0) + 1;
+
+    const time = new Date(row.Timestamp);
+    const dubaiHour = Number(time.toLocaleString("en-US", {
+      timeZone: "Asia/Dubai",
+      hour: "2-digit",
+      hour12: false
+    }));
+
+    const dubaiMinute = Number(time.toLocaleString("en-US", {
+      timeZone: "Asia/Dubai",
+      minute: "2-digit"
+    }));
+
+    const totalMinutes = dubaiHour * 60 + dubaiMinute;
+    totalMinutes < (17 * 60 + 11) ? early++ : late++;
+  });
+
+  const staffList = Object.entries(staffToday)
+    .map(([name, count]) => `${name}: ${count}`)
+    .join("<br>");
+
+  document.getElementById("todayStats").innerHTML = `
+    <p><strong>حسب الموظف:</strong><br>${staffList || "لا يوجد بيانات"}</p>
+    <p><strong>حسب الوقت:</strong><br>بالوقت: ${early} | متأخر: ${late}</p>
+    <p><strong>إجمالي اليوم:</strong> ${todayData.length}</p>
+  `;
 }
 
 function populateDropdowns(data = allData) {
@@ -1991,35 +2015,52 @@ renderTopRankings();
 }
 
 function renderStaffChart() {
-const staffCounts = {};
-filteredData.forEach(row => {
-const name = row["Scanned By"] || "غير معروف";
-staffCounts[name] = (staffCounts[name] || 0) + 1;
-});
+  const unique = {};
 
-if (charts.staff) charts.staff.destroy();
+  filteredData.forEach(row => {
+    if (!row.ID || !row.dateKey) return;
 
-const ctx = document.getElementById('pieStaff').getContext('2d');
-charts.staff = new Chart(ctx, {
-type: 'pie',
-data: {
-labels: Object.keys(staffCounts),
-datasets: [{
-data: Object.values(staffCounts),
-backgroundColor: [
-'#f4e733', '#ffbb00', '#ffaa00', '#ccaa00', '#999900'
-]
-}]
-},
-options: {
-plugins: {
-legend: {
-position: 'bottom',
-rtl: true
-}
-}
-}
-});
+    const key = `${row.ID}_${row.dateKey}`;
+
+    if (!unique[key]) {
+      unique[key] = row;
+    } else {
+      if (new Date(row.Timestamp) < new Date(unique[key].Timestamp)) {
+        unique[key] = row;
+      }
+    }
+  });
+
+  const staffCounts = {};
+
+  Object.values(unique).forEach(row => {
+    const name = row["Scanned By"] || "غير معروف";
+    staffCounts[name] = (staffCounts[name] || 0) + 1;
+  });
+
+  if (charts.staff) charts.staff.destroy();
+
+  const ctx = document.getElementById('pieStaff').getContext('2d');
+  charts.staff = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: Object.keys(staffCounts),
+      datasets: [{
+        data: Object.values(staffCounts),
+        backgroundColor: [
+          '#f4e733', '#ffbb00', '#ffaa00', '#ccaa00', '#999900'
+        ]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom',
+          rtl: true
+        }
+      }
+    }
+  });
 }
 
 function toggleHiddenColumns() {
