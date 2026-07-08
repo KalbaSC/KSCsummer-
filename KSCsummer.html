@@ -15,30 +15,34 @@
       src: url('NotoKufiArabic.ttf') format('truetype'); 
       font-display: swap;
     }
-    :root {
-      --brand: #f4e733;
-      --bg-dark: #111;
-      --bg-black: #000;
-    }
+:root {
+  --brand: #f4e733;
+  --brand-soft: #fff8c9;
+  --bg-dark: #111;
+  --bg-black: #000;
+  --card: #ffffff;
+  --text-dark: #1b1b1b;
+}
 
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
     }
-    body {
-      font-family: 'NotoKufiArabic', 'Cairo', system-ui, sans-serif;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: #000;
-      background-image: url('black_and_yellow_grunge_background.jpg');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-attachment: fixed;
-      background-size: cover;
-    }
+body {
+  font-family: 'NotoKufiArabic', 'Cairo', system-ui, sans-serif;
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(255,255,255,.65), rgba(255,255,255,.75)),
+    url('black_and_yellow_grunge_background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+}
 
     .header-container {
       width: 100%;
@@ -63,55 +67,68 @@
     .header-info { text-align: center; }
     .arabic-name { font-weight: bold; font-size: 20px; }
     .english-name { font-size: 14px; color: var(--brand); }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: var(--bg-black);
-      border-bottom: 2px solid var(--brand);
-    }
-    nav button {
-      background: none;
-      border: none;
-      color: var(--brand);
-      padding: 12px 18px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 94%;
+  max-width: 1450px;
+  margin: 18px auto;
+  padding: 12px;
+  background: white;
+  border: 1px solid rgba(244,231,51,.8);
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+nav button {
+  background: var(--brand-soft);
+  border: 1px solid rgba(244,231,51,.8);
+  color: #222;
+  padding: 12px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 14px;
+  transition: .2s;
+}
+nav button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.14);
+}
     nav button.active {
       background: var(--brand);
       color: #000;
       border-radius: 8px;
     }
+main {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 22px 25px;
+}
+#pageFrame {
+  width: 100%;
+  border: 0;
+  display: block;
+  background: white;
+  min-height: 420px;
+  border-radius: 24px;
+  box-shadow: 0 14px 35px rgba(0,0,0,.18);
+  transform: translateZ(0);
+}
 
-    main {
-      flex: 1; 
-      width: 100%;
-      box-sizing: border-box;
-    }
-    #pageFrame {
-      width: 100%;
-      border: 0;
-      display: block;
-      background: transparent; 
-      min-height: 420px; 
-      transform: translateZ(0);
-    }
-
-    footer {
-      background-color: var(--bg-dark);
-      color: white;
-      text-align: center;
-      padding: 18px 12px;
-      border-top: 3px solid var(--brand);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    .social-icons a {
-      color: white;
+footer {
+  background: white;
+  color: #222;
+  text-align: center;
+  padding: 18px 12px;
+  border-top: 3px solid var(--brand);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.social-icons a {
+  color: #111;
       margin: 0 8px;
       font-size: 18px;
     }
@@ -207,35 +224,34 @@
   font-family:'NotoKufiArabic',sans-serif;
   box-shadow:0 6px 18px rgba(244,231,51,.18);
 }
-
-  nav{
-    display:none;
-    width:82%;
-    max-width:340px;
-    margin:0 auto 10px;
-    padding:10px;
-    background:rgba(0,0,0,.94);
-    border:1px solid var(--brand);
-    border-radius:18px;
-  }
+nav{
+  display:none;
+  width:88%;
+  max-width:360px;
+  margin:0 auto 12px;
+  padding:12px;
+  background:white;
+  border:1px solid var(--brand);
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
 
   nav.show{
     display:block;
   }
-
-  nav button,
-  .dropdown-btn{
-    display:block;
-    width:100%;
-    margin:7px 0;
-    padding:13px;
-    border-radius:14px;
-    background:#151515;
-    color:var(--brand);
-    font-size:14px;
-    text-align:center;
-  }
-
+nav button,
+.dropdown-btn{
+  display:block;
+  width:100%;
+  margin:7px 0;
+  padding:13px;
+  border-radius:14px;
+  background:var(--brand-soft);
+  color:#111;
+  font-size:14px;
+  text-align:center;
+  border:1px solid rgba(244,231,51,.8);
+}
   nav button.active{
     background:var(--brand);
     color:#000;
