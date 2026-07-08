@@ -1844,39 +1844,38 @@ controls.innerHTML = activitySummaryHTML;
       tbody.appendChild(row);
     });
   }
+  const activityGroups = getActivityGroups(activityRecords);
 
   if (activityPlayers.size > 0) {
-    const headerRow = document.createElement("tr");
-    headerRow.className = "general-with-activities";
-    headerRow.innerHTML = `<td colspan="5">لاعبون مع أنشطة (${activityPlayers.size} لاعب)</td>`;
-    tbody.appendChild(headerRow);
+  const headerRow = document.createElement("tr");
+  headerRow.className = "general-with-activities";
+  headerRow.innerHTML = `<td colspan="5">لاعبون مع أنشطة (${activityPlayers.size} لاعب)</td>`;
+  tbody.appendChild(headerRow);
 
-    const playersWithActivities = {};
-    activityRecords.forEach(record => {
-      if (!playersWithActivities[record.ID]) {
-        playersWithActivities[record.ID] = {
-          info: record,
-          activities: new Set()
-        };
-      }
-      playersWithActivities[record.ID].activities.add(record.Activity);
-    });
+  const playersWithActivities = {};
+  activityRecords.forEach(record => {
+    if (!playersWithActivities[record.ID]) {
+      playersWithActivities[record.ID] = {
+        info: record,
+        activities: new Set()
+      };
+    }
+    playersWithActivities[record.ID].activities.add(record.Activity);
+  });
 
-    Object.values(playersWithActivities).forEach(player => {
-      const row = document.createElement("tr");
-      row.className = "general-with-activities";
-      row.innerHTML = `
-        <td>${formatDate(player.info.Timestamp)}</td>
-        <td>${player.info["Child Name"] || ""} ${player.info.Parent || ""}</td>
-        <td>${player.info.ID || ""}</td>
-        <td>${player.info["Scanned By"] || ""}</td>
-        <td>${Array.from(player.activities).join("، ")}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  const activityGroups = getActivityGroups(activityRecords);
+  Object.values(playersWithActivities).forEach(player => {
+    const row = document.createElement("tr");
+    row.className = "general-with-activities";
+    row.innerHTML = `
+      <td>${formatDate(player.info.Timestamp)}</td>
+      <td>${player.info["Child Name"] || ""} ${player.info.Parent || ""}</td>
+      <td>${player.info.ID || ""}</td>
+      <td>${player.info["Scanned By"] || ""}</td>
+      <td>${Array.from(player.activities).join("، ")}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
   Object.entries(activityGroups)
     .sort((a, b) => b[1].players.size - a[1].players.size)
     .forEach(([activity, data]) => {
