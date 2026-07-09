@@ -10,231 +10,245 @@
   <script src="https://unpkg.com/html5-qrcode"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-   @font-face {
-      font-family: 'NotoKufiArabic';
-      src: url('NotoKufiArabic.ttf') format('truetype'); 
-      font-display: swap;
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: 'NotoKufiArabic', 'Cairo', sans-serif;
-      background: url('black_and_yellow_grunge_background.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .page-wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .header-container {
-      width: 100%;
-      background: #111;
-      border-bottom: 3px solid #f4e733;
-    }
-    .header-right {
-      width: 100%;
-      max-width: 1170px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px 42px;
-      background-color: #111;
-      color: white;
-      box-sizing: border-box;
-    }
-    .header-right img.logo {
-      height: 70px;
-    }
-    .divider {
-      width: 1.5px;
-      height: 65px;
-      background-color: #f4e733;
-    }
-    .header-info {
-      text-align: center;
-    }
-    .arabic-name {
-      font-weight: bold;
-      font-size: 20px;
-    }
-    .english-name {
-      font-size: 14px;
-      color: #f4e733;
-    }
-    
-    main {
-      flex: 1;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.9);
-      border-radius: 10px;
-      margin-top: 30px;
-    }
-    
-    #reader {
-      width: 320px;
-      border: 3px solid #f4e733;
-      border-radius: 12px;
-      background: white;
-      margin: 20px auto;
-    }
-
-    #login-section, #scanner-section {
-      display: none;
-    }
-
-input {
-  width: 90%;
-  max-width: 300px;
-  margin: 10px auto;
-  display: block;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-}
-    
-button {
-  width: 90%;
-  max-width: 300px;
-  background-color: #f4e733;
-  color: black;
-  cursor: pointer;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  margin: 10px auto;
-  display: block;
+ @font-face {
+  font-family: 'NotoKufiArabic';
+  src: url('NotoKufiArabic.ttf') format('truetype');
+  font-display: swap;
 }
 
-    #status {
-      margin-top: 20px;
-      padding: 10px 15px;
-      background: black;
-      border-radius: 10px;
-      color: #f4e733;
-    }
-
-    footer {
-      background-color: #111;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      border-top: 3px solid #f4e733;
-      font-size: 12px;
-    }
-
-    .social-icons a {
-      color: white;
-      margin: 0 8px;
-      font-size: 11px;
-    }
-    #scanner-section h3,
-#scanner-section label {
-  color: #f4e733;
-  font-weight: bold;
-}
-        @media (max-width: 768px) {
- .header-right {
-    padding: 10px 10px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .header-info {
-    display: block;
-    text-align: center;
-  }
-
-  .header-info .arabic-name {
-    font-size: 16px;
-  }
-
-  .header-info .english-name {
-    font-size: 12px;
-  }
-
-  .header-right .divider {
-    height: 45px;
-    width: 1.5px;
-    background-color: #f4e733;
-  }
-
-  img.logo {
-    height: 50px !important;
-    max-height: 50px !important;
-  }
-  .container {
-    padding: 12px;
-    margin: 10px auto;
-    width: 95%;
-  }
-
-  .title {
-    font-size: 18px;
-    margin-top: 15px;
-    margin-bottom: 17px;
-    line-height: 1.4;
-  }
-
-  .search-group {
-  flex-direction: row !important;
-  flex-wrap: nowrap;
-}
-  button{
-    width: 80%;
-    font-size: 12px;
-    align-items: center;
-    padding: 10px;
-  }
-          
-  footer {
-  text-align: center;
-  padding: 15px 10px;
+:root{
+  --yellow:#f4e733;
+  --blue:#0b3551;
+  --sky:#eef6f8;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --green:#22c55e;
+  --red:#dc3545;
 }
 
-footer p {
-  margin-bottom: 10px;
-  font-size: 13px;
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  font-family:'NotoKufiArabic','Cairo',sans-serif;
+  background:#eef6f8;
+  color:var(--text);
 }
 
-.social-icons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
+.page-wrapper{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
-  .social-icons a {
-    font-size: 18px;
+
+.header-container{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+}
+
+.header-right{
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  padding:18px 40px;
+}
+
+.header-right img.logo{
+  height:64px;
+}
+
+.divider{
+  width:3px;
+  height:58px;
+  background:var(--yellow);
+  border-radius:10px;
+}
+
+.header-info{
+  text-align:center;
+}
+
+.arabic-name{
+  font-size:22px;
+  font-weight:bold;
+  color:var(--blue);
+}
+
+.english-name{
+  font-size:14px;
+  color:#2f80ed;
+  font-weight:600;
+}
+
+main{
+  flex:1;
+  padding:28px 18px;
+  text-align:center;
+}
+
+.container,
+#login-section{
+  max-width:680px !important;
+  margin:35px auto !important;
+  background:#fff !important;
+  border:1px solid var(--border) !important;
+  border-radius:24px !important;
+  padding:28px !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.08) !important;
+}
+
+#login-section h3,
+#scanner-section h3,
+#scanner-section label{
+  color:var(--blue) !important;
+  font-weight:bold;
+}
+
+input,select,textarea{
+  width:90%;
+  max-width:360px;
+  margin:10px auto;
+  display:block;
+  padding:13px 15px;
+  font-size:15px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#f8fbff;
+  color:var(--text);
+  font-family:'NotoKufiArabic','Cairo',sans-serif;
+}
+
+button{
+  width:90%;
+  max-width:360px;
+  background:var(--yellow);
+  color:#222;
+  cursor:pointer;
+  padding:13px;
+  font-size:15px;
+  border-radius:14px;
+  margin:10px auto;
+  display:block;
+  border:none;
+  font-family:'NotoKufiArabic','Cairo',sans-serif;
+  font-weight:bold;
+  transition:.2s;
+}
+
+button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+
+#reader{
+  width:320px;
+  max-width:95%;
+  border:3px solid var(--yellow);
+  border-radius:20px;
+  background:white;
+  margin:22px auto;
+  overflow:hidden;
+}
+
+#status{
+  margin:22px auto 0;
+  padding:16px 18px;
+  background:#f8fbff;
+  border:1px solid #dbeafe;
+  border-radius:18px;
+  color:var(--blue);
+  max-width:520px;
+  font-weight:bold;
+}
+
+#transportChoice,
+#departureTypeBox{
+  background:#f8fbff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  max-width:520px;
+  margin:18px auto !important;
+}
+
+#manualId{
+  background:#fff;
+}
+
+#scanner-section > div:last-child{
+  background:#f8fbff !important;
+  border:1px solid var(--border);
+  border-radius:18px !important;
+}
+
+footer{
+  background:#fff;
+  color:var(--text);
+  text-align:center;
+  padding:16px 12px;
+  border-top:4px solid var(--yellow);
+  font-size:12px;
+}
+
+footer p{
+  margin:6px 0;
+}
+
+.social-icons a{
+  color:#2f80ed;
+  margin:0 8px;
+  font-size:16px;
+}
+
+@media(max-width:768px){
+  .header-right{
+    padding:12px 8px;
+    gap:8px;
   }
-#login-section input,
-#login-section button {
-  width: 90% !important;
-  max-width: 300px;
-  display: block;
-  margin: 10px auto;
-  font-size: 15px;
-  padding: 12px;
-  border-radius: 10px;
-  text-align: center;
-}
+
+  .header-right img.logo{
+    height:44px !important;
+  }
+
+  .divider{
+    height:38px;
+  }
+
+  .arabic-name{
+    font-size:15px;
+  }
+
+  .english-name{
+    font-size:11px;
+  }
+
+  main{
+    padding:14px 10px;
+  }
+
+  .container,
+  #login-section{
+    width:95% !important;
+    padding:20px 14px !important;
+    margin:18px auto !important;
+  }
+
+  button,input,select{
+    width:92% !important;
+    font-size:14px;
+  }
+
+  footer{
+    font-size:11px;
+  }
 }
   </style>
 </head>
