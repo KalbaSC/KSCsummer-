@@ -246,10 +246,12 @@ footer p {
     overflow-x: hidden;
   }
 
-  .header-right {
-    padding: 12px 8px;
-    gap: 8px;
-  }
+.header-right {
+  padding: 14px 10px;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
 
   .header-right img.logo {
     height: 44px !important;
@@ -284,17 +286,21 @@ footer p {
     box-shadow: 0 8px 20px rgba(244, 231, 51, 0.3);
   }
 
-  nav {
-    display: none;
-    width: 88%;
-    max-width: 360px;
-    margin: 0 auto 12px;
-    padding: 12px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    box-shadow: 0 10px 25px rgba(47, 128, 237, 0.14);
-  }
+nav {
+  display: none;
+  position: absolute;
+  top: 78px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 88%;
+  max-width: 360px;
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 14px 35px rgba(0,0,0,.18);
+  z-index: 9999;
+}
 
   nav.show {
     display: block;
@@ -361,6 +367,14 @@ footer p {
   .social-icons a {
     font-size: 16px;
   }
+  .header-container {
+  position: relative;
+}
+
+.mobile-menu-btn {
+  position: relative;
+  z-index: 10000;
+}
 }
   </style>
 </head>
