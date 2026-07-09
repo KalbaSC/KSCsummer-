@@ -207,7 +207,12 @@ footer p{
   margin:0 8px;
   font-size:16px;
 }
-
+#login-section,
+#scanner-section,
+#mainView {
+  display: none;
+}
+    
 @media(max-width:768px){
   .header-right{
     padding:12px 8px;
@@ -408,9 +413,12 @@ function setScanMode(mode){
 
 if (loggedInUser) {
   document.getElementById("login-section").style.display = "none";
+  document.getElementById("mainView").style.display = "grid";
   document.getElementById("scanner-section").style.display = "block";
 } else {
   document.getElementById("login-section").style.display = "block";
+  document.getElementById("mainView").style.display = "none";
+  document.getElementById("scanner-section").style.display = "none";
 }
 
     function login() {
@@ -420,6 +428,7 @@ if (loggedInUser) {
         loggedInUser = u;
       localStorage.setItem("attendanceUser", u);
         document.getElementById("login-section").style.display = "none";
+        document.getElementById("mainView").style.display = "grid";
         document.getElementById("scanner-section").style.display = "block";
       } else {
         document.getElementById("login-error").innerText = "اسم المستخدم أو كلمة المرور غير صحيحة.";
