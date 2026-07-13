@@ -927,7 +927,7 @@ footer {
 <nav>
 <button onclick="showMainView()" class="active">الحضور </button>
 <button onclick="showActivitiesView()">الحضور حسب الأنشطة</button>
-<button onclick="showStatsView()">الإحصائيات</button>
+<button onclick="openStatsLogin()">الإحصائيات</button>
 <button onclick="showTopParticipants()">المنتسبون المميزون</button>
 <div class="dropdown">
 <button>الفترات الزمنية ▼</button>
@@ -1069,7 +1069,98 @@ onclick="promptForPassword()">
 </table>
     
 </div>
+<div id="statsLoginPopup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(11,53,81,.35);
+  backdrop-filter:blur(6px);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+">
 
+  <div style="
+    width:100%;
+    max-width:420px;
+    background:white;
+    border:1px solid #dfe7ec;
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(11,53,81,.18);
+    text-align:center;
+  ">
+
+    <h2 style="color:#0b3551;margin-top:0;">
+      دخول الإحصائيات
+    </h2>
+
+    <input
+      type="text"
+      id="statsUsername"
+      placeholder="اسم المستخدم"
+      style="
+        width:100%;
+        padding:13px;
+        margin:8px 0;
+        border:1px solid #dfe7ec;
+        border-radius:12px;
+        font-family:'NotoKufiArabic',sans-serif;
+      "
+    >
+
+    <input
+      type="password"
+      id="statsPassword"
+      placeholder="كلمة المرور"
+      style="
+        width:100%;
+        padding:13px;
+        margin:8px 0;
+        border:1px solid #dfe7ec;
+        border-radius:12px;
+        font-family:'NotoKufiArabic',sans-serif;
+      "
+    >
+
+    <div id="statsLoginError" style="
+      color:#dc3545;
+      min-height:24px;
+      margin-top:6px;
+    "></div>
+
+    <button onclick="checkStatsLogin()" style="
+      width:100%;
+      padding:13px;
+      margin-top:10px;
+      background:#f4e733;
+      color:#222;
+      border:none;
+      border-radius:12px;
+      font-family:'NotoKufiArabic',sans-serif;
+      font-weight:bold;
+      cursor:pointer;
+    ">
+      دخول
+    </button>
+
+    <button onclick="closeStatsLogin()" style="
+      width:100%;
+      padding:11px;
+      margin-top:8px;
+      background:#eef6f8;
+      color:#0b3551;
+      border:1px solid #dfe7ec;
+      border-radius:12px;
+      font-family:'NotoKufiArabic',sans-serif;
+      cursor:pointer;
+    ">
+      إلغاء
+    </button>
+
+  </div>
+</div>
 <div class="container" id="statsView" style="display: none;">
 <h2 style="color:#f4e733; text-align:center">إحصائيات الحضور</h2>
 <div class="controls" style="margin-bottom:20px">
@@ -1183,7 +1274,50 @@ let allData = [];
 let filteredData = [];
 let charts = {};
 let displayAllRecords = false;
+const STATS_USERS = {
+  "rwnd": "rwnd123",
+  "ahmed": "ahmed123"
+};
 
+function openStatsLogin() {
+  const alreadyAllowed = sessionStorage.getItem("statsAccess") === "true";
+
+  if (alreadyAllowed) {
+    showStatsView();
+    return;
+  }
+
+  document.getElementById("statsLoginPopup").style.display = "flex";
+  document.getElementById("statsUsername").value = "";
+  document.getElementById("statsPassword").value = "";
+  document.getElementById("statsLoginError").innerText = "";
+}
+
+function closeStatsLogin() {
+  document.getElementById("statsLoginPopup").style.display = "none";
+}
+
+function checkStatsLogin() {
+  const username = document
+    .getElementById("statsUsername")
+    .value
+    .trim()
+    .toLowerCase();
+
+  const password = document
+    .getElementById("statsPassword")
+    .value
+    .trim();
+
+  if (STATS_USERS[username] && STATS_USERS[username] === password) {
+    sessionStorage.setItem("statsAccess", "true");
+    closeStatsLogin();
+    showStatsView();
+  } else {
+    document.getElementById("statsLoginError").innerText =
+      "اسم المستخدم أو كلمة المرور غير صحيحة";
+  }
+}
 function formatDate(isoString) {
 const date = new Date(isoString);
 const options = {
