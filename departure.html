@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>تسجيل خروج الأطفال</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  >
+
+  <style>
+    @font-face {
+      font-family: "NotoKufiArabic";
+      src: url("NotoKufiArabic.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --yellow: #f4e733;
+      --navy: #0b3551;
+      --blue: #2f80ed;
+      --background: #eef6f8;
+      --white: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dfe7ec;
+      --green: #16a34a;
+      --green-soft: #ecfdf3;
+      --red: #dc3545;
+      --red-soft: #fff1f1;
+      --bus: #2f80ed;
+      --car: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "NotoKufiArabic", Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+    }
+
+    body {
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    .page-header {
+      margin-bottom: 20px;
+      padding: 24px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(11, 53, 81, 0.08);
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 30px;
+    }
+
+    .page-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(11, 53, 81, 0.06);
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      top: 50%;
+      right: 17px;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .search-box input,
+    .toolbar select {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 45px 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #f8fbfd;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .toolbar select {
+      padding: 12px;
+    }
+
+    .search-box input:focus,
+    .toolbar select:focus {
+      border-color: var(--blue);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(47, 128, 237, 0.1);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .summary-card {
+      padding: 17px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .summary-card strong {
+      display: block;
+      color: var(--navy);
+      font-size: 25px;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .children-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .child-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      box-shadow: 0 7px 20px rgba(11, 53, 81, 0.05);
+      transition: 0.2s;
+    }
+
+    .child-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(11, 53, 81, 0.09);
+    }
+
+    .child-card.departed {
+      background: var(--green-soft);
+      border-color: #b9e5c9;
+    }
+
+    .child-name {
+      margin: 0 0 7px;
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .child-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .child-details span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .departure-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .departure-actions button {
+      min-width: 105px;
+      min-height: 46px;
+      padding: 10px 15px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .departure-actions button:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    .car-button {
+      background: var(--car);
+    }
+
+    .bus-button {
+      background: var(--bus);
+    }
+
+    .departure-actions button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .departure-result {
+      min-width: 215px;
+      padding: 11px 14px;
+      background: white;
+      border: 1px solid #b9e5c9;
+      border-radius: 13px;
+      color: var(--green);
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .empty-state,
+    .loading {
+      padding: 45px 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 13px;
+      border: 4px solid #dfe7ec;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      max-width: calc(100% - 40px);
+      padding: 13px 20px;
+      border-radius: 13px;
+      color: white;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+      z-index: 9999;
+    }
+
+    .toast.success {
+      background: var(--green);
+    }
+
+    .toast.error {
+      background: var(--red);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .page-header {
+        padding: 19px 12px;
+        border-radius: 19px;
+      }
+
+      .page-header h1 {
+        font-size: 23px;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+        padding: 13px;
+      }
+
+      .summary {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+      }
+
+      .summary-card {
+        padding: 12px 5px;
+      }
+
+      .summary-card strong {
+        font-size: 20px;
+      }
+
+      .summary-card span {
+        font-size: 9px;
+      }
+
+      .child-card {
+        grid-template-columns: 1fr;
+        gap: 13px;
+        padding: 15px 12px;
+      }
+
+      .child-name {
+        font-size: 16px;
+      }
+
+      .departure-actions {
+        width: 100%;
+      }
+
+      .departure-actions button {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .departure-result {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <section class="page-header">
+      <h1>تسجيل خروج الأطفال</h1>
+      <p>
+        ابحث عن الطفل ثم اختر طريقة الخروج
+      </p>
+    </section>
+
+    <section class="toolbar">
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="ابحث بالاسم، ولي الأمر، أو المعرف"
+          oninput="renderChildren()"
+          autocomplete="off"
+        >
+      </div>
+
+      <select id="staffSelect">
+        <option value="">اختر الموظف</option>
+        <option value="RWND">RWND</option>
+        <option value="EMAN">EMAN</option>
+        <option value="FATIMA">FATIMA</option>
+        <option value="AMNA">AMNA</option>
+        <option value="HANEEN">HANEEN</option>
+      </select>
+
+    </section>
+
+    <section class="summary">
+      <div class="summary-card">
+        <strong id="attendedCount">0</strong>
+        <span>حضر اليوم</span>
+      </div>
+
+      <div class="summary-card">
+        <strong id="departedCount">0</strong>
+        <span>تم تسجيل خروجهم</span>
+      </div>
+
+      <div class="summary-card">
+        <strong id="remainingCount">0</strong>
+        <span>لم يخرجوا بعد</span>
+      </div>
+    </section>
+
+    <section id="childrenList" class="children-list">
+      <div class="loading">
+        <div class="spinner"></div>
+        جاري تحميل حضور اليوم...
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const ATTENDANCE_SCRIPT =
+      "https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec";
+
+    const DEPARTURE_SCRIPT =
+      "https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
+
+    let attendedChildren = [];
+    let departureRecords = {};
+
+    function getDubaiDateKey(value) {
+      return new Date(value).toLocaleDateString("en-CA", {
+        timeZone: "Asia/Dubai"
+      });
+    }
+
+    async function loadPageData() {
+      try {
+        const today = getDubaiDateKey(new Date());
+
+        const [attendanceResponse, departureResponse] =
+          await Promise.all([
+            fetch(`${ATTENDANCE_SCRIPT}?v=${Date.now()}`, {
+              cache: "no-store"
+            }),
+
+            fetch(`${DEPARTURE_SCRIPT}?v=${Date.now()}`, {
+              cache: "no-store"
+            })
+          ]);
+
+        const attendanceData = await attendanceResponse.json();
+        const departureResult = await departureResponse.json();
+
+        buildTodayAttendance(attendanceData, today);
+        buildTodayDepartures(
+          departureResult.data || [],
+          today
+        );
+
+        renderChildren();
+
+      } catch (error) {
+        console.error(error);
+
+        document.getElementById("childrenList").innerHTML = `
+          <div class="empty-state">
+            تعذر تحميل البيانات. تحقق من روابط Apps Script.
+          </div>
+        `;
+      }
+    }
+
+    function buildTodayAttendance(data, today) {
+      const unique = {};
+
+      if (!Array.isArray(data)) {
+        attendedChildren = [];
+        return;
+      }
+
+      data.forEach(row => {
+        if (!row.ID || !row.Timestamp) {
+          return;
+        }
+
+        if (getDubaiDateKey(row.Timestamp) !== today) {
+          return;
+        }
+
+        const id = String(row.ID).trim();
+
+        if (!unique[id]) {
+          unique[id] = {
+            id: id,
+            name: String(row["Child Name"] || "").trim(),
+            parent: String(row.Parent || "").trim(),
+            timestamp: row.Timestamp,
+            staff: String(row["Scanned By"] || "").trim()
+          };
+        } else {
+          const currentTime =
+            new Date(row.Timestamp).getTime();
+
+          const savedTime =
+            new Date(unique[id].timestamp).getTime();
+
+          if (currentTime < savedTime) {
+            unique[id].timestamp = row.Timestamp;
+            unique[id].staff =
+              String(row["Scanned By"] || "").trim();
+          }
+        }
+      });
+
+      attendedChildren = Object.values(unique).sort(
+        (a, b) => a.name.localeCompare(b.name, "ar")
+      );
+    }
+
+    function buildTodayDepartures(data, today) {
+      departureRecords = {};
+
+      data.forEach(row => {
+        if (
+          !row.ID ||
+          !row.Timestamp ||
+          getDubaiDateKey(row.Timestamp) !== today
+        ) {
+          return;
+        }
+
+        departureRecords[String(row.ID).trim()] = {
+          transportation: row.Transportation || "",
+          staff: row["Scanned By"] || "",
+          timestamp: row.Timestamp
+        };
+      });
+    }
+
+    function renderChildren() {
+      const list = document.getElementById("childrenList");
+
+      const query = document
+        .getElementById("searchInput")
+        .value
+        .trim()
+        .toLowerCase();
+
+      const filtered = attendedChildren.filter(child => {
+        const combined = `
+          ${child.name}
+          ${child.parent}
+          ${child.id}
+        `.toLowerCase();
+
+        return combined.includes(query);
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            لا يوجد أطفال مطابقون للبحث.
+          </div>
+        `;
+
+        updateSummary();
+        return;
+      }
+
+      list.innerHTML = filtered.map(child => {
+        const departure = departureRecords[child.id];
+
+        if (departure) {
+          return `
+            <article class="child-card departed">
+              ${childInformation(child)}
+
+              <div class="departure-result">
+                ✓ خرج بواسطة
+                ${escapeHtml(departure.transportation)}
+                <br>
+                الموظف:
+                ${escapeHtml(departure.staff)}
+              </div>
+            </article>
+          `;
+        }
+
+        return `
+          <article class="child-card" id="child-${safeId(child.id)}">
+            ${childInformation(child)}
+
+            <div class="departure-actions">
+              <button
+                class="car-button"
+                onclick="markDeparture(
+                  '${escapeJs(child.id)}',
+                  '${escapeJs(child.name)}',
+                  '${escapeJs(child.parent)}',
+                  'سيارة',
+                  this
+                )"
+              >
+                🚗 سيارة
+              </button>
+
+              <button
+                class="bus-button"
+                onclick="markDeparture(
+                  '${escapeJs(child.id)}',
+                  '${escapeJs(child.name)}',
+                  '${escapeJs(child.parent)}',
+                  'حافلة',
+                  this
+                )"
+              >
+                🚌 حافلة
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      updateSummary();
+    }
+
+    function childInformation(child) {
+      return `
+        <div>
+          <h2 class="child-name">
+            ${escapeHtml(child.name)}
+            ${child.parent
+              ? escapeHtml(" " + child.parent)
+              : ""}
+          </h2>
+
+          <div class="child-details">
+            <span>
+              <i class="fa-solid fa-id-card"></i>
+              ${escapeHtml(child.id)}
+            </span>
+
+            <span>
+              <i class="fa-solid fa-user"></i>
+              ولي الأمر:
+              ${escapeHtml(child.parent || "غير مسجل")}
+            </span>
+
+            <span>
+              <i class="fa-solid fa-clock"></i>
+              ${formatTime(child.timestamp)}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    async function markDeparture(
+      id,
+      name,
+      parent,
+      transportation,
+      clickedButton
+    ) {
+      const staff = document
+        .getElementById("staffSelect")
+        .value;
+
+      if (!staff) {
+        showToast("يرجى اختيار الموظف أولاً", false);
+        return;
+      }
+
+      const confirmed = confirm(
+        `تأكيد خروج ${name} بواسطة ${transportation}؟`
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      const card = clickedButton.closest(".child-card");
+      const buttons = card.querySelectorAll("button");
+
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
+
+      try {
+        const body = new URLSearchParams();
+
+        body.append("id", id);
+        body.append("name", name);
+        body.append("parent", parent);
+        body.append("transportation", transportation);
+        body.append("staff", staff);
+
+        const response = await fetch(DEPARTURE_SCRIPT, {
+          method: "POST",
+          body: body
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          if (result.status === "duplicate") {
+            departureRecords[id] = {
+              transportation:
+                result.transportation || transportation,
+              staff: result.staff || staff,
+              timestamp: new Date().toISOString()
+            };
+
+            renderChildren();
+            showToast("تم تسجيل خروج الطفل مسبقاً", false);
+            return;
+          }
+
+          throw new Error(
+            result.message || "Could not save departure"
+          );
+        }
+
+        departureRecords[id] = {
+          transportation: transportation,
+          staff: staff,
+          timestamp: new Date().toISOString()
+        };
+
+        renderChildren();
+
+        showToast(
+          `تم تسجيل خروج ${name} بواسطة ${transportation}`,
+          true
+        );
+
+      } catch (error) {
+        console.error(error);
+
+        buttons.forEach(button => {
+          button.disabled = false;
+        });
+
+        showToast("حدث خطأ أثناء حفظ الخروج", false);
+      }
+    }
+
+    function updateSummary() {
+      const attended = attendedChildren.length;
+
+      const departed = attendedChildren.filter(child =>
+        Boolean(departureRecords[child.id])
+      ).length;
+
+      document.getElementById("attendedCount").textContent =
+        attended;
+
+      document.getElementById("departedCount").textContent =
+        departed;
+
+      document.getElementById("remainingCount").textContent =
+        Math.max(0, attended - departed);
+    }
+
+    function formatTime(value) {
+      return new Date(value).toLocaleTimeString("ar-AE", {
+        timeZone: "Asia/Dubai",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function safeId(value) {
+      return String(value).replace(/[^a-zA-Z0-9_-]/g, "");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeJs(value) {
+      return String(value)
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll("\n", " ");
+    }
+
+    function showToast(message, success) {
+      const toast = document.createElement("div");
+
+      toast.className =
+        `toast ${success ? "success" : "error"}`;
+
+      toast.textContent = message;
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3500);
+    }
+
+    loadPageData();
+  </script>
+
+  <script>
+    (() => {
+      const isEmbedded =
+        new URLSearchParams(location.search).has("embed");
+
+      const sendSize = () => {
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+
+        window.parent.postMessage({
+          type: "kalba-iframe-size",
+          height: height
+        }, "*");
+      };
+
+      window.addEventListener("load", sendSize);
+
+      new MutationObserver(sendSize).observe(
+        document.body,
+        {
+          childList: true,
+          subtree: true,
+          attributes: true
+        }
+      );
+
+      if (!isEmbedded && window.top === window.self) {
+        window.location.replace(
+          "KSCsummer.html?page=departure.html"
+        );
+      }
+    })();
+  </script>
+
+</body>
+</html>
