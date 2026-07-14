@@ -507,16 +507,6 @@ function buildTodayAttendance(data, today) {
 
     const rowDate = getDubaiDateKey(row.Timestamp);
 
-    console.log(
-      "Attendance record:",
-      row.ID,
-      row.Timestamp,
-      "Converted date:",
-      rowDate,
-      "Today:",
-      today
-    );
-
     if (rowDate !== today) return;
 
     const id = String(row.ID).trim();
@@ -571,24 +561,34 @@ function buildTodayAttendance(data, today) {
       });
     }
 
+    function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[\u064B-\u065F\u0670]/g, "") // Remove Arabic vowel marks
+    .replace(/ـ/g, "")                     // Remove tatweel
+    .replace(/[أإآٱ]/g, "ا")              // Normalize Alef
+    .replace(/ى/g, "ي")                    // Normalize Ya
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")                  // Remove extra spaces
+    .trim();
+}
+    
     function renderChildren() {
       const list = document.getElementById("childrenList");
 
-      const query = document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+const query = normalizeSearchText(
+  document.getElementById("searchInput").value
+);
 
-      const filtered = attendedChildren.filter(child => {
-        const combined = `
-          ${child.name}
-          ${child.parent}
-          ${child.id}
-        `.toLowerCase();
+const filtered = attendedChildren.filter(child => {
+  const combined = normalizeSearchText(
+    `${child.name} ${child.parent} ${child.id}`
+  );
 
-        return combined.includes(query);
-      });
+  return combined.includes(query);
+});
 
       if (filtered.length === 0) {
         list.innerHTML = `
