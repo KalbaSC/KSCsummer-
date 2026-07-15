@@ -86,7 +86,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: 1fr 220px;
+      grid-template-columns: 1fr 220px 220px;
       gap: 14px;
       margin-bottom: 18px;
       padding: 18px;
@@ -135,7 +135,7 @@
 
     .summary {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -325,7 +325,7 @@
       }
 
       .summary {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 7px;
       }
 
@@ -379,47 +379,66 @@
       </p>
     </section>
 
-    <section class="toolbar">
+<section class="toolbar">
 
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
+  <div class="search-box">
+    <i class="fa-solid fa-magnifying-glass"></i>
 
-        <input
-          type="search"
-          id="searchInput"
-          placeholder="ابحث بالاسم، ولي الأمر، أو المعرف"
-          oninput="renderChildren()"
-          autocomplete="off"
-        >
-      </div>
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="ابحث بالاسم، ولي الأمر، أو المعرف"
+      oninput="renderChildren()"
+      autocomplete="off"
+    >
+  </div>
 
-      <select id="staffSelect">
-        <option value="">اختر الموظف</option>
-        <option value="RWND">RWND</option>
-        <option value="EMAN">EMAN</option>
-        <option value="FATIMA">FATIMA</option>
-        <option value="AMNA">AMNA</option>
-        <option value="HANEEN">HANEEN</option>
-      </select>
+  <select id="departureFilter" onchange="renderChildren()">
+    <option value="all">عرض الكل</option>
+    <option value="remaining">لم يخرجوا بعد</option>
+    <option value="سيارة">خرجوا بسيارة</option>
+    <option value="حافلة">خرجوا بحافلة</option>
+  </select>
 
-    </section>
+  <select id="staffSelect">
+    <option value="">اختر الموظف</option>
+    <option value="RWND">RWND</option>
+    <option value="EMAN">EMAN</option>
+    <option value="FATIMA">FATIMA</option>
+    <option value="AMNA">AMNA</option>
+    <option value="HANEEN">HANEEN</option>
+  </select>
 
-    <section class="summary">
-      <div class="summary-card">
-        <strong id="attendedCount">0</strong>
-        <span>حضر اليوم</span>
-      </div>
+</section>
 
-      <div class="summary-card">
-        <strong id="departedCount">0</strong>
-        <span>تم تسجيل خروجهم</span>
-      </div>
+<section class="summary">
 
-      <div class="summary-card">
-        <strong id="remainingCount">0</strong>
-        <span>لم يخرجوا بعد</span>
-      </div>
-    </section>
+  <div class="summary-card">
+    <strong id="attendedCount">0</strong>
+    <span>حضر اليوم</span>
+  </div>
+
+  <div class="summary-card">
+    <strong id="departedCount">0</strong>
+    <span>تم تسجيل خروجهم</span>
+  </div>
+
+  <div class="summary-card">
+    <strong id="remainingCount">0</strong>
+    <span>لم يخرجوا بعد</span>
+  </div>
+
+  <div class="summary-card">
+    <strong id="carCount">0</strong>
+    <span>خرجوا بسيارة</span>
+  </div>
+
+  <div class="summary-card">
+    <strong id="busCount">0</strong>
+    <span>خرجوا بحافلة</span>
+  </div>
+
+</section>
 
     <section id="childrenList" class="children-list">
       <div class="loading">
@@ -582,12 +601,33 @@ const query = normalizeSearchText(
   document.getElementById("searchInput").value
 );
 
+const selectedFilter =
+  document.getElementById("departureFilter").value;
+
 const filtered = attendedChildren.filter(child => {
   const combined = normalizeSearchText(
     `${child.name} ${child.parent} ${child.id}`
   );
 
-  return combined.includes(query);
+  const matchesSearch = combined.includes(query);
+
+  const departure = departureRecords[child.id];
+
+  let matchesDepartureFilter = true;
+
+  if (selectedFilter === "remaining") {
+    matchesDepartureFilter = !departure;
+  } else if (selectedFilter === "سيارة") {
+    matchesDepartureFilter =
+      departure &&
+      String(departure.transportation).trim() === "سيارة";
+  } else if (selectedFilter === "حافلة") {
+    matchesDepartureFilter =
+      departure &&
+      String(departure.transportation).trim() === "حافلة";
+  }
+
+  return matchesSearch && matchesDepartureFilter;
 });
 
       if (filtered.length === 0) {
@@ -779,22 +819,42 @@ const filtered = attendedChildren.filter(child => {
       }
     }
 
-    function updateSummary() {
-      const attended = attendedChildren.length;
+function updateSummary() {
+  const attended = attendedChildren.length;
 
-      const departed = attendedChildren.filter(child =>
-        Boolean(departureRecords[child.id])
-      ).length;
+  const departedChildren = attendedChildren.filter(child =>
+    Boolean(departureRecords[child.id])
+  );
 
-      document.getElementById("attendedCount").textContent =
-        attended;
+  const departed = departedChildren.length;
 
-      document.getElementById("departedCount").textContent =
-        departed;
+  const carCount = departedChildren.filter(child =>
+    String(
+      departureRecords[child.id]?.transportation || ""
+    ).trim() === "سيارة"
+  ).length;
 
-      document.getElementById("remainingCount").textContent =
-        Math.max(0, attended - departed);
-    }
+  const busCount = departedChildren.filter(child =>
+    String(
+      departureRecords[child.id]?.transportation || ""
+    ).trim() === "حافلة"
+  ).length;
+
+  document.getElementById("attendedCount").textContent =
+    attended;
+
+  document.getElementById("departedCount").textContent =
+    departed;
+
+  document.getElementById("remainingCount").textContent =
+    Math.max(0, attended - departed);
+
+  document.getElementById("carCount").textContent =
+    carCount;
+
+  document.getElementById("busCount").textContent =
+    busCount;
+}
 
     function formatTime(value) {
       return new Date(value).toLocaleTimeString("ar-AE", {
