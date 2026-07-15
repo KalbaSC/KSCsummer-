@@ -86,7 +86,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: 1fr 220px 220px;
+      grid-template-columns: 1fr 180px 220px 220px;
       gap: 14px;
       margin-bottom: 18px;
       padding: 18px;
@@ -109,7 +109,8 @@
     }
 
     .search-box input,
-    .toolbar select {
+.toolbar select,
+.toolbar input[type="date"] {
       width: 100%;
       min-height: 48px;
       padding: 12px 45px 12px 14px;
@@ -127,7 +128,8 @@
     }
 
     .search-box input:focus,
-    .toolbar select:focus {
+.toolbar select:focus,
+.toolbar input[type="date"]:focus {
       border-color: var(--blue);
       background: white;
       box-shadow: 0 0 0 4px rgba(47, 128, 237, 0.1);
@@ -393,6 +395,12 @@
     >
   </div>
 
+  <input
+    type="date"
+    id="dateFilter"
+    onchange="loadPageData()"
+  >
+
   <select id="departureFilter" onchange="renderChildren()">
     <option value="all">عرض الكل</option>
     <option value="remaining">لم يخرجوا بعد</option>
@@ -476,9 +484,20 @@ function getDubaiDateKey(value) {
   return `${year}-${month}-${day}`;
 }
 
+    function setDefaultDate() {
+  const dateInput = document.getElementById("dateFilter");
+
+  if (!dateInput.value) {
+    dateInput.value = getDubaiDateKey(new Date());
+  }
+}
+    
     async function loadPageData() {
       try {
-        const today = getDubaiDateKey(new Date());
+        setDefaultDate();
+
+const selectedDate =
+  document.getElementById("dateFilter").value;
 
         const [attendanceResponse, departureResponse] =
           await Promise.all([
@@ -494,11 +513,11 @@ function getDubaiDateKey(value) {
         const attendanceData = await attendanceResponse.json();
         const departureResult = await departureResponse.json();
 
-        buildTodayAttendance(attendanceData, today);
-        buildTodayDepartures(
-          departureResult.data || [],
-          today
-        );
+        buildTodayAttendance(attendanceData, selectedDate);
+buildTodayDepartures(
+  departureResult.data || [],
+  selectedDate
+);
 console.log(attendedChildren);
         renderChildren();
 
@@ -583,14 +602,14 @@ function buildTodayAttendance(data, today) {
     function normalizeSearchText(value) {
   return String(value || "")
     .toLowerCase()
-    .replace(/[\u064B-\u065F\u0670]/g, "") // Remove Arabic vowel marks
-    .replace(/ـ/g, "")                     // Remove tatweel
-    .replace(/[أإآٱ]/g, "ا")              // Normalize Alef
-    .replace(/ى/g, "ي")                    // Normalize Ya
+    .replace(/[\u064B-\u065F\u0670]/g, "") 
+    .replace(/ـ/g, "")                  
+    .replace(/[أإآٱ]/g, "ا")           
+    .replace(/ى/g, "ي")             
     .replace(/ؤ/g, "و")
     .replace(/ئ/g, "ي")
     .replace(/ة/g, "ه")
-    .replace(/\s+/g, " ")                  // Remove extra spaces
+    .replace(/\s+/g, " ")              
     .trim();
 }
     
@@ -675,7 +694,7 @@ const filtered = attendedChildren.filter(child => {
                   this
                 )"
               >
-                🚗 سيارة
+                 سيارة
               </button>
 
               <button
@@ -688,7 +707,7 @@ const filtered = attendedChildren.filter(child => {
                   this
                 )"
               >
-                🚌 حافلة
+                 حافلة
               </button>
             </div>
           </article>
@@ -729,95 +748,102 @@ const filtered = attendedChildren.filter(child => {
       `;
     }
 
-    async function markDeparture(
-      id,
-      name,
-      parent,
-      transportation,
-      clickedButton
-    ) {
-      const staff = document
-        .getElementById("staffSelect")
-        .value;
+  async function markDeparture(
+  id,
+  name,
+  parent,
+  transportation,
+  clickedButton
+) {
 
-      if (!staff) {
-        showToast("يرجى اختيار الموظف أولاً", false);
-        return;
-      }
+  const selectedDate = document.getElementById("dateFilter").value;
+  const today = getDubaiDateKey(new Date());
 
-      const confirmed = confirm(
-        `تأكيد خروج ${name} بواسطة ${transportation}؟`
-      );
+  if (selectedDate !== today) {
+    showToast(
+      "يمكن عرض الأيام السابقة فقط، ولا يمكن تسجيل خروج بتاريخ قديم",
+      false
+    );
+    return;
+  }
 
-      if (!confirmed) {
-        return;
-      }
+  const staff = document.getElementById("staffSelect").value;
 
-      const card = clickedButton.closest(".child-card");
-      const buttons = card.querySelectorAll("button");
+  if (!staff) {
+    showToast("يرجى اختيار الموظف أولاً", false);
+    return;
+  }
 
-      buttons.forEach(button => {
-        button.disabled = true;
-      });
+  const confirmed = confirm(
+    `تأكيد خروج ${name} بواسطة ${transportation}؟`
+  );
 
-      try {
-        const body = new URLSearchParams();
+  if (!confirmed) return;
 
-        body.append("id", id);
-        body.append("name", name);
-        body.append("parent", parent);
-        body.append("transportation", transportation);
-        body.append("staff", staff);
+  const card = clickedButton.closest(".child-card");
+  const buttons = card.querySelectorAll("button");
 
-        const response = await fetch(DEPARTURE_SCRIPT, {
-          method: "POST",
-          body: body
-        });
+  buttons.forEach(button => button.disabled = true);
 
-        const result = await response.json();
+  try {
 
-        if (!result.success) {
-          if (result.status === "duplicate") {
-            departureRecords[id] = {
-              transportation:
-                result.transportation || transportation,
-              staff: result.staff || staff,
-              timestamp: new Date().toISOString()
-            };
+    const body = new URLSearchParams();
 
-            renderChildren();
-            showToast("تم تسجيل خروج الطفل مسبقاً", false);
-            return;
-          }
+    body.append("id", id);
+    body.append("name", name);
+    body.append("parent", parent);
+    body.append("transportation", transportation);
+    body.append("staff", staff);
 
-          throw new Error(
-            result.message || "Could not save departure"
-          );
-        }
+    const response = await fetch(DEPARTURE_SCRIPT, {
+      method: "POST",
+      body
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+
+      if (result.status === "duplicate") {
 
         departureRecords[id] = {
-          transportation: transportation,
-          staff: staff,
+          transportation: result.transportation || transportation,
+          staff: result.staff || staff,
           timestamp: new Date().toISOString()
         };
 
         renderChildren();
-
-        showToast(
-          `تم تسجيل خروج ${name} بواسطة ${transportation}`,
-          true
-        );
-
-      } catch (error) {
-        console.error(error);
-
-        buttons.forEach(button => {
-          button.disabled = false;
-        });
-
-        showToast("حدث خطأ أثناء حفظ الخروج", false);
+        showToast("تم تسجيل خروج الطفل مسبقاً", false);
+        return;
       }
+
+      throw new Error(result.message || "Could not save departure");
     }
+
+    departureRecords[id] = {
+      transportation,
+      staff,
+      timestamp: new Date().toISOString()
+    };
+
+    renderChildren();
+
+    showToast(
+      `تم تسجيل خروج ${name} بواسطة ${transportation}`,
+      true
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    buttons.forEach(button => button.disabled = false);
+
+    showToast("حدث خطأ أثناء حفظ الخروج", false);
+
+  }
+
+}
 
 function updateSummary() {
   const attended = attendedChildren.length;
