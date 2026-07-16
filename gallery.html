@@ -37,27 +37,21 @@ body {
   font-family: 'NotoKufiArabic', Arial, sans-serif;
 }
 
-body {
-  min-height: 100vh;
-  padding: 35px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text);
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(244, 231, 51, 0.16),
-      transparent 28%
-    ),
-    linear-gradient(
-      135deg,
-      #eef6f8 0%,
-      #f8fbfc 55%,
-      #edf6fa 100%
-    );
+body{
+    min-height:100vh;
+    padding:40px 20px;
+    display:block;
+    background:
+      radial-gradient(circle at top right,
+      rgba(244,231,51,.16),
+      transparent 28%),
+      linear-gradient(135deg,#eef6f8,#f8fbfc,#edf6fa);
 }
 
+.gallery-card{
+    margin:40px auto;
+}
+  
 .gallery-card {
   width: 100%;
   max-width: 940px;
@@ -247,10 +241,7 @@ p {
 <div class="note">
   سيتم فتح الصور في نافذة جديدة  
 </div>
-
-    <div class="mascot-side">
-        <img src="الولد 3d.png">
-    </div>  
+ 
 </div>
 
 <script>
