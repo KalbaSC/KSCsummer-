@@ -1495,12 +1495,39 @@ async function sendEvaluation(evaluationData) {
       body: formData
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || "Failed to send evaluation");
-    }
+const responseText = await response.text();
 
-    return await response.text();
+if (!response.ok) {
+  throw new Error(
+    `Apps Script error ${response.status}: ${responseText}`
+  );
+}
+
+let result;
+
+try {
+  result = JSON.parse(responseText);
+} catch {
+  result = { status: "unknown", raw: responseText };
+}
+
+if (
+  result.status === "error" ||
+  result.success === false
+) {
+  throw new Error(
+    result.message || "Apps Script rejected the evaluation"
+  );
+}
+
+if (result.status === "duplicate") {
+  throw new Error(
+    result.message || "تم تقييم اللاعب مسبقاً في هذا التاريخ"
+  );
+}
+
+return result;
+    
   } catch (error) {
     console.error("Send evaluation error:", error);
     throw error;
