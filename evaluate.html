@@ -1551,14 +1551,19 @@ async function renderEvaluatedPlayersList() {
     let data = await response.json();
 
 const selectedDate =
-  document.getElementById("filterDate").value ||
-  document.getElementById("sessionDate").value;
+  document.getElementById("filterDate").value;
 
 const processedData = data
-  .filter(rec =>
-    rec.Activity === currentCoach.activity &&
-    formatDate(rec.Date) === selectedDate
-  )
+  .filter(rec => {
+    const matchesActivity =
+      rec.Activity === currentCoach.activity;
+
+    const matchesDate =
+      !selectedDate ||
+      formatDate(rec.Date) === selectedDate;
+
+    return matchesActivity && matchesDate;
+  })
   .map(rec => {
   let total = 0;
   const criteria = evaluationCriteria[currentCoach.activity] || [];
@@ -1959,7 +1964,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('sessionDate').value = today;
-  document.getElementById('filterDate').value = today;
 });
 
 function exportRankings() {
@@ -2063,7 +2067,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const today = new Date();
   const formattedDate = today.toISOString().split('T')[0];
   document.getElementById('sessionDate').value = formattedDate;
-  document.getElementById('filterDate').value = formattedDate;
 
   setupEventListeners();
 });
@@ -2165,7 +2168,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('is-mobile');
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('sessionDate').value = today;
-    document.getElementById('filterDate').value = today;
 
     document.querySelectorAll('*').forEach(el => {
       el.style.pointerEvents = 'auto';
