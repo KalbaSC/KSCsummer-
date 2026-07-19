@@ -1031,7 +1031,9 @@ footer {
 <button onclick="showActivitiesView()">الحضور حسب الأنشطة</button>
 <button onclick="openStatsLogin()">الإحصائيات</button>
 <button onclick="showTopParticipants()">المنتسبون المميزون</button>
-<button onclick="showTopParticipants()">المنتسبون المميزون</button>
+<button onclick="showRegisteredStatusView()">
+    حالة المسجلين
+</button>
 <div class="dropdown">
 <button>الفترات الزمنية ▼</button>
 <div class="dropdown-content">
@@ -3850,18 +3852,16 @@ function getAttendanceSummaryById() {
   return attendanceSummary;
 }
 
-async function showRegisteredStatusView() {
-  setActiveNavButton(4);
+function showRegisteredStatusView() {
+    setActiveNavButton(4);
 
-  document.getElementById("mainView").style.display = "none";
-  document.getElementById("activityView").style.display = "none";
-  document.getElementById("statsView").style.display = "none";
-  document.getElementById("topParticipantsView").style.display = "none";
-  document.getElementById("registeredStatusView").style.display = "block";
+    document.getElementById("mainView").style.display = "none";
+    document.getElementById("activityView").style.display = "none";
+    document.getElementById("statsView").style.display = "none";
+    document.getElementById("topParticipantsView").style.display = "none";
+    document.getElementById("registeredStatusView").style.display = "block";
 
-  if (!registeredStatusLoaded) {
-    await loadRegisteredAttendanceStatus();
-  }
+    renderRegisteredStatus();
 }
 
 async function loadRegisteredAttendanceStatus() {
