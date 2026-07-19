@@ -935,36 +935,65 @@ tbody tr:hover td {
   }
 }
 
-.player-search{
-    position:relative;
-    max-width:700px;
-    margin:0 auto 25px;
+.player-search {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 24px;
 }
 
-.player-search input{
-    width:100%;
-    padding:14px 50px 14px 18px;
-    border:1px solid var(--border);
-    border-radius:14px;
-    background:#fff;
-    font-family:'NotoKufiArabic';
-    font-size:15px;
-    transition:.2s;
+.player-search input {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 48px 13px 48px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  outline: none;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-family: 'NotoKufiArabic', Arial, sans-serif;
+  font-size: 14px;
+  transition: 0.2s ease;
 }
 
-.player-search input:focus{
-    outline:none;
-    border-color:var(--blue);
-    box-shadow:0 0 0 4px rgba(47,128,237,.12);
+.player-search input:focus {
+  border-color: var(--blue);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px rgba(47, 128, 237, 0.11);
 }
 
-.player-search i{
-    position:absolute;
-    right:18px;
-    top:50%;
-    transform:translateY(-50%);
-    color:#6b7280;
-}    
+.player-search > i {
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.clear-search {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 23px;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.clear-search:hover {
+  transform: translateY(-50%);
+  background: #e9f1f5;
+  box-shadow: none;
+}
   </style>
 </head>
 <body>
@@ -1065,13 +1094,25 @@ tbody tr:hover td {
     <div id="evaluationTab" class="hidden">
       <h2>تقييم اللاعبين</h2>
 
-      <div class="player-search">
-    <i class="fas fa-search"></i>
-    <input
-        type="text"
-        id="playerSearch"
-        placeholder="ابحث بالاسم الكامل أو المعرف..."
-        onkeyup="searchPlayers()">
+<div class="player-search">
+  <i class="fas fa-search"></i>
+
+  <input
+    type="search"
+    id="playerSearch"
+    placeholder="ابحث باسم اللاعب، ولي الأمر، أو المعرف..."
+    autocomplete="off"
+    oninput="debouncedPlayerSearch()"
+  >
+
+  <button
+    type="button"
+    class="clear-search"
+    onclick="clearPlayerSearch()"
+    aria-label="مسح البحث"
+  >
+    ×
+  </button>
 </div>
       <div id="playersList"></div>
     </div>
@@ -1290,6 +1331,74 @@ function searchPlayers() {
 
     renderPlayersList(filtered);
 }
+
+let currentDisplayedPlayers = [];
+
+function normalizeArabicSearch(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[\u064B-\u065F\u0670]/g, "")
+    .replace(/ـ/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function searchPlayers() {
+  const input = document.getElementById("playerSearch");
+
+  if (!input) return;
+
+  const query = normalizeArabicSearch(input.value);
+
+  const sourcePlayers =
+    currentDisplayedPlayers.length > 0
+      ? currentDisplayedPlayers
+      : playersData;
+
+  if (!query) {
+    renderPlayersList(sourcePlayers);
+    return;
+  }
+
+  const searchWords = query.split(" ").filter(Boolean);
+
+  const filteredPlayers = sourcePlayers.filter(player => {
+    const searchableText = normalizeArabicSearch([
+      player.name,
+      player.parent,
+      player.id
+    ].filter(Boolean).join(" "));
+
+    return searchWords.every(word =>
+      searchableText.includes(word)
+    );
+  });
+
+  renderPlayersList(filteredPlayers);
+}
+
+const debouncedPlayerSearch = debounce(searchPlayers, 200);
+
+function clearPlayerSearch() {
+  const input = document.getElementById("playerSearch");
+
+  if (input) {
+    input.value = "";
+  }
+
+  renderPlayersList(
+    currentDisplayedPlayers.length > 0
+      ? currentDisplayedPlayers
+      : playersData
+  );
+}
+
+    
 async function handleLogin(e) {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
