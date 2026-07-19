@@ -10,470 +10,234 @@
 @font-face {
   font-family: 'NotoKufiArabic';
   src: url('NotoKufiArabic.ttf') format('truetype');
+  font-display: swap;
 }
 
 :root {
-  --yellow: #f4e733;
-  --black: #050505;
-  --card: rgba(15,15,15,0.95);
-  --border: rgba(244,231,51,0.55);
-  --muted: #bdbdbd;
+  --primary: #0b3551;
+  --primary-light: #174f73;
+  --blue: #2f80ed;
+  --accent: #f4e733;
+  --accent-hover: #e4d824;
+  --background: #eef6f8;
+  --surface: #ffffff;
+  --surface-soft: #f7fbfd;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #dfe7ec;
+  --success: #16a34a;
+  --danger: #dc3545;
+  --shadow: 0 14px 36px rgba(11,53,81,.09);
 }
 
+* { box-sizing: border-box; }
+html { min-height: 100%; -webkit-text-size-adjust: 100%; }
 body {
-  font-family: 'NotoKufiArabic', sans-serif;
-  background: transparent;
-  color: white;
   margin: 0;
+  min-height: 100vh;
+  padding: 0;
+  font-family: 'NotoKufiArabic', Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top right, rgba(244,231,51,.16), transparent 28%),
+    linear-gradient(135deg,#eef6f8 0%,#f8fbfc 55%,#edf6fa 100%);
+}
+
+.container {
+  width: calc(100% - 32px);
+  max-width: 1280px;
+  margin: 24px auto;
   padding: 0;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  pointer-events: none;
-  z-index: -1;
-}  
+#loginView { max-width: 470px !important; margin-top: 55px; }
 
-.container {
-  max-width: 1180px;
-  margin: 25px auto;
-  padding: 18px;
-}
-.container {
-  position: relative;
-  max-width: 1180px;
-  margin: 25px auto;
-  padding: 18px;
-}
-
-.container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  border-radius: 30px;
-  backdrop-filter: blur(6px);
-  z-index: -1;
-}
-.page-title {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.page-title h2 {
-  color: var(--yellow);
-  font-size: 34px;
-  margin: 0;
-}
-
-.page-title p {
-  color: #ddd;
-  margin: 8px 0 0;
-  font-size: 15px;
-}
-
+.page-title,
 .form-box,
 .filters,
-.table-card {
-  background: rgba(0,0,0,0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+.table-card,
+.stats-card {
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 26px;
-  margin-bottom: 22px;
-  box-shadow: 0 0 25px rgba(244,231,51,0.12);
+  box-shadow: var(--shadow);
 }
 
-.section-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  color: var(--yellow);
-  font-size: 22px;
-  margin: 0 0 22px;
+.page-title {
+  position: relative;
+  padding: 28px 30px;
+  margin-bottom: 18px;
+  border-radius: 24px;
+  text-align: right;
 }
+.page-title h2 { margin: 0; color: var(--primary); font-size: 29px; }
+.page-title p { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+.page-title .logout-btn {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: auto;
+  min-width: 135px;
+  margin: 0;
+  transform: translateY(-50%);
+  background: #fff1f2;
+  color: var(--danger);
+  border: 1px solid #fecdd3;
+  box-shadow: none;
+}
+.page-title .logout-btn:hover { transform: translateY(calc(-50% - 2px)); background:#ffe4e6; }
 
-.report-grid {
+.stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 24px;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.stats-card {
+  padding: 18px;
+  border-radius: 19px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.stats-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 14px;
+  background: #eaf5fb;
+  color: var(--blue);
+  font-size: 21px;
+}
+.stats-card strong { display:block; color:var(--primary); font-size:24px; line-height:1.15; }
+.stats-card span { color:var(--muted); font-size:11px; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(360px,.85fr) minmax(0,1.35fr);
+  gap: 18px;
   align-items: start;
 }
-
-.form-group {
-  width: 100%;
+.form-box,.filters,.table-card {
+  padding: 24px;
+  margin-bottom: 18px;
+  border-radius: 22px;
 }
-
-.form-group.full {
-  grid-column: span 2;
+.upload-column .form-box { position: sticky; top: 18px; }
+.section-title {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  margin:0 0 21px;
+  color:var(--primary);
+  font-size:20px;
 }
-
-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 7px;
-  color: var(--yellow);
-  font-size: 14px;
-  font-weight: bold;
+.report-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-group { min-width:0; }
+.form-group.full { grid-column:1/-1; }
+label { display:flex; align-items:center; gap:7px; margin-bottom:7px; color:var(--primary); font-size:13px; font-weight:700; }
+input,select,textarea {
+  width:100%;
+  min-height:47px;
+  padding:11px 13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  outline:none;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-family:inherit;
+  font-size:13px;
+  transition:.2s ease;
 }
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 13px 14px;
-  border-radius: 13px;
-  border: 1px solid #444;
-  background: #000;
-  color: white;
-  box-sizing: border-box;
-  font-family: 'NotoKufiArabic', sans-serif;
-  font-size: 14px;
+textarea { min-height:105px; resize:vertical; }
+input:focus,select:focus,textarea:focus { border-color:var(--blue); background:#fff; box-shadow:0 0 0 4px rgba(47,128,237,.1); }
+.upload-box { padding:18px; border:1px dashed #aac9dc; border-radius:15px; background:#f8fcfe; }
+.upload-box input { min-height:auto; padding:0; border:0; background:transparent; }
+input[type=file]::file-selector-button {
+  margin-left:9px; padding:9px 13px; border:0; border-radius:10px; background:#eaf5fb; color:var(--primary); font-family:inherit; font-weight:700; cursor:pointer;
 }
-
-textarea {
-  min-height: 105px;
-  resize: vertical;
+button,.download-btn,.view-btn {
+  border:0;
+  border-radius:13px;
+  font-family:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
 }
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--yellow);
-  box-shadow: 0 0 10px rgba(244,231,51,0.35);
-}
-
-.upload-box {
-  border: 1px dashed var(--yellow);
-  border-radius: 16px;
-  padding: 22px;
-  background: rgba(0,0,0,0.45);
-}
-
-.upload-box input {
-  border: none;
-  padding: 0;
-}
-
 button {
-  width: 100%;
-  margin-top: 18px;
-  padding: 14px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #f4e733, #fff36a);
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: 'NotoKufiArabic', sans-serif;
-  font-size: 15px;
-  transition: 0.2s;
+  width:100%; min-height:48px; margin-top:16px; padding:11px 16px; background:linear-gradient(135deg,var(--accent),#fff176); color:#222;
+  box-shadow:0 8px 18px rgba(244,231,51,.22);
+}
+button:hover { transform:translateY(-2px); background:linear-gradient(135deg,var(--accent-hover),var(--accent)); }
+.status { min-height:22px; margin-top:12px; padding:10px; text-align:center; color:var(--primary); font-size:13px; font-weight:700; }
+.week-preview { margin-top:8px; padding:10px 12px; border:1px solid #cfe2ee; border-radius:11px; background:#eef7fb; color:var(--primary); text-align:center; font-size:12px; font-weight:700; }
+
+.filters-row { display:grid; grid-template-columns:minmax(0,1fr) 180px 180px 110px; gap:10px; align-items:center; }
+.search-wrap { position:relative; }
+.search-wrap i { position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
+.search-wrap input { padding-right:43px; }
+.filters button { margin:0; min-height:47px; box-shadow:none; }
+
+.table-card { padding: 0; overflow:hidden; }
+.table-scroll { width:100%; overflow-x:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0; background:#fff; }
+th,td { padding:13px 12px; text-align:center; border-bottom:1px solid var(--border); font-size:12px; }
+th { background:#f1f7fa; color:var(--primary); font-weight:800; white-space:nowrap; }
+tbody tr:hover td { background:#f8fcfe; }
+tbody tr:last-child td { border-bottom:0; }
+.report-week { display:inline-flex; padding:5px 9px; border-radius:999px; background:#eef6fb; color:var(--primary); font-weight:700; }
+.activity-badge { display:inline-flex; padding:5px 9px; border-radius:999px; background:#fffbea; color:#776d00; border:1px solid #eee49b; font-weight:700; }
+.file-name { max-width:210px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:inline-block; vertical-align:middle; }
+.view-btn,.download-btn { display:inline-flex; align-items:center; justify-content:center; gap:5px; width:auto; min-height:36px; margin:2px; padding:7px 11px; text-decoration:none; font-size:11px; }
+.view-btn { background:#eaf3ff; color:#1769c2; border:1px solid #c8def8; }
+.download-btn { background:#fff9c8; color:#4e4900; border:1px solid #eee27d; }
+.empty-cell { padding:40px 15px; color:var(--muted); }
+
+.file-modal { display:none; position:fixed; inset:0; padding:28px; background:rgba(11,53,81,.62); backdrop-filter:blur(6px); z-index:9999; }
+.file-modal-box { position:relative; width:min(1100px,94%); height:88vh; margin:auto; overflow:hidden; border:1px solid var(--border); border-radius:20px; background:#fff; box-shadow:0 25px 70px rgba(0,0,0,.25); }
+.file-modal iframe { width:100%; height:100%; border:0; }
+.close-modal { position:absolute; top:12px; left:12px; z-index:10000; width:42px; height:42px; min-height:42px; margin:0; padding:0; border-radius:50%; background:var(--accent); color:#222; font-size:21px; box-shadow:0 5px 15px rgba(0,0,0,.14); }
+
+#loginView .form-box { padding:32px; }
+#loginView .section-title { justify-content:center; font-size:23px; }
+#loginView label { margin-top:14px; }
+
+@media(max-width:1000px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .dashboard-grid{grid-template-columns:1fr}
+  .upload-column .form-box{position:static}
+  .filters-row{grid-template-columns:1fr 1fr}
+  .search-wrap{grid-column:1/-1}
 }
 
-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.06);
+@media(max-width:700px){
+  .container{width:calc(100% - 16px);margin:10px auto}
+  .page-title{padding:20px 15px;text-align:center}
+  .page-title h2{font-size:21px}
+  .page-title p{font-size:11px}
+  .page-title .logout-btn{position:static;transform:none;width:100%;margin-top:14px}
+  .page-title .logout-btn:hover{transform:translateY(-2px)}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .stats-card{padding:12px 9px;gap:8px}
+  .stats-icon{width:39px;height:39px;flex-basis:39px;font-size:17px}
+  .stats-card strong{font-size:19px}
+  .stats-card span{font-size:9px}
+  .form-box,.filters{padding:15px;border-radius:17px}
+  .section-title{font-size:17px}
+  .report-grid,.filters-row{grid-template-columns:1fr}
+  .search-wrap{grid-column:auto}
+  .form-group.full{grid-column:auto}
+  input,select,textarea{font-size:16px}
+  .table-card{border-radius:17px}
+  table{min-width:780px}
+  th,td{padding:9px 8px;font-size:10px}
+  .file-modal{padding:8px}
+  .file-modal-box{width:100%;height:87vh}
 }
 
-.status {
-  text-align: center;
-  margin-top: 15px;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 12px;
-  color: var(--yellow);
-}
-
-.filters-row {
-  display: grid;
-  grid-template-columns: 1fr 160px;
-  gap: 12px;
-  align-items: center;
-}
-
-.filters button {
-  margin-top: 0;
-}
-
-.table-card {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-}
-
-th {
-  color: var(--yellow);
-  padding: 12px;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-td {
-  background: rgba(30,30,30,0.95);
-  padding: 14px;
-  text-align: center;
-  color: white;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-td:first-child {
-  border-radius: 0 14px 14px 0;
-}
-
-td:last-child {
-  border-radius: 14px 0 0 14px;
-}
-
-.view-btn,
-.download-btn {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: bold;
-  margin: 3px;
-  width: auto;
-  font-size: 13px;
-}
-
-.view-btn {
-  background: #0d6efd;
-  color: white;
-  border: 1px solid #4da3ff;
-}
-
-.download-btn {
-  background: var(--yellow);
-  color: black;
-}
-
-.empty-cell {
-  color: var(--muted);
-  padding: 25px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    width: 94%;
-    padding: 10px;
-  }
-
-  .page-title h2 {
-    font-size: 24px;
-  }
-
-  .form-box,
-  .filters,
-  .table-card {
-    padding: 18px;
-  }
-
-  .report-grid,
-  .filters-row {
-    grid-template-columns: 1fr;
-  }
-
-  .form-group.full {
-    grid-column: span 1;
-  }
-
-  table {
-    font-size: 11px;
-  }
-
-  th,
-  td {
-    padding: 9px;
-  }
-}
-
-.week-preview{
-  margin-top:10px;
-  background:rgba(244,231,51,.08);
-  border:1px solid rgba(244,231,51,.25);
-  color:#f4e733;
-  border-radius:12px;
-  padding:12px 15px;
-  font-weight:bold;
-  text-align:center;
-} 
-
-.file-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 9999;
-  padding: 30px;
-}
-
-.file-modal-box {
-  width: 90%;
-  height: 90vh;
-  margin: auto;
-  background: #111;
-  border: 1px solid #f4e733;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-}
-
-.file-modal iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.close-modal {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-
-  width: 50px;
-  height: 50px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin: 0;
-  padding: 0;
-
-  border: none;
-  border-radius: 50%;
-
-  background: #f4e733;
-  color: #000;
-
-  font-size: 32px;
-  font-weight: bold;
-  line-height: 1;
-
-  cursor: pointer;
-  z-index: 10000;
-
-  transition: 0.2s;
-}
-
-.close-modal:hover {
-  transform: scale(1.08);
-  background: #fff36a;
-}
-
-@media(max-width:768px){
-  body{
-    overflow-x:hidden;
-  }
-
-  .container{
-    width:100%;
-    margin:10px auto;
-    padding:10px;
-  }
-
-  .container::before{
-    border-radius:18px;
-  }
-
-  .page-title h2{
-    font-size:22px;
-    line-height:1.5;
-  }
-
-  .page-title p{
-    font-size:12px;
-  }
-
-  .form-box,
-  .filters,
-  .table-card{
-    padding:14px;
-    border-radius:16px;
-  }
-
-  .section-title{
-    font-size:18px;
-    flex-wrap:wrap;
-    text-align:center;
-  }
-
-  .report-grid,
-  .filters-row{
-    grid-template-columns:1fr !important;
-  }
-
-  .form-group.full{
-    grid-column:span 1;
-  }
-
-  input,
-  select,
-  textarea,
-  button{
-    font-size:13px;
-    padding:11px;
-  }
-
-  .table-card{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  table{
-    min-width:760px;
-    font-size:11px;
-  }
-
-  th,
-  td{
-    padding:8px;
-  }
-
-.view-btn,
-.download-btn{
-    display:inline-flex;
-    justify-content:center;
-    align-items:center;
-
-    width:92px;
-    height:42px;
-
-    margin:4px;
-    border-radius:10px;
-}
-
-  td:last-child{
-      white-space:nowrap;
-  }
-  
-  .file-modal{
-    padding:10px;
-  }
-
-  .file-modal-box{
-    width:100%;
-    height:85vh;
-  }
-
-  .close-modal{
-    width:42px;
-    height:42px;
-    font-size:24px;
-  }
-}
-  
 </style>
 </head>
 
@@ -503,16 +267,22 @@ td:last-child {
 
 <div class="container" id="reportsApp" style="display:none;">
  <div class="page-title">
-  <h2>📄 التقارير الأسبوعية الداخلية</h2>
-   <button
-style="width:170px;margin:20px auto;display:block;"
-onclick="logoutWeekly()">
-
-تسجيل الخروج
-
-</button>
-  <p>قم بتعبئة بيانات التقرير ورفع الملف الأسبوعي</p>
+  <h2><i class="fa-solid fa-file-lines"></i> التقارير الأسبوعية الداخلية</h2>
+  <p>إدارة ورفع ومراجعة التقارير الأسبوعية لنادي كلباء الرياضي الثقافي</p>
+  <button class="logout-btn" onclick="logoutWeekly()">
+    <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+  </button>
 </div>
+
+<div class="stats-grid">
+  <div class="stats-card"><div class="stats-icon"><i class="fa-solid fa-file-lines"></i></div><div><strong id="reportsCount">0</strong><span>إجمالي التقارير</span></div></div>
+  <div class="stats-card"><div class="stats-icon"><i class="fa-solid fa-users"></i></div><div><strong id="staffCount">0</strong><span>الموظفون المشاركون</span></div></div>
+  <div class="stats-card"><div class="stats-icon"><i class="fa-solid fa-trophy"></i></div><div><strong id="activitiesCount">0</strong><span>الأنشطة</span></div></div>
+  <div class="stats-card"><div class="stats-icon"><i class="fa-solid fa-calendar-week"></i></div><div><strong id="weeksCount">0</strong><span>الأسابيع المسجلة</span></div></div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="upload-column">
 
   <div class="form-box" id="uploadReportBox">
   <h3 class="section-title">
@@ -525,7 +295,7 @@ onclick="logoutWeekly()">
     <label>الأسبوع</label>
     <input type="week" id="week">
     <div class="week-preview" id="weekPreview">
-  📅 سيتم اختيار الأسبوع الحالي تلقائياً
+   سيتم اختيار الأسبوع الحالي تلقائياً
 </div>
   </div>
       
@@ -573,6 +343,8 @@ onclick="logoutWeekly()">
     <div id="status" class="status"></div>
   </div>
 
+  </div>
+  <div class="reports-column">
   <div class="filters">
 <h3 class="section-title">
   <i class="fa-solid fa-magnifying-glass"></i>
@@ -580,14 +352,18 @@ onclick="logoutWeekly()">
 </h3>
 
 <div class="filters-row">
-  <input type="text" id="searchInput" placeholder="ابحث باسم الموظف أو النشاط أو الأسبوع..." onkeyup="renderReports()">
-  <button onclick="loadReports()">
-    تحديث <i class="fa-solid fa-rotate-right"></i>
-  </button>
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="search" id="searchInput" placeholder="ابحث باسم الموظف أو النشاط أو الأسبوع..." oninput="renderReports()">
+  </div>
+  <select id="activityFilter" onchange="renderReports()"><option value="">كل الأنشطة</option></select>
+  <select id="weekFilter" onchange="renderReports()"><option value="">كل الأسابيع</option></select>
+  <button onclick="loadReports()"><i class="fa-solid fa-rotate-right"></i> تحديث</button>
 </div>
   </div>
 
   <div class="table-card">
+  <div class="table-scroll">
   <table>
     <thead>
       <tr>
@@ -605,8 +381,10 @@ onclick="logoutWeekly()">
       </tr>
     </tbody>
   </table>
+  </div>
 </div>
   </div>
+</div>
 
 <script>
 function forceInsideMainPortal() {
@@ -643,7 +421,7 @@ function loginWeekly(){
 
     if(!user || user.password !== password){
         status.innerHTML =
-        "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+        " اسم المستخدم أو كلمة المرور غير صحيحة";
         return;
     }
 
@@ -702,7 +480,7 @@ if (file.size > 20 * 1024 * 1024) {
 }
   const reader = new FileReader();
 
-  status.innerHTML = "⏳ جاري رفع التقرير...";
+  status.innerHTML = " جاري رفع التقرير...";
 
   reader.onload = async function(e) {
     const base64 = e.target.result.split(",")[1];
@@ -725,7 +503,7 @@ const response = await fetch(SCRIPT_URL, {
 const result = await response.text();
 
 if (result.trim() === "success") {
-  status.innerHTML = "✅ تم رفع التقرير بنجاح";
+  status.innerHTML = " تم رفع التقرير بنجاح";
   await loadReports();
 } else {
   status.innerHTML = "❌ " + result;
@@ -755,6 +533,7 @@ async function loadReports() {
   try {
     const res = await fetch(SCRIPT_URL);
     reportsData = await res.json();
+    updateReportDashboard();
     renderReports();
   } catch (err) {
     console.error(err);
@@ -762,38 +541,66 @@ async function loadReports() {
   }
 }
 
+function updateReportDashboard() {
+  const unique = values => new Set(values.filter(Boolean)).size;
+  document.getElementById("reportsCount").textContent = reportsData.length;
+  document.getElementById("staffCount").textContent = unique(reportsData.map(r => r["Staff Name"] || r.Staff || ""));
+  document.getElementById("activitiesCount").textContent = unique(reportsData.map(r => r.Activity || ""));
+  document.getElementById("weeksCount").textContent = unique(reportsData.map(r => r.Week || ""));
+
+  const activityFilter = document.getElementById("activityFilter");
+  const weekFilter = document.getElementById("weekFilter");
+  const currentActivity = activityFilter.value;
+  const currentWeek = weekFilter.value;
+
+  const activities = [...new Set(reportsData.map(r => r.Activity || "").filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ar"));
+  const weeks = [...new Set(reportsData.map(r => r.Week || "").filter(Boolean))].sort().reverse();
+
+  activityFilter.innerHTML = '<option value="">كل الأنشطة</option>' + activities.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  weekFilter.innerHTML = '<option value="">كل الأسابيع</option>' + weeks.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+  activityFilter.value = activities.includes(currentActivity) ? currentActivity : "";
+  weekFilter.value = weeks.includes(currentWeek) ? currentWeek : "";
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function renderReports() {
   const tbody = document.getElementById("reportsTable");
   const search = document.getElementById("searchInput").value.toLowerCase().trim();
+  const selectedActivity = document.getElementById("activityFilter")?.value || "";
+  const selectedWeek = document.getElementById("weekFilter")?.value || "";
 
   const filtered = reportsData.filter(r => {
     const staffName = r["Staff Name"] || r.Staff || "";
-    const text = `${r.Week || ""} ${r.Activity || ""} ${staffName} ${r.Notes || ""}`.toLowerCase();
-    return text.includes(search);
+    const text = `${r.Week || ""} ${r.Activity || ""} ${staffName} ${r.Notes || ""} ${r["File Name"] || ""}`.toLowerCase();
+    return text.includes(search) &&
+      (!selectedActivity || r.Activity === selectedActivity) &&
+      (!selectedWeek || r.Week === selectedWeek);
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6">لا توجد تقارير</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-cell"><i class="fa-regular fa-folder-open"></i><br>لا توجد تقارير مطابقة</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = filtered.reverse().map(r => `
+  tbody.innerHTML = [...filtered].reverse().map(r => `
     <tr>
-      <td>${r.Week || ""}</td>
-      <td>${r.Activity || ""}</td>
-      <td>${r["Staff Name"] || r.Staff || ""}</td>
-      <td>${r.Notes || ""}</td>
-      <td>${r["File Name"] || ""}</td>
-<td>
-<button class="view-btn"
-        onclick="openDriveFile('${getDrivePreviewLink(r["File Link"] || "#")}')">
-  👁️ عرض
-</button>
-
-  <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank">
-    📥 تحميل
-  </a>
-</td>
+      <td><span class="report-week">${escapeHtml(r.Week || "")}</span></td>
+      <td><span class="activity-badge">${escapeHtml(r.Activity || "")}</span></td>
+      <td>${escapeHtml(r["Staff Name"] || r.Staff || "")}</td>
+      <td>${escapeHtml(r.Notes || "")}</td>
+      <td><span class="file-name" title="${escapeHtml(r["File Name"] || "")}">${escapeHtml(r["File Name"] || "")}</span></td>
+      <td>
+        <button class="view-btn" onclick="openDriveFile('${getDrivePreviewLink(r["File Link"] || "#")}')"><i class="fa-regular fa-eye"></i> عرض</button>
+        <a class="download-btn" href="${r["File Link"] || "#"}" target="_blank"><i class="fa-solid fa-download"></i> تحميل</a>
+      </td>
     </tr>
   `).join("");
 }
@@ -911,7 +718,7 @@ weekInput.value =
   `${year}-W${String(week).padStart(2, "0")}`;
 
 weekPreview.innerHTML =
-  `📅 الأسبوع ${week} - ${year}`;
+  ` الأسبوع ${week} - ${year}`;
 
 weekInput.addEventListener("change", () => {
   if (!weekInput.value) return;
@@ -920,7 +727,7 @@ weekInput.addEventListener("change", () => {
     weekInput.value.split("-W");
 
   weekPreview.innerHTML =
-    `📅 الأسبوع ${selectedWeek} - ${selectedYear}`;
+    ` الأسبوع ${selectedWeek} - ${selectedYear}`;
 });  
 </script>
 
