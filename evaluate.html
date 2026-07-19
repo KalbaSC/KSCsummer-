@@ -934,6 +934,37 @@ tbody tr:hover td {
     height: 290px;
   }
 }
+
+.player-search{
+    position:relative;
+    max-width:700px;
+    margin:0 auto 25px;
+}
+
+.player-search input{
+    width:100%;
+    padding:14px 50px 14px 18px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:#fff;
+    font-family:'NotoKufiArabic';
+    font-size:15px;
+    transition:.2s;
+}
+
+.player-search input:focus{
+    outline:none;
+    border-color:var(--blue);
+    box-shadow:0 0 0 4px rgba(47,128,237,.12);
+}
+
+.player-search i{
+    position:absolute;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#6b7280;
+}    
   </style>
 </head>
 <body>
@@ -1033,6 +1064,15 @@ tbody tr:hover td {
 
     <div id="evaluationTab" class="hidden">
       <h2>تقييم اللاعبين</h2>
+
+      <div class="player-search">
+    <i class="fas fa-search"></i>
+    <input
+        type="text"
+        id="playerSearch"
+        placeholder="ابحث بالاسم الكامل أو المعرف..."
+        onkeyup="searchPlayers()">
+</div>
       <div id="playersList"></div>
     </div>
 
@@ -1227,7 +1267,29 @@ function addAlToSecondWord(activity) {
   }
   return `ال${activity}`; 
 }
+function searchPlayers() {
 
+    const search =
+        document.getElementById("playerSearch")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const filtered = playersData.filter(player => {
+
+        const fullName =
+            `${player.name} ${player.parent || ""}`
+            .toLowerCase();
+
+        return (
+            fullName.includes(search) ||
+            player.name.toLowerCase().includes(search) ||
+            player.id.toLowerCase().includes(search)
+        );
+    });
+
+    renderPlayersList(filtered);
+}
 async function handleLogin(e) {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
