@@ -907,6 +907,108 @@ footer {
     font-size: 15px;
   }
 }
+
+.registered-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.registered-summary-card {
+  padding: 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(11, 53, 81, 0.07);
+}
+
+.registered-summary-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf5ff;
+  color: var(--blue);
+  border-radius: 14px;
+  font-size: 21px;
+}
+
+.registered-summary-label {
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.registered-summary-value {
+  margin-top: 7px;
+  color: var(--navy);
+  font-size: 29px;
+  font-weight: 900;
+}
+
+.attended-card .registered-summary-icon {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.absent-card .registered-summary-icon {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.registered-status-badge {
+  display: inline-block;
+  min-width: 125px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.registered-status-attended {
+  background: var(--green-soft);
+  color: var(--green);
+  border: 1px solid #bbf7d0;
+}
+
+.registered-status-never {
+  background: var(--red-soft);
+  color: var(--red);
+  border: 1px solid #fecaca;
+}
+
+.registered-never-row td {
+  background: #fff8f8;
+}
+
+.registered-attended-row td {
+  background: #f8fff9;
+}
+
+.registered-controls {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .registered-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .registered-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #registeredStatusTable {
+    min-width: 950px;
+  }
+}  
 </style>
 </head>
 <body>
@@ -928,6 +1030,7 @@ footer {
 <button onclick="showMainView()" class="active">الحضور </button>
 <button onclick="showActivitiesView()">الحضور حسب الأنشطة</button>
 <button onclick="openStatsLogin()">الإحصائيات</button>
+<button onclick="showTopParticipants()">المنتسبون المميزون</button>
 <button onclick="showTopParticipants()">المنتسبون المميزون</button>
 <div class="dropdown">
 <button>الفترات الزمنية ▼</button>
@@ -1229,6 +1332,167 @@ onclick="promptForPassword()">
 
 
 </div>
+
+ <div
+  class="container"
+  id="registeredStatusView"
+  style="display:none;"
+>
+  <h2 class="title" style="text-align:center;">
+    حالة حضور الأطفال المسجلين
+  </h2>
+
+  <div class="registered-summary-grid">
+    <div class="registered-summary-card">
+      <div class="registered-summary-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+
+      <div class="registered-summary-label">
+        إجمالي المسجلين
+      </div>
+
+      <div
+        class="registered-summary-value"
+        id="registeredTotalCount"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="registered-summary-card attended-card">
+      <div class="registered-summary-icon">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+
+      <div class="registered-summary-label">
+        حضروا مرة واحدة على الأقل
+      </div>
+
+      <div
+        class="registered-summary-value"
+        id="registeredAttendedCount"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="registered-summary-card absent-card">
+      <div class="registered-summary-icon">
+        <i class="fa-solid fa-user-xmark"></i>
+      </div>
+
+      <div class="registered-summary-label">
+        لم يحضروا أبداً
+      </div>
+
+      <div
+        class="registered-summary-value"
+        id="registeredNeverCount"
+      >
+        0
+      </div>
+    </div>
+
+    <div class="registered-summary-card">
+      <div class="registered-summary-icon">
+        <i class="fa-solid fa-chart-pie"></i>
+      </div>
+
+      <div class="registered-summary-label">
+        نسبة من حضروا
+      </div>
+
+      <div
+        class="registered-summary-value"
+        id="registeredAttendanceRate"
+      >
+        0%
+      </div>
+    </div>
+  </div>
+
+  <div class="controls registered-controls">
+    <div class="filter-bar">
+      <div class="search-group">
+        <input
+          type="text"
+          id="registeredSearch"
+          placeholder="ابحث بالاسم أو رقم التسجيل أو الهاتف..."
+          oninput="renderRegisteredStatusTable()"
+        >
+
+        <select
+          id="registeredStatusFilter"
+          onchange="renderRegisteredStatusTable()"
+        >
+          <option value="never">
+            لم يحضروا أبداً
+          </option>
+
+          <option value="all">
+            جميع المسجلين
+          </option>
+
+          <option value="attended">
+            حضروا مرة واحدة على الأقل
+          </option>
+        </select>
+
+        <button
+          class="export"
+          onclick="loadRegisteredAttendanceStatus()"
+        >
+          <i class="fa-solid fa-rotate"></i>
+          تحديث
+        </button>
+      </div>
+
+      <div class="export-buttons">
+        <button
+          class="export"
+          onclick="exportRegisteredStatusToExcel()"
+        >
+          <span class="download-icon"></span>
+          Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="registeredStatusMessage"
+    class="empty-state"
+    style="display:none;"
+  ></div>
+
+  <div style="overflow-x:auto;">
+    <table id="registeredStatusTable">
+      <thead>
+        <tr>
+          <th>م</th>
+          <th>اسم الطفل</th>
+          <th>رقم التسجيل</th>
+          <th>ولي الأمر</th>
+          <th>الهاتف</th>
+          <th>البريد الإلكتروني</th>
+          <th>عدد أيام الحضور</th>
+          <th>آخر حضور</th>
+          <th>الحالة</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td colspan="9" class="empty-state">
+            اضغط على حالة المسجلين لعرض البيانات
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  
 <div id="loadingPopup" style="
   display: none;
   position: fixed;
@@ -1268,6 +1532,13 @@ window.addEventListener("pageshow", forceInsideMainPortal);
   
     //https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec';
+
+const REGISTRATION_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
+
+let registeredKids = [];
+let registeredAttendanceResults = [];
+let registeredStatusLoaded = false;  
 let currentPeriod = 'today';
 
 let allData = [];
@@ -1540,6 +1811,7 @@ document.getElementById("mainView").style.display = "block";
 document.getElementById("activityView").style.display = "none";
 document.getElementById("statsView").style.display = "none";
 document.getElementById("topParticipantsView").style.display = "none";
+document.getElementById("registeredStatusView").style.display = "none";
 }
 
 function showActivitiesView() {
@@ -1549,6 +1821,7 @@ document.getElementById("activityView").style.display = "block";
 document.getElementById("statsView").style.display = "none";
 document.getElementById("topParticipantsView").style.display = "none";
 renderActivityTable();
+  document.getElementById("registeredStatusView").style.display = "none";
 }
 
 function toggleDisplayMode() {
@@ -1569,6 +1842,7 @@ document.getElementById("activityView").style.display = "none";
 document.getElementById("statsView").style.display = "block";
 document.getElementById("topParticipantsView").style.display = "none";
 renderCharts();
+document.getElementById("registeredStatusView").style.display = "none";  
 }
 
 function showTopParticipants() {
@@ -1578,6 +1852,7 @@ document.getElementById("activityView").style.display = "none";
 document.getElementById("statsView").style.display = "none";
 document.getElementById("topParticipantsView").style.display = "block";
 renderTopParticipants();
+  document.getElementById("registeredStatusView").style.display = "none";
 }
 
 function setActiveNavButton(index) {
@@ -3526,6 +3801,473 @@ async function sendWeeklyAttendanceEmails() {
   }
 }
   
+function normalizeComparisonId(value) {
+  return String(value || "")
+    .replace(/^KalbaSC-/i, "")
+    .replace(/[^\dA-Za-z_-]/g, "")
+    .replace(/\.0$/, "")
+    .trim()
+    .toLowerCase();
+}
+
+function getAttendanceSummaryById() {
+  const attendanceSummary = {};
+
+  allData.forEach(record => {
+    const normalizedId = normalizeComparisonId(record.ID);
+
+    if (!normalizedId) return;
+
+    if (!attendanceSummary[normalizedId]) {
+      attendanceSummary[normalizedId] = {
+        records: 0,
+        days: new Set(),
+        lastAttendance: null
+      };
+    }
+
+    const summary = attendanceSummary[normalizedId];
+
+    summary.records += 1;
+
+    if (record.dateKey) {
+      summary.days.add(record.dateKey);
+    }
+
+    const attendanceDate = new Date(record.Timestamp);
+
+    if (
+      !isNaN(attendanceDate.getTime()) &&
+      (
+        !summary.lastAttendance ||
+        attendanceDate > summary.lastAttendance
+      )
+    ) {
+      summary.lastAttendance = attendanceDate;
+    }
+  });
+
+  return attendanceSummary;
+}
+
+async function showRegisteredStatusView() {
+  setActiveNavButton(4);
+
+  document.getElementById("mainView").style.display = "none";
+  document.getElementById("activityView").style.display = "none";
+  document.getElementById("statsView").style.display = "none";
+  document.getElementById("topParticipantsView").style.display = "none";
+  document.getElementById("registeredStatusView").style.display = "block";
+
+  if (!registeredStatusLoaded) {
+    await loadRegisteredAttendanceStatus();
+  }
+}
+
+async function loadRegisteredAttendanceStatus() {
+  const tbody = document.querySelector(
+    "#registeredStatusTable tbody"
+  );
+
+  const message = document.getElementById(
+    "registeredStatusMessage"
+  );
+
+  message.style.display = "none";
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="9" class="empty-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        جاري تحميل المسجلين ومقارنة الحضور...
+      </td>
+    </tr>
+  `;
+
+  try {
+    /*
+      Attendance is normally already loaded into allData.
+      This only reloads it if it is empty.
+    */
+    if (!Array.isArray(allData) || allData.length === 0) {
+      await fetchData();
+    }
+
+    const url =
+      REGISTRATION_SCRIPT_URL +
+      "?action=listRegisteredKids&t=" +
+      Date.now();
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(
+        "Registration server error: " + response.status
+      );
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error(
+        result.message || "Invalid registration data"
+      );
+    }
+
+    registeredKids = removeDuplicateRegisteredKids(
+      result.data
+    );
+
+    const attendanceSummary =
+      getAttendanceSummaryById();
+
+    registeredAttendanceResults =
+      registeredKids.map(child => {
+        const normalizedId =
+          normalizeComparisonId(
+            child.registrationId
+          );
+
+        const attendance =
+          attendanceSummary[normalizedId];
+
+        const attended =
+          Boolean(
+            attendance &&
+            attendance.records > 0
+          );
+
+        return {
+          ...child,
+          normalizedId: normalizedId,
+          attended: attended,
+          attendanceRecords:
+            attendance
+              ? attendance.records
+              : 0,
+          attendanceDays:
+            attendance
+              ? attendance.days.size
+              : 0,
+          lastAttendance:
+            attendance
+              ? attendance.lastAttendance
+              : null
+        };
+      });
+
+    registeredStatusLoaded = true;
+
+    updateRegisteredStatusSummary();
+    renderRegisteredStatusTable();
+
+  } catch (error) {
+    console.error(
+      "Registered attendance comparison error:",
+      error
+    );
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="empty-state">
+          حدث خطأ أثناء تحميل بيانات المسجلين.
+          تأكد من رابط Registration Apps Script
+          ومن نشر آخر نسخة.
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function removeDuplicateRegisteredKids(children) {
+  const uniqueChildren = new Map();
+
+  children.forEach(child => {
+    const key = normalizeComparisonId(
+      child.registrationId
+    );
+
+    /*
+      Ignore registrations that have no ID,
+      because they cannot be compared safely.
+    */
+    if (!key) return;
+
+    if (!uniqueChildren.has(key)) {
+      uniqueChildren.set(key, child);
+    }
+  });
+
+  return Array.from(uniqueChildren.values());
+}
+
+function updateRegisteredStatusSummary() {
+  const total =
+    registeredAttendanceResults.length;
+
+  const attended =
+    registeredAttendanceResults.filter(
+      child => child.attended
+    ).length;
+
+  const neverAttended =
+    total - attended;
+
+  const attendanceRate =
+    total > 0
+      ? ((attended / total) * 100).toFixed(1)
+      : "0.0";
+
+  document.getElementById(
+    "registeredTotalCount"
+  ).textContent = total;
+
+  document.getElementById(
+    "registeredAttendedCount"
+  ).textContent = attended;
+
+  document.getElementById(
+    "registeredNeverCount"
+  ).textContent = neverAttended;
+
+  document.getElementById(
+    "registeredAttendanceRate"
+  ).textContent = attendanceRate + "%";
+}
+
+function getFilteredRegisteredStatusRows() {
+  const search = String(
+    document.getElementById(
+      "registeredSearch"
+    ).value || ""
+  )
+    .toLowerCase()
+    .trim();
+
+  const statusFilter =
+    document.getElementById(
+      "registeredStatusFilter"
+    ).value;
+
+  return registeredAttendanceResults.filter(
+    child => {
+      const matchesStatus =
+        statusFilter === "all" ||
+        (
+          statusFilter === "attended" &&
+          child.attended
+        ) ||
+        (
+          statusFilter === "never" &&
+          !child.attended
+        );
+
+      const searchableText = [
+        child.childName,
+        child.parentName,
+        child.registrationId,
+        child.emiratesId,
+        child.phone,
+        child.altPhone,
+        child.email
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        searchableText.includes(search);
+
+      return matchesStatus && matchesSearch;
+    }
+  );
+}
+
+function renderRegisteredStatusTable() {
+  const tbody = document.querySelector(
+    "#registeredStatusTable tbody"
+  );
+
+  const rows =
+    getFilteredRegisteredStatusRows();
+
+  if (!rows.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="empty-state">
+          لا توجد نتائج مطابقة
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML = rows.map(
+    (child, index) => {
+      const rowClass =
+        child.attended
+          ? "registered-attended-row"
+          : "registered-never-row";
+
+      const badgeClass =
+        child.attended
+          ? "registered-status-attended"
+          : "registered-status-never";
+
+      const statusText =
+        child.attended
+          ? "حضر"
+          : "لم يحضر أبداً";
+
+      const lastAttendance =
+        child.lastAttendance
+          ? formatDate(
+              child.lastAttendance.toISOString()
+            )
+          : "—";
+
+      return `
+        <tr class="${rowClass}">
+          <td>${index + 1}</td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.childName || "—"
+            )}
+          </td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.registrationId || "—"
+            )}
+          </td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.parentName || "—"
+            )}
+          </td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.phone ||
+              child.altPhone ||
+              "—"
+            )}
+          </td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.email || "—"
+            )}
+          </td>
+
+          <td>
+            ${child.attendanceDays}
+          </td>
+
+          <td>
+            ${lastAttendance}
+          </td>
+
+          <td>
+            <span
+              class="
+                registered-status-badge
+                ${badgeClass}
+              "
+            >
+              ${statusText}
+            </span>
+          </td>
+        </tr>
+      `;
+    }
+  ).join("");
+}
+
+function escapeRegisteredHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function exportRegisteredStatusToExcel() {
+  if (!registeredStatusLoaded) {
+    alert("يرجى تحميل بيانات المسجلين أولاً.");
+    return;
+  }
+
+  const rows =
+    getFilteredRegisteredStatusRows();
+
+  if (!rows.length) {
+    alert("لا توجد بيانات للتصدير.");
+    return;
+  }
+
+  const exportData = rows.map(
+    (child, index) => ({
+      "م": index + 1,
+      "اسم الطفل":
+        child.childName || "",
+      "رقم التسجيل":
+        child.registrationId || "",
+      "رقم الهوية":
+        child.emiratesId || "",
+      "ولي الأمر":
+        child.parentName || "",
+      "الهاتف":
+        child.phone ||
+        child.altPhone ||
+        "",
+      "البريد الإلكتروني":
+        child.email || "",
+      "عدد أيام الحضور":
+        child.attendanceDays,
+      "عدد سجلات الحضور":
+        child.attendanceRecords,
+      "آخر حضور":
+        child.lastAttendance
+          ? formatDate(
+              child.lastAttendance.toISOString()
+            )
+          : "",
+      "الحالة":
+        child.attended
+          ? "حضر مرة واحدة على الأقل"
+          : "لم يحضر أبداً"
+    })
+  );
+
+  const worksheet =
+    XLSX.utils.json_to_sheet(exportData);
+
+  const workbook =
+    XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "حالة المسجلين"
+  );
+
+  const status =
+    document.getElementById(
+      "registeredStatusFilter"
+    ).value;
+
+  const fileName =
+    status === "never"
+      ? "المسجلون الذين لم يحضروا أبداً.xlsx"
+      : "حالة حضور الأطفال المسجلين.xlsx";
+
+  XLSX.writeFile(workbook, fileName);
+}  
 window.onload = initialize;
 window.addEventListener('load', checkMobileView);
 window.addEventListener('resize', checkMobileView);
