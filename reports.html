@@ -432,23 +432,25 @@ tbody tr:hover td {
   border-color: var(--navy);
 }
 
-/* Statistics cards */
-
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   margin-top: 22px;
+  align-items: start;
 }
 
 .stat-card {
   min-width: 0;
+  min-height: 360px;
+  height: auto;
   padding: 20px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 20px;
   box-shadow: 0 8px 22px rgba(11, 53, 81, 0.07);
   color: var(--text);
+  overflow: hidden;
 }
 
 .stat-card h3 {
@@ -459,10 +461,10 @@ tbody tr:hover td {
 }
 
 .stat-card canvas {
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 280px !important;
 }
-
-/* Select2 */
 
 .select2-container {
   min-width: 160px;
@@ -906,6 +908,17 @@ footer {
     margin: 0 5px;
     font-size: 15px;
   }
+  .stats-container {
+  grid-template-columns: 1fr;
+}
+
+.stat-card {
+  min-height: 320px;
+}
+
+.stat-card canvas {
+  max-height: 250px !important;
+}
 }
 
 .registered-summary-grid {
@@ -1293,7 +1306,7 @@ onclick="promptForPassword()">
 </div>
 <div class="stat-card">
 <h3>الحضور حسب الأنشطة</h3>
-<canvas id="activityChart" height="320"></canvas>
+<canvas id="activityChart" height="220"></canvas>
 </div>    
 <div class="stat-card">
 <h3>إحصائيات اليوم</h3>
@@ -2792,7 +2805,8 @@ function renderActivityChart() {
 
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      maintainAspectRatio: true,
+aspectRatio: 1.4,
       cutout: "60%",
 
       plugins: {
