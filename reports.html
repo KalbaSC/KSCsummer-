@@ -2761,13 +2761,37 @@ function renderActivityChart() {
     },
     options: {
       plugins: {
-        legend: { position: 'bottom', labels: { color: 'white' } },
+        options: {
+    plugins: {
+        legend: {
+            position: 'bottom',
+            rtl: true,
+            labels: {
+                color: '#163A63',
+                font: {
+                    family: 'Noto Kufi Arabic',
+                    size: 13,
+                    weight: 'bold'
+                },
+                padding: 18,
+                usePointStyle: true,
+                pointStyle: 'circle'
+            }
+        },
         title: {
-          display: true,
-          text: 'مشاركة الحضور حسب الأنشطة',
-          color: 'white',
-          font: { size: 18 }
+            display: true,
+            text: 'الحضور حسب الأنشطة',
+            color: '#163A63',
+            font: {
+                size: 18,
+                weight: 'bold'
+            }
         }
+    },
+    cutout: '55%',
+    responsive: true,
+    maintainAspectRatio: false
+}
       },
       cutout: '50%',
       responsive: true
