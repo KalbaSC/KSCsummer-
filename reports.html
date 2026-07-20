@@ -1293,7 +1293,7 @@ onclick="promptForPassword()">
 </div>
 <div class="stat-card">
 <h3>الحضور حسب الأنشطة</h3>
-<canvas id="activityChart" height="200"></canvas>
+<canvas id="activityChart" height="320"></canvas>
 </div>    
 <div class="stat-card">
 <h3>إحصائيات اليوم</h3>
@@ -2738,86 +2738,146 @@ function renderActivityChart() {
   filteredData.forEach(row => {
     const activity = row.Activity;
     const id = row.ID;
+
     if (!activity || activity === "عام" || !id) return;
 
     const key = `${activity}_${id}`;
+
     if (!seen[key]) {
       seen[key] = true;
-      activityCounts[activity] = (activityCounts[activity] || 0) + 1;
+      activityCounts[activity] =
+        (activityCounts[activity] || 0) + 1;
     }
   });
 
-  if (charts.activities) charts.activities.destroy();
+  if (charts.activities) {
+    charts.activities.destroy();
+  }
 
-  const ctx = document.getElementById('activityChart').getContext('2d');
+  const ctx = document
+    .getElementById("activityChart")
+    .getContext("2d");
+
   charts.activities = new Chart(ctx, {
-    type: 'doughnut',
+    type: "doughnut",
+
     data: {
       labels: Object.keys(activityCounts),
+
       datasets: [{
         data: Object.values(activityCounts),
-        backgroundColor: ['#f4e733','#ff9800','#ffbb00','#4caf50', '#795548', '#d9534f']
+
+        backgroundColor: [
+          "#F4E733",
+          "#FF9800",
+          "#FFC107",
+          "#4CAF50",
+          "#03A9F4",
+          "#8BC34A",
+          "#9C27B0",
+          "#009688",
+          "#795548",
+          "#607D8B",
+          "#E91E63",
+          "#FF5722",
+          "#CDDC39",
+          "#00BCD4",
+          "#673AB7"
+        ],
+
+        borderColor: "#ffffff",
+        borderWidth: 2
       }]
     },
+
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "60%",
+
       plugins: {
-        options: {
-    plugins: {
-plugins: {
-    legend: {
-        position: 'right',
-        rtl: true,
-        align: 'center',
-        labels: {
-            color: '#0b3551',
+        legend: {
+          position: "right",
+          rtl: true,
+          align: "center",
+
+          labels: {
+            color: "#0b3551",
             usePointStyle: true,
-            pointStyle: 'circle',
-            padding: 18,
+            pointStyle: "circle",
+            padding: 14,
+
             font: {
-                family: 'NotoKufiArabic',
-                size: 13,
-                weight: 'bold'
+              family: "NotoKufiArabic",
+              size: 11,
+              weight: "bold"
             },
 
             generateLabels(chart) {
-                const labels =
-                    Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              const labels =
+                Chart.defaults.plugins.legend.labels
+                  .generateLabels(chart);
 
-                const data = chart.data.datasets[0].data;
-                const total = data.reduce((a, b) => a + b, 0);
+              const values =
+                chart.data.datasets[0].data;
 
-                labels.forEach((label, i) => {
-                    const value = data[i];
-                    const percent = ((value / total) * 100).toFixed(1);
-                    label.text =
-                        `${chart.data.labels[i]} (${value}) - ${percent}%`;
-                });
+              const total = values.reduce(
+                (sum, value) => sum + value,
+                0
+              );
 
-                return labels;
+              labels.forEach((label, index) => {
+                const value = values[index];
+
+                const percentage =
+                  total > 0
+                    ? ((value / total) * 100).toFixed(1)
+                    : "0.0";
+
+                label.text =
+                  `${chart.data.labels[index]} ` +
+                  `(${value}) - ${percentage}%`;
+              });
+
+              return labels;
             }
-        }
-    },
+          }
+        },
 
-    title: {
-        display: false
-    },
+        title: {
+          display: false
+        },
 
-    tooltip: {
-        callbacks: {
+        tooltip: {
+          callbacks: {
             label(context) {
-                const total =
-                    context.dataset.data.reduce((a,b)=>a+b,0);
+              const total =
+                context.dataset.data.reduce(
+                  (sum, value) => sum + value,
+                  0
+                );
 
-                const percent =
-                    ((context.raw / total) * 100).toFixed(1);
+              const percentage =
+                total > 0
+                  ? (
+                      (context.raw / total) * 100
+                    ).toFixed(1)
+                  : "0.0";
 
-                return `${context.label}: ${context.raw} لاعب (${percent}%)`;
+              return (
+                `${context.label}: ` +
+                `${context.raw} لاعب ` +
+                `(${percentage}%)`
+              );
             }
+          }
         }
-    }
-}
-      cutout: '50%',
-      responsive: true
+      },
+
+      animation: {
+        animateRotate: true,
+        duration: 1000
+      }
     }
   });
 }
@@ -3948,7 +4008,7 @@ function showRegisteredStatusView() {
     document.getElementById("topParticipantsView").style.display = "none";
     document.getElementById("registeredStatusView").style.display = "block";
 
-    renderRegisteredStatus();
+    await loadRegisteredAttendanceStatus();
 }
 
  async function loadNationalityData() {
