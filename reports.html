@@ -2763,36 +2763,59 @@ function renderActivityChart() {
       plugins: {
         options: {
     plugins: {
-        legend: {
-            position: 'bottom',
-            rtl: true,
-            labels: {
-                color: '#163A63',
-                font: {
-                    family: 'Noto Kufi Arabic',
-                    size: 13,
-                    weight: 'bold'
-                },
-                padding: 18,
-                usePointStyle: true,
-                pointStyle: 'circle'
-            }
-        },
-        title: {
-            display: true,
-            text: 'الحضور حسب الأنشطة',
-            color: '#163A63',
+plugins: {
+    legend: {
+        position: 'right',
+        rtl: true,
+        align: 'center',
+        labels: {
+            color: '#0b3551',
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 18,
             font: {
-                size: 18,
+                family: 'NotoKufiArabic',
+                size: 13,
                 weight: 'bold'
+            },
+
+            generateLabels(chart) {
+                const labels =
+                    Chart.defaults.plugins.legend.labels.generateLabels(chart);
+
+                const data = chart.data.datasets[0].data;
+                const total = data.reduce((a, b) => a + b, 0);
+
+                labels.forEach((label, i) => {
+                    const value = data[i];
+                    const percent = ((value / total) * 100).toFixed(1);
+                    label.text =
+                        `${chart.data.labels[i]} (${value}) - ${percent}%`;
+                });
+
+                return labels;
             }
         }
     },
-    cutout: '55%',
-    responsive: true,
-    maintainAspectRatio: false
+
+    title: {
+        display: false
+    },
+
+    tooltip: {
+        callbacks: {
+            label(context) {
+                const total =
+                    context.dataset.data.reduce((a,b)=>a+b,0);
+
+                const percent =
+                    ((context.raw / total) * 100).toFixed(1);
+
+                return `${context.label}: ${context.raw} لاعب (${percent}%)`;
+            }
+        }
+    }
 }
-      },
       cutout: '50%',
       responsive: true
     }
