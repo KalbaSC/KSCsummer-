@@ -450,7 +450,7 @@ tbody tr:hover td {
   border-radius: 20px;
   box-shadow: 0 8px 22px rgba(11, 53, 81, 0.07);
   color: var(--text);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .stat-card h3 {
@@ -2806,57 +2806,52 @@ function renderActivityChart() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-aspectRatio: 1.4,
+aspectRatio: 1.15,
       cutout: "60%",
 
       plugins: {
-        legend: {
-          position: "right",
-          rtl: true,
-          align: "center",
+legend: {
+  position: "bottom",
+  rtl: true,
+  align: "center",
 
-          labels: {
-            color: "#0b3551",
-            usePointStyle: true,
-            pointStyle: "circle",
-            padding: 14,
+  labels: {
+    color: "#0b3551",
+    usePointStyle: true,
+    pointStyle: "circle",
+    boxWidth: 10,
+    boxHeight: 10,
+    padding: 12,
 
-            font: {
-              family: "NotoKufiArabic",
-              size: 11,
-              weight: "bold"
-            },
+    font: {
+      family: "NotoKufiArabic",
+      size: 10,
+      weight: "bold"
+    },
 
-            generateLabels(chart) {
-              const labels =
-                Chart.defaults.plugins.legend.labels
-                  .generateLabels(chart);
+    generateLabels(chart) {
+      const labels =
+        Chart.defaults.plugins.legend.labels.generateLabels(chart);
 
-              const values =
-                chart.data.datasets[0].data;
+      const values = chart.data.datasets[0].data;
+      const total = values.reduce((sum, value) => sum + value, 0);
 
-              const total = values.reduce(
-                (sum, value) => sum + value,
-                0
-              );
+      labels.forEach((label, index) => {
+        const value = values[index];
 
-              labels.forEach((label, index) => {
-                const value = values[index];
+        const percentage =
+          total > 0
+            ? ((value / total) * 100).toFixed(1)
+            : "0.0";
 
-                const percentage =
-                  total > 0
-                    ? ((value / total) * 100).toFixed(1)
-                    : "0.0";
+        label.text =
+          `${chart.data.labels[index]} (${value}) - ${percentage}%`;
+      });
 
-                label.text =
-                  `${chart.data.labels[index]} ` +
-                  `(${value}) - ${percentage}%`;
-              });
-
-              return labels;
-            }
-          }
-        },
+      return labels;
+    }
+  }
+},
 
         title: {
           display: false
