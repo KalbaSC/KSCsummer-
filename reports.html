@@ -1412,6 +1412,42 @@ onclick="promptForPassword()">
         0%
       </div>
     </div>
+
+    <div class="registered-summary-card">
+  <div class="registered-summary-icon">
+    <i class="fa-solid fa-flag"></i>
+  </div>
+
+  <div class="registered-summary-label">
+    المواطنون
+  </div>
+
+  <div class="registered-summary-value" id="citizenCount">
+    0
+  </div>
+
+  <div id="citizenRate" style="color:#6b7280;font-size:13px;">
+    0%
+  </div>
+</div>
+
+<div class="registered-summary-card">
+  <div class="registered-summary-icon">
+    <i class="fa-solid fa-earth-americas"></i>
+  </div>
+
+  <div class="registered-summary-label">
+    غير المواطنين
+  </div>
+
+  <div class="registered-summary-value" id="nonCitizenCount">
+    0
+  </div>
+
+  <div id="nonCitizenRate" style="color:#6b7280;font-size:13px;">
+    0%
+  </div>
+</div>
   </div>
 
   <div class="controls registered-controls">
@@ -1538,10 +1574,14 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fE
 const REGISTRATION_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
 
+  const READFROMID_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwl8RzWIdUzQjaB4hUgheQxMOuC_yvIQ3nUl-rfzBwYiQA58-R8BejMrF7iXuB3WKIq/exec";
+
 let registeredKids = [];
 let registeredAttendanceResults = [];
 let registeredStatusLoaded = false;  
 let currentPeriod = 'today';
+let nationalityMap = {};  
 
 let allData = [];
 let filteredData = [];
@@ -3864,6 +3904,40 @@ function showRegisteredStatusView() {
     renderRegisteredStatus();
 }
 
+ async function loadNationalityData() {
+  const response = await fetch(
+    READFROMID_SCRIPT_URL +
+    "?action=listNationalities&t=" +
+    Date.now()
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Nationality server error: " + response.status
+    );
+  }
+
+  const result = await response.json();
+
+  if (!result.success || !Array.isArray(result.data)) {
+    throw new Error(
+      result.message || "Invalid nationality data"
+    );
+  }
+
+  nationalityMap = {};
+
+  result.data.forEach(item => {
+    const emiratesId = String(item.emiratesId || "")
+      .replace(/[^\d]/g, "")
+      .trim();
+
+    if (!emiratesId) return;
+
+    nationalityMap[emiratesId] =
+      String(item.nationality || "").trim();
+  });
+} 
 async function loadRegisteredAttendanceStatus() {
   const tbody = document.querySelector(
     "#registeredStatusTable tbody"
@@ -3885,14 +3959,12 @@ async function loadRegisteredAttendanceStatus() {
   `;
 
   try {
-    /*
-      Attendance is normally already loaded into allData.
-      This only reloads it if it is empty.
-    */
+
     if (!Array.isArray(allData) || allData.length === 0) {
       await fetchData();
     }
 
+    await loadNationalityData();
     const url =
       REGISTRATION_SCRIPT_URL +
       "?action=listRegisteredKids&t=" +
@@ -3937,10 +4009,20 @@ async function loadRegisteredAttendanceStatus() {
             attendance.records > 0
           );
 
-        return {
-          ...child,
-          normalizedId: normalizedId,
-          attended: attended,
+const normalizedEmiratesId = String(
+  child.emiratesId || ""
+)
+  .replace(/[^\d]/g, "")
+  .trim();
+
+const nationality =
+  nationalityMap[normalizedEmiratesId] || "";
+
+return {
+  ...child,
+  normalizedId: normalizedId,
+  nationality: nationality,
+  attended: attended,
           attendanceRecords:
             attendance
               ? attendance.records
@@ -3987,10 +4069,6 @@ function removeDuplicateRegisteredKids(children) {
       child.registrationId
     );
 
-    /*
-      Ignore registrations that have no ID,
-      because they cannot be compared safely.
-    */
     if (!key) return;
 
     if (!uniqueChildren.has(key)) {
@@ -4033,8 +4111,58 @@ function updateRegisteredStatusSummary() {
   document.getElementById(
     "registeredAttendanceRate"
   ).textContent = attendanceRate + "%";
+  const citizens =
+  registeredAttendanceResults.filter(child =>
+    isUaeCitizen(child.nationality)
+  ).length;
+
+const nonCitizens =
+  registeredAttendanceResults.filter(child =>
+    child.nationality &&
+    !isUaeCitizen(child.nationality)
+  ).length;
+
+const nationalityTotal = citizens + nonCitizens;
+
+const citizenRate =
+  nationalityTotal > 0
+    ? ((citizens / nationalityTotal) * 100).toFixed(1)
+    : "0.0";
+
+const nonCitizenRate =
+  nationalityTotal > 0
+    ? ((nonCitizens / nationalityTotal) * 100).toFixed(1)
+    : "0.0";
+
+document.getElementById("citizenCount").textContent =
+  citizens;
+
+document.getElementById("nonCitizenCount").textContent =
+  nonCitizens;
+
+document.getElementById("citizenRate").textContent =
+  citizenRate + "%";
+
+document.getElementById("nonCitizenRate").textContent =
+  nonCitizenRate + "%";
 }
 
+  function isUaeCitizen(nationality) {
+  const value = String(nationality || "")
+    .trim()
+    .toLowerCase();
+
+  return (
+    value === "الإمارات العربية المتحدة" ||
+    value === "اماراتي" ||
+    value === "إماراتي" ||
+    value === "اماراتية" ||
+    value === "إماراتية" ||
+    value === "uae" ||
+    value === "emirati"
+  );
+}
+  
 function getFilteredRegisteredStatusRows() {
   const search = String(
     document.getElementById(
