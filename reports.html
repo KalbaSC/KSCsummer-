@@ -1533,6 +1533,43 @@ onclick="promptForPassword()">
     0%
   </div>
 </div>
+
+<div class="registered-summary-card">
+  <div class="registered-summary-icon">
+    <i class="fa-solid fa-building-flag"></i>
+  </div>
+
+  <div class="registered-summary-label">
+    المنتسبون للنادي
+  </div>
+
+  <div class="registered-summary-value" id="clubMemberCount">
+    0
+  </div>
+
+  <div id="clubMemberRate" style="color:#6b7280;font-size:13px;">
+    0%
+  </div>
+</div>
+
+<div class="registered-summary-card">
+  <div class="registered-summary-icon">
+    <i class="fa-solid fa-location-dot"></i>
+  </div>
+
+  <div class="registered-summary-label">
+    الإمارات
+  </div>
+
+  <div class="registered-summary-value" id="emiratesCount">
+    0
+  </div>
+
+  <div id="emiratesBreakdown" style="color:#6b7280;font-size:11px;line-height:1.8;">
+    —
+  </div>
+</div>
+
   </div>
 
   <div class="controls registered-controls">
@@ -1599,6 +1636,8 @@ onclick="promptForPassword()">
           <th>ولي الأمر</th>
           <th>الهاتف</th>
           <th>البريد الإلكتروني</th>
+          <th>الإمارة</th>
+          <th>الانتساب للنادي</th>
           <th>عدد أيام الحضور</th>
           <th>آخر حضور</th>
           <th>الحالة</th>
@@ -1607,7 +1646,7 @@ onclick="promptForPassword()">
 
       <tbody>
         <tr>
-          <td colspan="9" class="empty-state">
+          <td colspan="11" class="empty-state">
             اضغط على حالة المسجلين لعرض البيانات
           </td>
         </tr>
@@ -1666,7 +1705,9 @@ let registeredKids = [];
 let registeredAttendanceResults = [];
 let registeredStatusLoaded = false;  
 let currentPeriod = 'today';
-let nationalityMap = {};  
+let nationalityMap = {};
+let emirateMap = {};
+let clubMembershipMap = {};  
 
 let allData = [];
 let filteredData = [];
@@ -4173,16 +4214,43 @@ function showRegisteredStatusView() {
   }
 
   nationalityMap = {};
+  emirateMap = {};
+  clubMembershipMap = {};
 
   result.data.forEach(item => {
-    const emiratesId = String(item.emiratesId || "")
+    const emiratesId = String(
+      item.emiratesId ||
+      item.emiratesID ||
+      item["رقم الهوية"] ||
+      item["رقم الهوية الإماراتية"] ||
+      ""
+    )
       .replace(/[^\d]/g, "")
       .trim();
 
     if (!emiratesId) return;
 
-    nationalityMap[emiratesId] =
-      String(item.nationality || "").trim();
+    nationalityMap[emiratesId] = String(
+      item.nationality || item["الجنسية"] || ""
+    ).trim();
+
+    emirateMap[emiratesId] = String(
+      item.emirate ||
+      item.Emirate ||
+      item["الإمارة"] ||
+      item["الامارة"] ||
+      ""
+    ).trim();
+
+    clubMembershipMap[emiratesId] = String(
+      item.clubMembership ||
+      item.clubMember ||
+      item.membership ||
+      item["الانتساب للنادي"] ||
+      item["المنتسبين للنادي"] ||
+      item["المنتسب للنادي"] ||
+      ""
+    ).trim();
   });
 } 
 async function loadRegisteredAttendanceStatus() {
@@ -4198,7 +4266,7 @@ async function loadRegisteredAttendanceStatus() {
 
   tbody.innerHTML = `
     <tr>
-      <td colspan="9" class="empty-state">
+      <td colspan="11" class="empty-state">
         <i class="fas fa-spinner fa-spin"></i>
         جاري تحميل المسجلين ومقارنة الحضور...
       </td>
@@ -4265,10 +4333,18 @@ const normalizedEmiratesId = String(
 const nationality =
   nationalityMap[normalizedEmiratesId] || "";
 
+const emirate =
+  emirateMap[normalizedEmiratesId] || "";
+
+const clubMembership =
+  clubMembershipMap[normalizedEmiratesId] || "";
+
 return {
   ...child,
   normalizedId: normalizedId,
   nationality: nationality,
+  emirate: emirate,
+  clubMembership: clubMembership,
   attended: attended,
           attendanceRecords:
             attendance
@@ -4298,7 +4374,7 @@ return {
 
     tbody.innerHTML = `
       <tr>
-        <td colspan="9" class="empty-state">
+        <td colspan="11" class="empty-state">
           حدث خطأ أثناء تحميل بيانات المسجلين.
           تأكد من رابط Registration Apps Script
           ومن نشر آخر نسخة.
@@ -4392,6 +4468,43 @@ document.getElementById("citizenRate").textContent =
 
 document.getElementById("nonCitizenRate").textContent =
   nonCitizenRate + "%";
+
+const clubMembers = registeredAttendanceResults.filter(child => {
+  const value = String(child.clubMembership || "")
+    .replace(/[\s\u200B-\u200D\uFEFF]/g, "")
+    .trim();
+
+  return value && !value.includes("غيرمنتسب") && !value.includes("غيرمسجل");
+}).length;
+
+const clubMemberRate =
+  total > 0
+    ? ((clubMembers / total) * 100).toFixed(1)
+    : "0.0";
+
+document.getElementById("clubMemberCount").textContent =
+  clubMembers;
+
+document.getElementById("clubMemberRate").textContent =
+  clubMemberRate + "%";
+
+const emirateCounts = {};
+registeredAttendanceResults.forEach(child => {
+  const emirate = String(child.emirate || "").trim();
+  if (!emirate) return;
+  emirateCounts[emirate] = (emirateCounts[emirate] || 0) + 1;
+});
+
+const emirateEntries = Object.entries(emirateCounts)
+  .sort((a, b) => b[1] - a[1]);
+
+document.getElementById("emiratesCount").textContent =
+  emirateEntries.length;
+
+document.getElementById("emiratesBreakdown").textContent =
+  emirateEntries.length
+    ? emirateEntries.map(([name, count]) => `${name}: ${count}`).join(" | ")
+    : "—";
 }
 
   function isUaeCitizen(nationality) {
@@ -4444,7 +4557,9 @@ function getFilteredRegisteredStatusRows() {
         child.emiratesId,
         child.phone,
         child.altPhone,
-        child.email
+        child.email,
+        child.emirate,
+        child.clubMembership
       ]
         .join(" ")
         .toLowerCase();
@@ -4469,7 +4584,7 @@ function renderRegisteredStatusTable() {
   if (!rows.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="9" class="empty-state">
+        <td colspan="11" class="empty-state">
           لا توجد نتائج مطابقة
         </td>
       </tr>
@@ -4539,6 +4654,18 @@ function renderRegisteredStatusTable() {
           </td>
 
           <td>
+            ${escapeRegisteredHtml(
+              child.emirate || "—"
+            )}
+          </td>
+
+          <td>
+            ${escapeRegisteredHtml(
+              child.clubMembership || "—"
+            )}
+          </td>
+
+          <td>
             ${child.attendanceDays}
           </td>
 
@@ -4602,6 +4729,10 @@ function exportRegisteredStatusToExcel() {
         "",
       "البريد الإلكتروني":
         child.email || "",
+      "الإمارة":
+        child.emirate || "",
+      "الانتساب للنادي":
+        child.clubMembership || "",
       "عدد أيام الحضور":
         child.attendanceDays,
       "عدد سجلات الحضور":
