@@ -994,6 +994,51 @@ tbody tr:hover td {
   background: #e9f1f5;
   box-shadow: none;
 }
+
+.progress-player-search {
+  position: relative;
+  width: 100%;
+}
+
+.progress-player-results {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 14px 35px rgba(11, 53, 81, 0.16);
+}
+
+.progress-player-item {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.progress-player-item:last-child {
+  border-bottom: 0;
+}
+
+.progress-player-item:hover {
+  background: #eef7fb;
+}
+
+.progress-player-name {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.progress-player-info {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}    
   </style>
 </head>
 <body>
@@ -1146,15 +1191,17 @@ tbody tr:hover td {
       <div class="form-group">
 <label for="progressPlayerSearch">ابحث عن اللاعب</label>
 
-<input
-  type="search"
-  id="progressPlayerSearch"
-  list="progressPlayersList"
-  placeholder="اكتب اسم اللاعب..."
-  autocomplete="off"
->
+<div class="progress-player-search">
+  <input
+    type="search"
+    id="progressPlayerSearch"
+    placeholder="اكتب الاسم الكامل أو جزءاً منه..."
+    autocomplete="off"
+    oninput="searchProgressPlayers()"
+  >
 
-<datalist id="progressPlayersList"></datalist>
+  <div id="progressPlayerResults" class="progress-player-results"></div>
+</div>
 
 <input type="hidden" id="playerSelect">
 
@@ -1974,72 +2021,108 @@ function getActivityIcon(activity) {
 const playerSelect = document.getElementById('playerSelect');
 
 function updatePlayerSelect() {
-  const searchInput =
-    document.getElementById("progressPlayerSearch");
+  const input = document.getElementById("progressPlayerSearch");
+  const hiddenId = document.getElementById("playerSelect");
+  const results = document.getElementById("progressPlayerResults");
 
-  const datalist =
-    document.getElementById("progressPlayersList");
+  if (input) input.value = "";
+  if (hiddenId) hiddenId.value = "";
 
-  const hiddenPlayerId =
-    document.getElementById("playerSelect");
-
-  if (!searchInput || !datalist || !hiddenPlayerId) {
-    console.error("Progress player search elements not found");
-    return;
+  if (results) {
+    results.innerHTML = "";
+    results.style.display = "none";
   }
-
-  datalist.innerHTML = "";
-
-  playersData.forEach(player => {
-    const option = document.createElement("option");
-
-    option.value = player.name;
-    option.label = `${player.name} (${player.id})`;
-
-    datalist.appendChild(option);
-  });
-
-  searchInput.value = "";
-  hiddenPlayerId.value = "";
 }
 
-function selectProgressPlayer() {
-  const searchInput =
-    document.getElementById("progressPlayerSearch");
+function searchProgressPlayers() {
+  const input = document.getElementById("progressPlayerSearch");
+  const results = document.getElementById("progressPlayerResults");
+  const hiddenId = document.getElementById("playerSelect");
 
-  const hiddenPlayerId =
-    document.getElementById("playerSelect");
+  const query = normalizeArabicSearch(input.value);
 
-  const query = normalizeArabicSearch(searchInput.value);
+  hiddenId.value = "";
 
   if (!query) {
-    hiddenPlayerId.value = "";
+    results.innerHTML = "";
+    results.style.display = "none";
     return;
   }
 
-  const matchingPlayer = playersData.find(player =>
-    normalizeArabicSearch(player.name) === query
-  );
+  const searchWords = query.split(/\s+/).filter(Boolean);
 
-  if (!matchingPlayer) {
-    hiddenPlayerId.value = "";
+  const matches = playersData.filter(player => {
+    const playerText = normalizeArabicSearch([
+      player.name,
+      player.parent,
+      player.id
+    ].filter(Boolean).join(" "));
 
-    document.getElementById("progressChartContainer").innerHTML = `
-      <p style="
-        text-align:center;
-        padding:25px;
-        color:#6b7280;
-      ">
-        اختر لاعباً من نتائج البحث
-      </p>
+    return searchWords.every(word =>
+      playerText.includes(word)
+    );
+  }).slice(0, 15);
+
+  if (!matches.length) {
+    results.innerHTML = `
+      <div class="progress-player-item">
+        <div class="progress-player-name">
+          لا يوجد لاعب بهذا الاسم
+        </div>
+      </div>
     `;
 
+    results.style.display = "block";
     return;
   }
 
-  hiddenPlayerId.value = matchingPlayer.id;
+  results.innerHTML = matches.map(player => {
+    const index = playersData.indexOf(player);
+
+    return `
+      <div
+        class="progress-player-item"
+        onclick="chooseProgressPlayer(${index})"
+      >
+        <div class="progress-player-name">
+          ${escapeProgressHtml(player.name)}
+        </div>
+
+        <div class="progress-player-info">
+          ولي الأمر: ${escapeProgressHtml(player.parent || "غير معروف")}
+          — المعرف: ${escapeProgressHtml(player.id)}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  results.style.display = "block";
+}
+
+function chooseProgressPlayer(index) {
+  const player = playersData[index];
+
+  if (!player) return;
+
+  document.getElementById("progressPlayerSearch").value =
+    player.name;
+
+  document.getElementById("playerSelect").value =
+    String(player.id).trim();
+
+  document.getElementById("progressPlayerResults").style.display =
+    "none";
 
   showPlayerProgress();
+}
+
+function escapeProgressHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
     
 let progressChart = null;
@@ -2061,7 +2144,7 @@ async function showPlayerProgress() {
     const playerId = playerSelect.value.trim();
 
     if (!playerId) {
-      container.innerHTML = '<p style="color:white; text-align:center; padding:20px;">الرجاء اختيار لاعب</p>';
+      container.innerHTML = '<p style="color:#6b7280; text-align:center; padding:20px;">الرجاء اختيار لاعب</p>';
       return;
     }
 
@@ -2077,7 +2160,7 @@ async function showPlayerProgress() {
       .sort((a, b) => new Date(a.Date) - new Date(b.Date));
 
     if (playerEvals.length === 0) {
-      container.innerHTML = '<p style="color:white; text-align:center; padding:20px;">لا توجد بيانات لهذا اللاعب</p>';
+      container.innerHTML = '<p style="color:#6b7280; text-align:center; padding:20px;">لا توجد بيانات لهذا اللاعب</p>';
       return;
     }
 
