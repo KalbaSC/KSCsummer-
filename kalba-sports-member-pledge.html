@@ -311,7 +311,6 @@
 
       <div id="memberCard" class="member-card">
         <div class="member-row"><strong>اسم المنتسب</strong><span id="cardName">—</span></div>
-        <div class="member-row"><strong>النشاط</strong><span id="cardActivity">—</span></div>
         <div class="member-row"><strong>ولي الأمر</strong><span id="cardParent">—</span></div>
         <div class="member-row"><strong>رقم التسجيل</strong><span id="cardId">—</span></div>
       </div>
@@ -382,65 +381,154 @@
   </main>
 
 <script>
-  // بيانات تجريبية مؤقتة.
-  // لاحقاً نستبدلها ببيانات التسجيل الفعلية من Google Apps Script.
-  const members = [
-    { id:'KSC-2026-001', name:'محمد أحمد علي', activity:'كرة القدم', parent:'أحمد علي حسن' },
-    { id:'KSC-2026-002', name:'سالم راشد محمد', activity:'السباحة', parent:'راشد محمد سالم' },
-    { id:'KSC-2026-003', name:'عمر خالد حسن', activity:'الروبوت والابتكار', parent:'خالد حسن علي' },
-    { id:'KSC-2026-004', name:'يوسف ماجد علي', activity:'كرة السلة', parent:'ماجد علي يوسف' }
-  ];
+
+const REGISTRATION_API =
+  "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
+
+let members = [];
+
+async function loadMembers() {
+  try {
+    const response = await fetch(
+      `${REGISTRATION_API}?action=listRegisteredKids`
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to connect to registration system");
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error(result.message || "Invalid registration data");
+    }
+
+    members = result.data
+      .filter(child => child.childName)
+      .map(child => ({
+        id: child.registrationId || "",
+        name: child.childName || "",
+        parent: child.parentName || "",
+        age: child.age || "",
+        emiratesId: child.emiratesId || ""
+      }));
+
+    console.log(`Loaded ${members.length} registered children`);
+
+  } catch (error) {
+    console.error(error);
+
+    document.getElementById("searchResults").innerHTML = `
+      <div class="search-item">
+        <div class="search-name">تعذر تحميل بيانات المنتسبين</div>
+        <div class="search-meta">تحقق من رابط Google Apps Script وإعدادات النشر</div>
+      </div>
+    `;
+  }
+}
 
   const canvas = document.getElementById('pledgeCanvas');
   const ctx = canvas.getContext('2d');
   let generated = false;
 
-  function searchMembers(){
-    const input = document.getElementById('memberSearch');
-    const results = document.getElementById('searchResults');
-    const query = input.value.trim().toLowerCase();
+function searchMembers() {
+  const input = document.getElementById("memberSearch");
+  const results = document.getElementById("searchResults");
+  const query = normalizeArabic(input.value);
 
-    if(!query){
-      results.style.display='none';
-      results.innerHTML='';
-      return;
-    }
+  if (!query) {
+    results.style.display = "none";
+    results.innerHTML = "";
+    return;
+  }
 
-    const matches = members.filter(member =>
-      member.name.toLowerCase().includes(query)
-    );
-
-    if(!matches.length){
-      results.innerHTML='<div class="search-item"><div class="search-name">لا توجد نتائج</div></div>';
-      results.style.display='block';
-      return;
-    }
-
-    results.innerHTML = matches.map(member => `
-      <div class="search-item" onclick='selectMember(${JSON.stringify(member)})'>
-        <div class="search-name">${member.name}</div>
-        <div class="search-meta">${member.activity} • ${member.id}</div>
+  if (!members.length) {
+    results.innerHTML = `
+      <div class="search-item">
+        <div class="search-name">جاري تحميل الأسماء...</div>
       </div>
-    `).join('');
-
-    results.style.display='block';
+    `;
+    results.style.display = "block";
+    return;
   }
 
-  function selectMember(member){
-    document.getElementById('memberSearch').value = member.name;
-    document.getElementById('participantName').value = member.name;
-    document.getElementById('memberId').value = member.id;
-    document.getElementById('activity').value = member.activity;
-    document.getElementById('parentName').value = member.parent;
+  const matches = members
+    .filter(member =>
+      normalizeArabic(member.name).includes(query)
+    )
+    .slice(0, 20);
 
-    document.getElementById('cardName').textContent = member.name;
-    document.getElementById('cardActivity').textContent = member.activity;
-    document.getElementById('cardParent').textContent = member.parent;
-    document.getElementById('cardId').textContent = member.id;
-
-    document.getElementById('memberCard').style.display='block';
-    document.getElementById('searchResults').style.display='none';
+  if (!matches.length) {
+    results.innerHTML = `
+      <div class="search-item">
+        <div class="search-name">لا توجد نتائج مطابقة</div>
+      </div>
+    `;
+    results.style.display = "block";
+    return;
   }
+
+  results.innerHTML = matches.map((member, index) => `
+    <div class="search-item" onclick="selectMemberByIndex(${members.indexOf(member)})">
+      <div class="search-name">${escapeHtml(member.name)}</div>
+      <div class="search-meta">
+        ولي الأمر: ${escapeHtml(member.parent || "غير مسجل")}
+        • رقم التسجيل: ${escapeHtml(member.id || "—")}
+      </div>
+    </div>
+  `).join("");
+
+  results.style.display = "block";
+}
+
+function normalizeArabic(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/[\u064B-\u065F]/g, "");
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}  
+function selectMemberByIndex(index) {
+  const member = members[index];
+
+  if (!member) return;
+
+  document.getElementById("memberSearch").value = member.name;
+  document.getElementById("participantName").value = member.name;
+  document.getElementById("memberId").value = member.id;
+  document.getElementById("parentName").value = member.parent;
+
+  document.getElementById("cardName").textContent =
+    member.name || "—";
+
+  document.getElementById("cardParent").textContent =
+    member.parent || "—";
+
+  document.getElementById("cardId").textContent =
+    member.id || "—";
+
+  document.getElementById("memberCard").style.display = "block";
+  document.getElementById("searchResults").style.display = "none";
+
+  document.getElementById("participantSignature").value =
+    member.name || "";
+
+  document.getElementById("parentSignature").value =
+    member.parent || "";
+}
 
   function roundedRect(x,y,w,h,r,fill,stroke=null,lineWidth=1){
     ctx.beginPath();
@@ -619,14 +707,20 @@
   function generatePledge(){
     const name=document.getElementById('participantName').value.trim();
     const memberId=document.getElementById('memberId').value.trim();
-    const activity=document.getElementById('activity').value.trim();
     const parent=document.getElementById('parentName').value.trim();
     const participantSignature=document.getElementById('participantSignature').value.trim();
     const parentSignature=document.getElementById('parentSignature').value.trim();
     const date=document.getElementById('pledgeDate').value;
     const error=document.getElementById('errorBox');
 
-    if(!name || !memberId || !activity || !parent || !participantSignature || !parentSignature || !date){
+    if (
+  !name ||
+  !memberId ||
+  !parent ||
+  !participantSignature ||
+  !parentSignature ||
+  !date
+){
       error.style.display='block';
       return;
     }
@@ -636,9 +730,6 @@
 
     drawText('اسم المنتسب',850,485,170,17,'right','#6b7d8d');
     drawText(name,660,485,500,24,'right','#17324a');
-
-    drawText('النشاط',850,545,170,17,'right','#6b7d8d');
-    drawText(activity,660,545,500,22,'right','#17324a');
 
     drawText('ولي الأمر',850,600,170,17,'right','#6b7d8d');
     drawText(parent,660,600,500,22,'right','#17324a');
@@ -748,6 +839,13 @@
 
   document.getElementById('pledgeDate').value=new Date().toISOString().slice(0,10);
   drawBase();
+
+  document.getElementById("pledgeDate").value =
+  new Date().toISOString().slice(0, 10);
+
+drawBase();
+loadMembers();
+  
 </script>
 </body>
 </html>
