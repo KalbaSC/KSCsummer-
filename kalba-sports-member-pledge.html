@@ -460,7 +460,8 @@ const searchWords = query.split(/\s+/).filter(Boolean);
 let matches = members.filter(member => {
 
     const name = normalizeArabic(member.name);
-
+console.log("Searching:", searchWords);
+console.log("Name:", name);
     return searchWords.every(word => name.includes(word));
 
 });
@@ -514,15 +515,16 @@ let matches = members.filter(member => {
 }
 
 function normalizeArabic(value) {
-  return String(value || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[أإآ]/g, "ا")
-    .replace(/ى/g, "ي")
-    .replace(/ؤ/g, "و")
-    .replace(/ئ/g, "ي")
-    .replace(/ة/g, "ه")
-    .replace(/[\u064B-\u065F]/g, "");
+    return String(value || "")
+        .toLowerCase()
+        .replace(/[أإآ]/g, "ا")
+        .replace(/ى/g, "ي")
+        .replace(/ؤ/g, "و")
+        .replace(/ئ/g, "ي")
+        .replace(/ة/g, "ه")
+        .replace(/[\u064B-\u065F]/g, "")
+        .replace(/\s+/g, " ")   // make all spaces one space
+        .trim();
 }
 
 function escapeHtml(value) {
