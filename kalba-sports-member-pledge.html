@@ -431,53 +431,82 @@ alert(`Loaded ${members.length} registered children`);
   let generated = false;
 
 function searchMembers() {
-  const input = document.getElementById("memberSearch");
-  const results = document.getElementById("searchResults");
-  const query = normalizeArabic(input.value);
 
-  if (!query) {
-    results.style.display = "none";
-    results.innerHTML = "";
-    return;
-  }
+    const input = document.getElementById("memberSearch");
+    const results = document.getElementById("searchResults");
 
-  if (!members.length) {
-    results.innerHTML = `
-      <div class="search-item">
-        <div class="search-name">جاري تحميل الأسماء...</div>
-      </div>
-    `;
+    const query = normalizeArabic(input.value.trim());
+
+    if (!query) {
+        results.style.display = "none";
+        results.innerHTML = "";
+        return;
+    }
+
+    // Don't search until at least 2 letters
+    if (query.length < 2) {
+        results.innerHTML = `
+            <div class="search-item">
+                <div class="search-name">
+                    اكتب حرفين على الأقل...
+                </div>
+            </div>
+        `;
+        results.style.display = "block";
+        return;
+    }
+
+    // Find matches
+    let matches = members.filter(member =>
+        normalizeArabic(member.name).includes(query)
+    );
+
+    // Sort results so names starting with the query appear first
+    matches.sort((a, b) => {
+
+        const aName = normalizeArabic(a.name);
+        const bName = normalizeArabic(b.name);
+
+        const aStarts = aName.startsWith(query);
+        const bStarts = bName.startsWith(query);
+
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+
+        return aName.localeCompare(bName);
+    });
+
+    // Limit results
+    matches = matches.slice(0, 10);
+
+    if (!matches.length) {
+        results.innerHTML = `
+            <div class="search-item">
+                <div class="search-name">
+                    لا يوجد منتسب بهذا الاسم
+                </div>
+            </div>
+        `;
+        results.style.display = "block";
+        return;
+    }
+
+    results.innerHTML = matches.map(member => `
+        <div class="search-item"
+             onclick="selectMemberByIndex(${members.indexOf(member)})">
+
+            <div class="search-name">
+                👤 ${member.name}
+            </div>
+
+            <div class="search-meta">
+                👨 ${member.parent}
+            </div>
+
+        </div>
+    `).join("");
+
     results.style.display = "block";
-    return;
-  }
-
-  const matches = members
-    .filter(member =>
-      normalizeArabic(member.name).includes(query)
-    )
-    .slice(0, 20);
-
-  if (!matches.length) {
-    results.innerHTML = `
-      <div class="search-item">
-        <div class="search-name">لا توجد نتائج مطابقة</div>
-      </div>
-    `;
-    results.style.display = "block";
-    return;
-  }
-
-  results.innerHTML = matches.map((member, index) => `
-    <div class="search-item" onclick="selectMemberByIndex(${members.indexOf(member)})">
-      <div class="search-name">${escapeHtml(member.name)}</div>
-      <div class="search-meta">
-        ولي الأمر: ${escapeHtml(member.parent || "غير مسجل")}
-        • رقم التسجيل: ${escapeHtml(member.id || "—")}
-      </div>
-    </div>
-  `).join("");
-
-  results.style.display = "block";
 }
 
 function normalizeArabic(value) {
