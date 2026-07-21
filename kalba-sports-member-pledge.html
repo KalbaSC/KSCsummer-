@@ -841,7 +841,21 @@ document.getElementById("pledgeDate").value =
 
 drawBase();
 loadMembers();
-  
+
+
+function sendPageHeight() {
+    if (window.parent === window) return;
+
+    window.parent.postMessage({
+        type: "kalba-iframe-size",
+        height: document.documentElement.scrollHeight
+    }, "*");
+}
+
+window.addEventListener("load", sendPageHeight);
+window.addEventListener("resize", sendPageHeight);
+
+new ResizeObserver(sendPageHeight).observe(document.body);  
 </script>
 </body>
 </html>
