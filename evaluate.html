@@ -1144,8 +1144,20 @@ tbody tr:hover td {
     <div id="progressTab" class="hidden">
       <h2>تطور الأداء</h2>
       <div class="form-group">
-        <label for="playerSelect">اختر اللاعب</label>
-<select id="playerSelect"></select>
+<label for="progressPlayerSearch">ابحث عن اللاعب</label>
+
+<input
+  type="search"
+  id="progressPlayerSearch"
+  list="progressPlayersList"
+  placeholder="اكتب اسم اللاعب..."
+  autocomplete="off"
+>
+
+<datalist id="progressPlayersList"></datalist>
+
+<input type="hidden" id="playerSelect">
+
 <div id="progressChartContainer">
   <canvas id="progressChart"></canvas>
 </div>
@@ -1275,8 +1287,25 @@ async function loadPlayersData() {
 renderPlayersList();
 updatePlayerSelect();
 
-document.getElementById('playerSelect')
-  .addEventListener('change', showPlayerProgress);
+const progressSearch =
+  document.getElementById("progressPlayerSearch");
+
+progressSearch.removeEventListener(
+  "change",
+  selectProgressPlayer
+);
+
+progressSearch.addEventListener(
+  "change",
+  selectProgressPlayer
+);
+
+progressSearch.addEventListener(
+  "input",
+  function () {
+    document.getElementById("playerSelect").value = "";
+  }
+);
 
 renderEvaluatedPlayersList();
     
@@ -1945,28 +1974,74 @@ function getActivityIcon(activity) {
 const playerSelect = document.getElementById('playerSelect');
 
 function updatePlayerSelect() {
-  if (!playerSelect) {
-    console.error("playerSelect element not found!");
+  const searchInput =
+    document.getElementById("progressPlayerSearch");
+
+  const datalist =
+    document.getElementById("progressPlayersList");
+
+  const hiddenPlayerId =
+    document.getElementById("playerSelect");
+
+  if (!searchInput || !datalist || !hiddenPlayerId) {
+    console.error("Progress player search elements not found");
     return;
   }
 
-  playerSelect.innerHTML = ''; 
-
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = '-- اختر لاعب --';
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  playerSelect.appendChild(defaultOption);
+  datalist.innerHTML = "";
 
   playersData.forEach(player => {
-    const option = document.createElement('option');
-    option.value = player.id;
-    option.textContent = `${player.name} (${player.id})`;
-    playerSelect.appendChild(option);
+    const option = document.createElement("option");
+
+    option.value = player.name;
+    option.label = `${player.name} (${player.id})`;
+
+    datalist.appendChild(option);
   });
+
+  searchInput.value = "";
+  hiddenPlayerId.value = "";
 }
 
+function selectProgressPlayer() {
+  const searchInput =
+    document.getElementById("progressPlayerSearch");
+
+  const hiddenPlayerId =
+    document.getElementById("playerSelect");
+
+  const query = normalizeArabicSearch(searchInput.value);
+
+  if (!query) {
+    hiddenPlayerId.value = "";
+    return;
+  }
+
+  const matchingPlayer = playersData.find(player =>
+    normalizeArabicSearch(player.name) === query
+  );
+
+  if (!matchingPlayer) {
+    hiddenPlayerId.value = "";
+
+    document.getElementById("progressChartContainer").innerHTML = `
+      <p style="
+        text-align:center;
+        padding:25px;
+        color:#6b7280;
+      ">
+        اختر لاعباً من نتائج البحث
+      </p>
+    `;
+
+    return;
+  }
+
+  hiddenPlayerId.value = matchingPlayer.id;
+
+  showPlayerProgress();
+}
+    
 let progressChart = null;
 
 async function showPlayerProgress() {
