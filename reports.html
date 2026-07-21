@@ -1738,6 +1738,20 @@ return formatted;
     timeZone: "Asia/Dubai"
   });
 }
+
+function isGeneralAttendanceRecord(item) {
+  const general = String(item.General || "")
+    .replace(/\s+/g, "")
+    .trim();
+
+  const activity = String(item.Activity || "")
+    .trim();
+
+  return (
+    general.includes("حضر") ||
+    activity === "عام"
+  );
+}
   
 function processRawData(rawData) {
 if (!Array.isArray(rawData)) return [];
@@ -1755,7 +1769,7 @@ if (isNaN(timestamp.getTime())) return false;
 return timestamp <= now;
 })
 .map(item => {
-const isGeneral = item.General === "✔️ حضر" || item.General === "حضر";
+const isGeneral = isGeneralAttendanceRecord(item);
 return {
 ...item,
 isGeneral: isGeneral,
@@ -2506,14 +2520,27 @@ const generalOnlyIDs = new Set();
 const activityIDs = new Set();
 
 dataset.forEach(row => {
-  const id = row.ID?.trim();
+  const id = String(row.ID || "").trim();
+
   if (!id) return;
 
-  const isGeneral = row.General === "✔️ حضر" || row.General === "حضر";
-  const isActivity = row.Activity && row.Activity.trim() !== "" && row.Activity !== "عام";
+  const isGeneral =
+    isGeneralAttendanceRecord(row);
 
-  if (isGeneral) generalOnlyIDs.add(id);
-  if (isActivity) activityIDs.add(id);
+  const activity =
+    String(row.Activity || "").trim();
+
+  const isActivity =
+    activity !== "" &&
+    activity !== "عام";
+
+  if (isGeneral) {
+    generalOnlyIDs.add(id);
+  }
+
+  if (isActivity) {
+    activityIDs.add(id);
+  }
 });
 
 activityIDs.forEach(id => generalOnlyIDs.delete(id));
@@ -2545,7 +2572,11 @@ controls.innerHTML = activitySummaryHTML;
     tbody.appendChild(headerRow);
 
     generalOnlyIDs.forEach(playerId => {
-      const playerRecords = dataset.filter(r => r.ID === playerId && (r.General === "✔️ حضر" || r.General === "حضر"));
+      const playerRecords = dataset.filter(
+  r =>
+    r.ID === playerId &&
+    isGeneralAttendanceRecord(r)
+);
       const latestRecord = playerRecords.reduce((latest, current) =>
         new Date(current.Timestamp) > new Date(latest.Timestamp) ? current : latest
       );
