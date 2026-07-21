@@ -411,8 +411,6 @@ async function loadMembers() {
         age: child.age || "",
         emiratesId: child.emiratesId || ""
       }));
-
-alert(`Loaded ${members.length} registered children`);
     
   } catch (error) {
     console.error(error);
@@ -457,9 +455,15 @@ function searchMembers() {
     }
 
     // Find matches
-    let matches = members.filter(member =>
-        normalizeArabic(member.name).includes(query)
-    );
+const searchWords = query.split(/\s+/).filter(Boolean);
+
+let matches = members.filter(member => {
+
+    const name = normalizeArabic(member.name);
+
+    return searchWords.every(word => name.includes(word));
+
+});
 
     // Sort results so names starting with the query appear first
     matches.sort((a, b) => {
