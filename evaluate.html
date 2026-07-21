@@ -1335,24 +1335,7 @@ renderPlayersList();
 updatePlayerSelect();
 
 const progressSearch =
-  document.getElementById("progressPlayerSearch");
 
-progressSearch.removeEventListener(
-  "change",
-  selectProgressPlayer
-);
-
-progressSearch.addEventListener(
-  "change",
-  selectProgressPlayer
-);
-
-progressSearch.addEventListener(
-  "input",
-  function () {
-    document.getElementById("playerSelect").value = "";
-  }
-);
 
 renderEvaluatedPlayersList();
     
