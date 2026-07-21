@@ -1740,16 +1740,28 @@ return formatted;
 }
 
 function isGeneralAttendanceRecord(item) {
-  const general = String(item.General || "")
-    .replace(/\s+/g, "")
+  const general = String(
+    item.General ??
+    item.general ??
+    item["الحضور العام"] ??
+    ""
+  )
+    .replace(/[\s\u200B-\u200D\uFEFF]/g, "")
     .trim();
 
-  const activity = String(item.Activity || "")
+  const activity = String(
+    item.Activity ??
+    item.activity ??
+    item["النشاط"] ??
+    ""
+  )
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
     .trim();
 
   return (
     general.includes("حضر") ||
-    activity === "عام"
+    activity === "عام" ||
+    activity === ""
   );
 }
   
@@ -1912,7 +1924,12 @@ async function fetchData() {
       loadingElement.style.display = "block";
     }
 
-    const res = await fetch(scriptURL);
+    const res = await fetch(
+  scriptURL + "?t=" + Date.now(),
+  {
+    cache: "no-store"
+  }
+);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const rawData = await res.json();
