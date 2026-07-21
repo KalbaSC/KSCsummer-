@@ -317,7 +317,6 @@
 
       <input id="participantName" type="hidden">
       <input id="memberId" type="hidden">
-      <input id="activity" type="hidden">
       <input id="parentName" type="hidden">
 
       <div class="section-title">القيم الرياضية</div>
@@ -413,8 +412,8 @@ async function loadMembers() {
         emiratesId: child.emiratesId || ""
       }));
 
-    console.log(`Loaded ${members.length} registered children`);
-
+alert(`Loaded ${members.length} registered children`);
+    
   } catch (error) {
     console.error(error);
 
@@ -837,11 +836,8 @@ function selectMemberByIndex(index) {
     }
   });
 
-  document.getElementById('pledgeDate').value=new Date().toISOString().slice(0,10);
-  drawBase();
-
-  document.getElementById("pledgeDate").value =
-  new Date().toISOString().slice(0, 10);
+document.getElementById("pledgeDate").value =
+    new Date().toISOString().slice(0,10);
 
 drawBase();
 loadMembers();
