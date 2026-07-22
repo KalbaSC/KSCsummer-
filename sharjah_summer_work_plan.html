@@ -6,188 +6,50 @@
 <title>خطة عمل صيف الشارقة</title>
 <style>
 :root {
-  --navy:#0b3551;
-  --blue:#2f80ed;
-  --yellow:#f4e733;
-  --sky:#eef6f8;
-  --white:#ffffff;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --border:#dfe7ec;
-  --green:#16a34a;
-  --orange:#f59e0b;
-  --red:#dc3545;
+  --navy:#0b3551; --blue:#2f80ed; --yellow:#f4e733; --sky:#eef6f8;
+  --white:#fff; --text:#1f2937; --muted:#6b7280; --border:#dfe7ec;
+  --green:#16a34a; --orange:#f59e0b; --red:#dc3545;
 }
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  font-family:Tahoma, Arial, sans-serif;
-  background:var(--sky);
-  color:var(--text);
-}
-header {
-  background:linear-gradient(135deg,var(--navy),#174f70);
-  color:white;
-  padding:28px 20px;
-  text-align:center;
-  box-shadow:0 7px 20px rgba(11,53,81,.18);
-}
-header h1 { margin:0 0 8px; font-size:30px; }
-header p { margin:0; opacity:.86; }
-.page {
-  max-width:1500px;
-  margin:24px auto;
-  padding:0 18px 30px;
-}
-.summary {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(180px,1fr));
-  gap:14px;
-  margin-bottom:18px;
-}
-.card {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 8px 22px rgba(11,53,81,.07);
-  text-align:center;
-}
-.card .label { color:var(--muted); font-size:13px; }
-.card .value { color:var(--navy); font-size:30px; font-weight:800; margin-top:8px; }
-.controls {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:15px;
-  box-shadow:0 8px 22px rgba(11,53,81,.06);
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  margin-bottom:18px;
-}
-input, select, button {
-  font-family:inherit;
-  min-height:42px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  padding:9px 12px;
-  background:white;
-  color:var(--text);
-}
-input { min-width:250px; flex:1; }
-button { cursor:pointer; font-weight:bold; }
-button.primary { background:var(--yellow); border-color:var(--yellow); color:#222; }
-button.secondary { background:#eaf5ff; color:var(--navy); }
-.week-tabs {
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
-.week-tab {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:9px 16px;
-  cursor:pointer;
-}
-.week-tab.active {
-  background:var(--yellow);
-  border-color:var(--yellow);
-  font-weight:bold;
-}
-.table-wrap {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:auto;
-  box-shadow:0 10px 28px rgba(11,53,81,.08);
-}
-table {
-  border-collapse:separate;
-  border-spacing:0;
-  width:100%;
-  min-width:1750px;
-}
-th, td {
-  padding:11px 9px;
-  border-left:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  text-align:center;
-  vertical-align:middle;
-  font-size:12px;
-}
-th {
-  position:sticky;
-  top:0;
-  z-index:3;
-  background:var(--navy);
-  color:white;
-  white-space:nowrap;
-}
-tbody tr:hover td { background:#f8fbfd; }
-.week-cell {
-  font-weight:bold;
-  color:var(--navy);
-  background:#f1f7fb;
-}
-.activity-cell {
-  min-width:260px;
-  text-align:right;
-  font-weight:700;
-}
-.notes-cell, .risk-cell, .correction-cell {
-  min-width:230px;
-  text-align:right;
-}
-.badge {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:38px;
-  padding:5px 9px;
-  border-radius:999px;
-  font-weight:bold;
-}
-.risk-low { background:#ecfdf3; color:#15803d; }
-.risk-medium { background:#fff7df; color:#b45309; }
-.risk-high { background:#fff1f1; color:#b91c1c; }
-.empty {
-  padding:45px;
-  text-align:center;
-  color:var(--muted);
-}
-footer {
-  text-align:center;
-  color:var(--muted);
-  padding:20px;
-}
-@media (max-width:900px) {
-  .summary { grid-template-columns:repeat(2,1fr); }
-  header h1 { font-size:23px; }
-}
-@media (max-width:520px) {
-  .summary { grid-template-columns:1fr; }
-  input { min-width:100%; }
-}
-@media print {
-  body { background:white; }
-  header { background:white; color:black; box-shadow:none; padding:10px; }
-  .controls,.week-tabs { display:none !important; }
-  .page { max-width:none; margin:0; padding:0; }
-  .table-wrap { box-shadow:none; border:0; overflow:visible; }
-  table { min-width:0; font-size:8px; }
-  th,td { font-size:7px; padding:4px; }
-  th { position:static; background:#ddd !important; color:black !important; }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--sky);color:var(--text)}
+header{background:linear-gradient(135deg,var(--navy),#174f70);color:#fff;padding:28px 20px;text-align:center;box-shadow:0 7px 20px rgba(11,53,81,.18)}
+header h1{margin:0 0 8px;font-size:30px} header p{margin:0;opacity:.86}
+.page{max-width:1500px;margin:24px auto;padding:0 18px 30px}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 8px 22px rgba(11,53,81,.07);text-align:center}
+.card .label{color:var(--muted);font-size:13px}.card .value{color:var(--navy);font-size:30px;font-weight:800;margin-top:8px}
+.controls{background:#fff;border:1px solid var(--border);border-radius:18px;padding:15px;box-shadow:0 8px 22px rgba(11,53,81,.06);display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+input,select,button{font-family:inherit;min-height:42px;border:1px solid var(--border);border-radius:11px;padding:9px 12px;background:#fff;color:var(--text)}
+#searchInput{min-width:250px;flex:1}button{cursor:pointer;font-weight:bold}
+button.primary{background:var(--yellow);border-color:var(--yellow);color:#222}button.secondary{background:#eaf5ff;color:var(--navy)}
+.global-status{margin-inline-start:auto;font-size:12px;font-weight:bold;color:var(--muted)}
+.global-status.saving{color:var(--orange)}.global-status.saved{color:var(--green)}.global-status.error{color:var(--red)}
+.week-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.week-tab{background:#fff;border:1px solid var(--border);border-radius:999px;padding:9px 16px;cursor:pointer}
+.week-tab.active{background:var(--yellow);border-color:var(--yellow);font-weight:bold}
+.table-wrap{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:auto;box-shadow:0 10px 28px rgba(11,53,81,.08)}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1850px}
+th,td{padding:11px 9px;border-left:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;font-size:12px}
+th{position:sticky;top:0;z-index:3;background:var(--navy);color:#fff;white-space:nowrap}
+tbody tr:hover td{background:#f8fbfd}.week-cell{font-weight:bold;color:var(--navy);background:#f1f7fb}
+.activity-cell{min-width:260px;text-align:right;font-weight:700}.notes-cell,.risk-cell,.correction-cell{min-width:230px;text-align:right}
+.edit-wrap{display:flex;align-items:center;justify-content:center;gap:5px;min-width:115px}
+.editable-number{width:78px;min-height:35px;padding:6px;text-align:center;border:1px solid #bfd3df;border-radius:8px;background:#fffef2;color:var(--navy);font-weight:700}
+.editable-number:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,128,237,.12);background:#fff}
+.editable-number.saving{border-color:var(--orange);background:#fff7df}.editable-number.saved{border-color:var(--green);background:#ecfdf3}.editable-number.error{border-color:var(--red);background:#fff1f1}
+.cell-status{width:18px;font-size:12px}.cell-status.saving{color:var(--orange)}.cell-status.saved{color:var(--green)}.cell-status.error{color:var(--red)}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:38px;padding:5px 9px;border-radius:999px;font-weight:bold}
+.risk-low{background:#ecfdf3;color:#15803d}.risk-medium{background:#fff7df;color:#b45309}.risk-high{background:#fff1f1;color:#b91c1c}
+.empty{padding:45px;text-align:center;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:20px}
+@media(max-width:900px){.summary{grid-template-columns:repeat(2,1fr)}header h1{font-size:23px}}
+@media(max-width:520px){.summary{grid-template-columns:1fr}#searchInput{min-width:100%}}
+@media print{body{background:#fff}header{background:#fff;color:#000;box-shadow:none;padding:10px}.controls,.week-tabs{display:none!important}.page{max-width:none;margin:0;padding:0}.table-wrap{box-shadow:none;border:0;overflow:visible}table{min-width:0}th,td{font-size:7px;padding:4px}th{position:static;background:#ddd!important;color:#000!important}.cell-status{display:none}}
 </style>
 </head>
 <body>
 <header>
   <h1>خطة عمل صيف الشارقة</h1>
-  <p>عرض تفاعلي لخطة الفعاليات، مؤشرات الأداء، والمخاطر</p>
+  <p>يتم حفظ الأرقام مباشرةً في Google Sheet</p>
 </header>
 
 <main class="page">
@@ -209,6 +71,7 @@ footer {
     <button class="secondary" onclick="resetFilters()">مسح الفلاتر</button>
     <button class="primary" onclick="exportCSV()">تصدير CSV</button>
     <button class="secondary" onclick="window.print()">طباعة / PDF</button>
+    <span id="globalStatus" class="global-status">جاهز للحفظ</span>
   </section>
 
   <div id="weekTabs" class="week-tabs"></div>
@@ -217,26 +80,12 @@ footer {
     <table>
       <thead>
         <tr>
-          <th>الأسبوع</th>
-          <th>الموعد والمكان</th>
-          <th>م</th>
-          <th>النشاط أو الفعالية</th>
-          <th>المسؤولية</th>
-          <th>الموارد المالية</th>
-          <th>التاريخ النهائي</th>
-          <th>نسبة إنجاز المهام</th>
-          <th>نسبة إنجاز النشاط</th>
-          <th>ملاحظات</th>
-          <th>مؤشر الأداء</th>
-          <th>المستهدف</th>
-          <th>المتحقق</th>
-          <th>النتيجة</th>
-          <th>التحليل</th>
-          <th>الخطر</th>
-          <th>الاحتمالية</th>
-          <th>التأثير</th>
-          <th>درجة الخطر</th>
-          <th>التصحيح</th>
+          <th>الأسبوع</th><th>الموعد والمكان</th><th>م</th><th>النشاط أو الفعالية</th>
+          <th>المسؤولية</th><th>الموارد المالية</th><th>التاريخ النهائي</th>
+          <th>نسبة إنجاز المهام</th><th>نسبة إنجاز النشاط</th><th>ملاحظات</th>
+          <th>مؤشر الأداء</th><th>المستهدف</th><th>المتحقق</th><th>النتيجة</th>
+          <th>التحليل</th><th>الخطر</th><th>الاحتمالية</th><th>التأثير</th>
+          <th>درجة الخطر</th><th>التصحيح</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -244,20 +93,34 @@ footer {
     <div id="emptyState" class="empty" style="display:none">لا توجد نتائج مطابقة.</div>
   </section>
 </main>
-
 <footer>نادي كلباء الرياضي الثقافي — صيف الشارقة</footer>
 
 <script>
-const workPlan = [{"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "1", "activity": "الاستقبال و التسجيل", "responsibility": "لجنة التسجيل", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "توفير أجهزة حاسوب وطاولات", "indicator": "توثيق كافة المسجلين ضمن برنامج التسجيل", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حضور مشاركين غير مسجلين", "probability": "3", "impact": "3", "riskScore": "9", "correction": "تخصيص موظف لتسجيل المشاركين ووضعهم ضمن قائمة الانتظار"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "2", "activity": "توزيع الملابس على المنتسبين", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تقسيم المقاسات", "indicator": "تسليم كافة المشاركين ملابس البرنامج", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حدوث خطأ في توزيع المقاسات", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المقاسات بشكل مسبق وكتابة الأسماء وتواجد عدد كافي من المشرفين"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "3", "activity": "كلمة رئيس النادي", "responsibility": "لجنة الاعلام", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التأكد من التجهيزات التقنية", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التجهيز المسبق"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "4", "activity": "التعريف بالبرنامج و القوانين و محاور الأسابيع", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "عرض مرئي على الشاشة", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التجهيز المسبق"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "5", "activity": "تقسيم المجموعات و جلسة التعارف", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "تقسيم المشاركين إلى مجموعات", "target": "5", "achieved": "", "result": "", "analysis": "", "risk": "عدم حضور عدد كافي في اليوم الأول", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات اسمياً وتوزيع المجموعات إلكترونياً"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "6", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "7", "activity": "تقسيم مجموعات المنتسبين بحسب مناطق الحافلات", "responsibility": "لجنة الخدمات المساندة", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تقسيم المنتسبين بحسب المناطق", "indicator": "حصر المناطق وطريقة التوصيل", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "بقاء المنتسبين في النادي لعدم معرفة الحافلة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "مشاركة كافة المدربين في التوزيع في اليوم الأول والتأكد من وصول المنتسبين لمنازلهم"}, {"week": "الأسرة", "schedule": "46210", "number": "1", "activity": "ورشة القيم الأسرية والترابط العائلي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع التنمية الاسرية", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"week": "الأسرة", "schedule": "46210", "number": "2", "activity": "مسابقة ثقافية أسرية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع نادي سيدات الشارقة - كلباء", "indicator": "نسبة مشاركة المنتسبين في المسابقة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل أثناء المسابقة", "probability": "2", "impact": "2", "riskScore": "", "correction": "استخدام أساليب الألعاب والتحديات، إدخال عناصر تفاعلية وتقنيات رقمية"}, {"week": "الأسرة", "schedule": "46210", "number": "3", "activity": "ورشة آداب التعامل داخل الأسرة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"week": "الأسرة", "schedule": "46210", "number": "4", "activity": "أنشطة رياضية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"week": "الأسرة", "schedule": "46211", "number": "1", "activity": "محاضرة التواصل الأسري الفعال", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع التنمية الاسرية / الخدمات الاجتماعية", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"week": "الأسرة", "schedule": "46211", "number": "2", "activity": "زيارة لكبار المواطنين وتقديم الهدايا الرمزية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "دار رعاية المسنين / التعاون مع إحدى مجالس الضواحي", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الأسرة", "schedule": "46211", "number": "3", "activity": "ورشة مسعف في كل أسرة (المسعف الصغير)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "بالتعاون مع مستشفى كلباء", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التركيز", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة حركية"}, {"week": "الأسرة", "schedule": "46211", "number": "4", "activity": "لعبة تحدي القيم الأسرية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية", "indicator": "عدد الفرق", "target": "20", "achieved": "", "result": "", "analysis": "", "risk": "عدم فهم التعليمات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح مسبق"}, {"week": "الأسرة", "schedule": "46211", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الأسرة", "schedule": "46212", "number": "1", "activity": "يوم مفتوح للأسر بمشاركة أولياء الأمور", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع الخدمات الاجتماعية بكلباء", "indicator": "عدد الأسر المشاركة", "target": "10", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المشاركة", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التسويق المسبق لهذه اليوم ودعوة العوائل بشكل فردي"}, {"week": "الأسرة", "schedule": "46212", "number": "2", "activity": "ورشة بعنوان \"دور الأسرة في بناء الشخصية\".", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية", "indicator": "عدد المستفيدين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"week": "الأسرة", "schedule": "46212", "number": "3", "activity": "فعالية \"رسالة شكر لوالديّ", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية والإعلامية", "indicator": "عدد الرسائل", "target": "25", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل وقلة عدد المشاركات", "probability": "2", "impact": "2", "riskScore": "", "correction": "تحفيز المشاركين من خلال أساليب ممتعة وتشجيعهم على الكتابة الإبداعية"}, {"week": "الأسرة", "schedule": "46212", "number": "4", "activity": "جلسة حكايات من الأسرة الإماراتية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "منطقة التراث بكلباء", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أسلوب سرد مشوق"}, {"week": "الأسرة", "schedule": "46212", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الذكاء الاصطناعي", "schedule": "46216", "number": "1", "activity": "زيارة علمية للتعرف على تطبيقات الذكاء الاصطناعي (الرياضة والذكاء الاصطناعي)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع جامعة كلباء", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46216", "number": "2", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46216", "number": "3", "activity": "ألعاب الذكاء والمنطق الرقمية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشكلات تقنية", "probability": "2", "impact": "3", "riskScore": "6", "correction": "فحص الأجهزة"}, {"week": "الذكاء الاصطناعي", "schedule": "46216", "number": "4", "activity": "مسابقة أسئلة الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المعرفة", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح تمهيدي"}, {"week": "الذكاء الاصطناعي", "schedule": "46216", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الذكاء الاصطناعي", "schedule": "46217", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46217", "number": "2", "activity": "ورشة توظيف الذكاء الصناعي في الرياضة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "14/07/2026", "taskProgress": "", "activityProgress": "", "notes": "بالتعاون مع جامعة الشارقة", "indicator": "عدد المستفيدين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "إقامة أنشطة تفاعلية أثناء الورشة"}, {"week": "الذكاء الاصطناعي", "schedule": "46217", "number": "3", "activity": "مختبر الابتكار الصغير (تصميم شخصية كرتونية بالذكاء الاصطناعي)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "14/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد التصاميم", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المهارات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "نماذج جاهزة"}, {"week": "الذكاء الاصطناعي", "schedule": "46217", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الذكاء الاصطناعي", "schedule": "46218", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46218", "number": "2", "activity": "مسابقة تصميم صورة أو قصة باستخدام الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد التصاميم", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المهارات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التركيز على المنتسبين الأعلى مهارة لإعداد نماذج لتعليم بقية المشاركين"}, {"week": "الذكاء الاصطناعي", "schedule": "46218", "number": "3", "activity": "ورشة السلامة الرقمية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع الخدمات الاجتماعية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "تحفيز وجوائز"}, {"week": "الذكاء الاصطناعي", "schedule": "46218", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الذكاء الاصطناعي", "schedule": "46219", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46219", "number": "2", "activity": "زيارة مركز ربع قرن للعلوم والتكنولوجيا", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الذكاء الاصطناعي", "schedule": "46219", "number": "3", "activity": "معرض مصغر لمشاريع الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاريع", "target": "10", "achieved": "", "result": "", "analysis": "", "risk": "عدم وجود مشاريع", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تجهيز مشاريع من بداية الأسبوع لهذا المعرض"}, {"week": "الذكاء الاصطناعي", "schedule": "46219", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الشارقة", "schedule": "46223", "number": "1", "activity": "زيارة ميدانية لمعالم ثقافية وسياحية في كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "زيارة ميدانية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم التنسيق مع هيئة السياحة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الشارقة", "schedule": "46223", "number": "2", "activity": "مسابقة أفضل صورة لمعالم مدينة كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أثناء الزيارة الميدانية", "indicator": "عدد الصور المشاركة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر أجهزة لدى المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تصوير معالم المدينة مع أولياء أمور المنشارك في غير أوقات عمل النادي"}, {"week": "الشارقة", "schedule": "46223", "number": "3", "activity": "ورشة التعرف على تراث كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف الاهتمام", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تفاعلية"}, {"week": "الشارقة", "schedule": "46223", "number": "4", "activity": "لعبة اكتشف المعلم السياحي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم فهم النشاط", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح واضح"}, {"week": "الشارقة", "schedule": "46223", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الشارقة", "schedule": "46224", "number": "1", "activity": "زيارة ميدانية لمعالم ثقافية وسياحية في كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "زيارة ميدانية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم التنسيق مع هيئة السياحة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"week": "الشارقة", "schedule": "46224", "number": "2", "activity": "مسابقة أفضل صورة لمعالم مدينة كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أثناء الزيارة الميدانية", "indicator": "عدد الصور المشاركة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر أجهزة لدى المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تصوير معالم المدينة مع أولياء أمور المنشارك في غير أوقات عمل النادي"}, {"week": "الشارقة", "schedule": "46224", "number": "3", "activity": "ورشة الحرف التراثية البسيطة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "جمعية الصيادين / علي سالم جمعة المراشدة", "indicator": "عدد المشاركين", "target": "100", "achieved": "", "result": "", "analysis": "", "risk": "نقص الأدوات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "مواد احتياطية"}, {"week": "الشارقة", "schedule": "46224", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الشارقة", "schedule": "46225", "number": "1", "activity": "مسابقة ثقافية \"هنا الشارقة\"", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "40", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية في المسابقة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التجهيز المسبق وتجربة المسابقة قبل وصول المشاركين"}, {"week": "الشارقة", "schedule": "46225", "number": "2", "activity": "ركن الألغاز عن الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف الإقبال", "probability": "2", "impact": "2", "riskScore": "4", "correction": "جوائز"}, {"week": "الشارقة", "schedule": "46225", "number": "3", "activity": "ورشة تصميم بطاقة سياحية للشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد البطاقات", "target": "100", "achieved": "", "result": "", "analysis": "", "risk": "نقص المواد", "probability": "2", "impact": "2", "riskScore": "4", "correction": "توفير خامات"}, {"week": "الشارقة", "schedule": "46225", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الشارقة", "schedule": "46226", "number": "1", "activity": "معرض صور لأبرز معالم الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "23/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد الصور المعروضة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم تجهيز مكان العرض", "probability": "2", "impact": "4", "riskScore": "8", "correction": "اختيار مكان المعرض وتجهيزه من بداية الأسبوع"}, {"week": "الشارقة", "schedule": "46226", "number": "2", "activity": "مسابقة الرسم عن معالم الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد الرسمات المنجزة", "target": "20", "achieved": "", "result": "", "analysis": "", "risk": "عدم تفاعل المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تحفيز وجوائز للفائزين"}, {"week": "الشارقة", "schedule": "46226", "number": "3", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"week": "الرياضة", "schedule": "46230", "number": "1", "activity": "ورشة مفهوم الرياضة وأهميتها للصحة والنشاط", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "يوم مفتوح", "indicator": "عدد المشاركين", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"week": "الرياضة", "schedule": "46230", "number": "2", "activity": "محطات رياضية مهارية (كافة الرياضات)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"week": "الرياضة", "schedule": "46230", "number": "3", "activity": "سباق المهارات الحركية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات بسيطة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "إشراف المدربين"}, {"week": "الرياضة", "schedule": "46231", "number": "1", "activity": "ورشة الإسعافات الأولية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مستشفى كلباء", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم حضور المحاضر أو عرض نظري", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التواصل مع المستشفى للتأكيد على اسم المنسق واسم المحاضر والتأكيد على ضرورة تجهيز عرض عملي"}, {"week": "الرياضة", "schedule": "46231", "number": "2", "activity": "ورشة \"كيف أصبح لاعباً مميزاً؟\"", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"week": "الرياضة", "schedule": "46231", "number": "3", "activity": "ورشة المعلق الرياضي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أحمد أو عبدالله الساحر", "indicator": "عدد المعلقين المكتشفين", "target": "5", "achieved": "", "result": "", "analysis": "", "risk": "عدم وجود اهتمام بالورشة من قبل المنتسبين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التسويق للورشة من بداية الأسبوع وتجهيز هدايا للفائزين"}, {"week": "الرياضة", "schedule": "46232", "number": "1", "activity": "مسابقة الألعاب الشعبية الرياضية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات طفيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تدابير سلامة"}, {"week": "الرياضة", "schedule": "46232", "number": "2", "activity": "التغذية الصحية للرياضيين الصغار", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "مستشفى كلباء", "indicator": "نسبة الرضا", "target": "90%", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "قصص ملهمة"}, {"week": "الرياضة", "schedule": "46232", "number": "3", "activity": "الأجهزة الذكية في متابعة الأداء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات بسيطة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "متابعة المدربين"}, {"week": "الرياضة", "schedule": "46233", "number": "1", "activity": "الحفل الختامي", "responsibility": "كافة اللجان", "resources": "", "deadline": "30/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تحديد قاعة الحفل", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حضور عدد قليل", "probability": "2", "impact": "3", "riskScore": "6", "correction": "توزيع الأدوار بشكل جيد والإعلان عن الحفل من بداية الأسبوع"}];
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx4kkmAI_tn3axRhwrisFEpTCUEOQxNsV8HkaTZUsHtADfEBkvY3Nr609WvKTmOW0Pq7A/exec";
+const workPlan = [{"sheetRow": 6, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "1", "activity": "الاستقبال و التسجيل", "responsibility": "لجنة التسجيل", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "توفير أجهزة حاسوب وطاولات", "indicator": "توثيق كافة المسجلين ضمن برنامج التسجيل", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حضور مشاركين غير مسجلين", "probability": "3", "impact": "3", "riskScore": "9", "correction": "تخصيص موظف لتسجيل المشاركين ووضعهم ضمن قائمة الانتظار"}, {"sheetRow": 7, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "2", "activity": "توزيع الملابس على المنتسبين", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تقسيم المقاسات", "indicator": "تسليم كافة المشاركين ملابس البرنامج", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حدوث خطأ في توزيع المقاسات", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المقاسات بشكل مسبق وكتابة الأسماء وتواجد عدد كافي من المشرفين"}, {"sheetRow": 8, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "3", "activity": "كلمة رئيس النادي", "responsibility": "لجنة الاعلام", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التأكد من التجهيزات التقنية", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التجهيز المسبق"}, {"sheetRow": 9, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "4", "activity": "التعريف بالبرنامج و القوانين و محاور الأسابيع", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "عرض مرئي على الشاشة", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التجهيز المسبق"}, {"sheetRow": 10, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "5", "activity": "تقسيم المجموعات و جلسة التعارف", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "تقسيم المشاركين إلى مجموعات", "target": "5", "achieved": "", "result": "", "analysis": "", "risk": "عدم حضور عدد كافي في اليوم الأول", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات اسمياً وتوزيع المجموعات إلكترونياً"}, {"sheetRow": 11, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "6", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 12, "week": "الأسرة", "schedule": "06/07/2026 النادي", "number": "7", "activity": "تقسيم مجموعات المنتسبين بحسب مناطق الحافلات", "responsibility": "لجنة الخدمات المساندة", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تقسيم المنتسبين بحسب المناطق", "indicator": "حصر المناطق وطريقة التوصيل", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "بقاء المنتسبين في النادي لعدم معرفة الحافلة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "مشاركة كافة المدربين في التوزيع في اليوم الأول والتأكد من وصول المنتسبين لمنازلهم"}, {"sheetRow": 13, "week": "الأسرة", "schedule": "07/07/2026", "number": "1", "activity": "ورشة القيم الأسرية والترابط العائلي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع التنمية الاسرية", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"sheetRow": 14, "week": "الأسرة", "schedule": "07/07/2026", "number": "2", "activity": "مسابقة ثقافية أسرية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع نادي سيدات الشارقة - كلباء", "indicator": "نسبة مشاركة المنتسبين في المسابقة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل أثناء المسابقة", "probability": "2", "impact": "2", "riskScore": "", "correction": "استخدام أساليب الألعاب والتحديات، إدخال عناصر تفاعلية وتقنيات رقمية"}, {"sheetRow": 15, "week": "الأسرة", "schedule": "07/07/2026", "number": "3", "activity": "ورشة آداب التعامل داخل الأسرة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"sheetRow": 16, "week": "الأسرة", "schedule": "07/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "07/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"sheetRow": 17, "week": "الأسرة", "schedule": "08/07/2026", "number": "1", "activity": "محاضرة التواصل الأسري الفعال", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع التنمية الاسرية / الخدمات الاجتماعية", "indicator": "نسبة الرضا عن الورشة", "target": "0.9", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"sheetRow": 18, "week": "الأسرة", "schedule": "08/07/2026", "number": "2", "activity": "زيارة لكبار المواطنين وتقديم الهدايا الرمزية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "دار رعاية المسنين / التعاون مع إحدى مجالس الضواحي", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 19, "week": "الأسرة", "schedule": "08/07/2026", "number": "3", "activity": "ورشة مسعف في كل أسرة (المسعف الصغير)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "بالتعاون مع مستشفى كلباء", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التركيز", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة حركية"}, {"sheetRow": 20, "week": "الأسرة", "schedule": "08/07/2026", "number": "4", "activity": "لعبة تحدي القيم الأسرية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية", "indicator": "عدد الفرق", "target": "20", "achieved": "", "result": "", "analysis": "", "risk": "عدم فهم التعليمات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح مسبق"}, {"sheetRow": 21, "week": "الأسرة", "schedule": "08/07/2026", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 22, "week": "الأسرة", "schedule": "09/07/2026", "number": "1", "activity": "يوم مفتوح للأسر بمشاركة أولياء الأمور", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع الخدمات الاجتماعية بكلباء", "indicator": "عدد الأسر المشاركة", "target": "10", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المشاركة", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التسويق المسبق لهذه اليوم ودعوة العوائل بشكل فردي"}, {"sheetRow": 23, "week": "الأسرة", "schedule": "09/07/2026", "number": "2", "activity": "ورشة بعنوان \"دور الأسرة في بناء الشخصية\".", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية", "indicator": "عدد المستفيدين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تطبيقية وتفاعلية"}, {"sheetRow": 24, "week": "الأسرة", "schedule": "09/07/2026", "number": "3", "activity": "فعالية \"رسالة شكر لوالديّ", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "08/07/2026", "taskProgress": "", "activityProgress": "", "notes": "اللجنة الثقافية والإعلامية", "indicator": "عدد الرسائل", "target": "25", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل وقلة عدد المشاركات", "probability": "2", "impact": "2", "riskScore": "", "correction": "تحفيز المشاركين من خلال أساليب ممتعة وتشجيعهم على الكتابة الإبداعية"}, {"sheetRow": 25, "week": "الأسرة", "schedule": "09/07/2026", "number": "4", "activity": "جلسة حكايات من الأسرة الإماراتية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "09/07/2026", "taskProgress": "", "activityProgress": "", "notes": "منطقة التراث بكلباء", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أسلوب سرد مشوق"}, {"sheetRow": 26, "week": "الأسرة", "schedule": "09/07/2026", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 27, "week": "الذكاء الاصطناعي", "schedule": "13/07/2026", "number": "1", "activity": "زيارة علمية للتعرف على تطبيقات الذكاء الاصطناعي (الرياضة والذكاء الاصطناعي)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع جامعة كلباء", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 28, "week": "الذكاء الاصطناعي", "schedule": "13/07/2026", "number": "2", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 29, "week": "الذكاء الاصطناعي", "schedule": "13/07/2026", "number": "3", "activity": "ألعاب الذكاء والمنطق الرقمية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "مشكلات تقنية", "probability": "2", "impact": "3", "riskScore": "6", "correction": "فحص الأجهزة"}, {"sheetRow": 30, "week": "الذكاء الاصطناعي", "schedule": "13/07/2026", "number": "4", "activity": "مسابقة أسئلة الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المعرفة", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح تمهيدي"}, {"sheetRow": 31, "week": "الذكاء الاصطناعي", "schedule": "13/07/2026", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 32, "week": "الذكاء الاصطناعي", "schedule": "14/07/2026", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 33, "week": "الذكاء الاصطناعي", "schedule": "14/07/2026", "number": "2", "activity": "ورشة توظيف الذكاء الصناعي في الرياضة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "14/07/2026", "taskProgress": "", "activityProgress": "", "notes": "بالتعاون مع جامعة الشارقة", "indicator": "عدد المستفيدين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "حدوث ملل بين المنتسبين", "probability": "2", "impact": "2", "riskScore": "4", "correction": "إقامة أنشطة تفاعلية أثناء الورشة"}, {"sheetRow": 34, "week": "الذكاء الاصطناعي", "schedule": "14/07/2026", "number": "3", "activity": "مختبر الابتكار الصغير (تصميم شخصية كرتونية بالذكاء الاصطناعي)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "14/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد التصاميم", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المهارات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "نماذج جاهزة"}, {"sheetRow": 35, "week": "الذكاء الاصطناعي", "schedule": "14/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 36, "week": "الذكاء الاصطناعي", "schedule": "15/07/2026", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 37, "week": "الذكاء الاصطناعي", "schedule": "15/07/2026", "number": "2", "activity": "مسابقة تصميم صورة أو قصة باستخدام الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد التصاميم", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "ضعف المهارات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "التركيز على المنتسبين الأعلى مهارة لإعداد نماذج لتعليم بقية المشاركين"}, {"sheetRow": 38, "week": "الذكاء الاصطناعي", "schedule": "15/07/2026", "number": "3", "activity": "ورشة السلامة الرقمية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع الخدمات الاجتماعية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "تحفيز وجوائز"}, {"sheetRow": 39, "week": "الذكاء الاصطناعي", "schedule": "15/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 40, "week": "الذكاء الاصطناعي", "schedule": "16/07/2026", "number": "1", "activity": "برنامج الروبوتات المتحركة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "13/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مركز الناشئة", "indicator": "عدد المستفيدين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر الأدوات المناسبة للعمر", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 41, "week": "الذكاء الاصطناعي", "schedule": "16/07/2026", "number": "2", "activity": "زيارة مركز ربع قرن للعلوم والتكنولوجيا", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "30", "achieved": "", "result": "", "analysis": "", "risk": "عدم علم الجهة المستضيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 42, "week": "الذكاء الاصطناعي", "schedule": "16/07/2026", "number": "3", "activity": "معرض مصغر لمشاريع الذكاء الاصطناعي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "15/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاريع", "target": "10", "achieved": "", "result": "", "analysis": "", "risk": "عدم وجود مشاريع", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تجهيز مشاريع من بداية الأسبوع لهذا المعرض"}, {"sheetRow": 43, "week": "الذكاء الاصطناعي", "schedule": "16/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 44, "week": "الشارقة", "schedule": "20/07/2026", "number": "1", "activity": "زيارة ميدانية لمعالم ثقافية وسياحية في كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "زيارة ميدانية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم التنسيق مع هيئة السياحة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 45, "week": "الشارقة", "schedule": "20/07/2026", "number": "2", "activity": "مسابقة أفضل صورة لمعالم مدينة كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أثناء الزيارة الميدانية", "indicator": "عدد الصور المشاركة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر أجهزة لدى المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تصوير معالم المدينة مع أولياء أمور المنشارك في غير أوقات عمل النادي"}, {"sheetRow": 46, "week": "الشارقة", "schedule": "20/07/2026", "number": "3", "activity": "ورشة التعرف على تراث كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف الاهتمام", "probability": "2", "impact": "2", "riskScore": "4", "correction": "أنشطة تفاعلية"}, {"sheetRow": 47, "week": "الشارقة", "schedule": "20/07/2026", "number": "4", "activity": "لعبة اكتشف المعلم السياحي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "20/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم فهم النشاط", "probability": "2", "impact": "2", "riskScore": "4", "correction": "شرح واضح"}, {"sheetRow": 48, "week": "الشارقة", "schedule": "20/07/2026", "number": "5", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 49, "week": "الشارقة", "schedule": "21/07/2026", "number": "1", "activity": "زيارة ميدانية لمعالم ثقافية وسياحية في كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "زيارة ميدانية", "indicator": "عدد المشاركين", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم التنسيق مع هيئة السياحة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التنسيق المسبق وأخذ الموافقات واسم المنسق من قبل الجهة"}, {"sheetRow": 50, "week": "الشارقة", "schedule": "21/07/2026", "number": "2", "activity": "مسابقة أفضل صورة لمعالم مدينة كلباء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أثناء الزيارة الميدانية", "indicator": "عدد الصور المشاركة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر أجهزة لدى المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تصوير معالم المدينة مع أولياء أمور المنشارك في غير أوقات عمل النادي"}, {"sheetRow": 51, "week": "الشارقة", "schedule": "21/07/2026", "number": "3", "activity": "ورشة الحرف التراثية البسيطة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "21/07/2026", "taskProgress": "", "activityProgress": "", "notes": "جمعية الصيادين / علي سالم جمعة المراشدة", "indicator": "عدد المشاركين", "target": "100", "achieved": "", "result": "", "analysis": "", "risk": "نقص الأدوات", "probability": "2", "impact": "2", "riskScore": "4", "correction": "مواد احتياطية"}, {"sheetRow": 52, "week": "الشارقة", "schedule": "21/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 53, "week": "الشارقة", "schedule": "22/07/2026", "number": "1", "activity": "مسابقة ثقافية \"هنا الشارقة\"", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "40", "achieved": "", "result": "", "analysis": "", "risk": "مشاكل تقنية في المسابقة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التجهيز المسبق وتجربة المسابقة قبل وصول المشاركين"}, {"sheetRow": 54, "week": "الشارقة", "schedule": "22/07/2026", "number": "2", "activity": "ركن الألغاز عن الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "ضعف الإقبال", "probability": "2", "impact": "2", "riskScore": "4", "correction": "جوائز"}, {"sheetRow": 55, "week": "الشارقة", "schedule": "22/07/2026", "number": "3", "activity": "ورشة تصميم بطاقة سياحية للشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد البطاقات", "target": "100", "achieved": "", "result": "", "analysis": "", "risk": "نقص المواد", "probability": "2", "impact": "2", "riskScore": "4", "correction": "توفير خامات"}, {"sheetRow": 56, "week": "الشارقة", "schedule": "22/07/2026", "number": "4", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 57, "week": "الشارقة", "schedule": "23/07/2026", "number": "1", "activity": "معرض صور لأبرز معالم الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "23/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد الصور المعروضة", "target": "50", "achieved": "", "result": "", "analysis": "", "risk": "عدم تجهيز مكان العرض", "probability": "2", "impact": "4", "riskScore": "8", "correction": "اختيار مكان المعرض وتجهيزه من بداية الأسبوع"}, {"sheetRow": 58, "week": "الشارقة", "schedule": "23/07/2026", "number": "2", "activity": "مسابقة الرسم عن معالم الشارقة", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "22/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد الرسمات المنجزة", "target": "20", "achieved": "", "result": "", "analysis": "", "risk": "عدم تفاعل المشاركين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تحفيز وجوائز للفائزين"}, {"sheetRow": 59, "week": "الشارقة", "schedule": "23/07/2026", "number": "3", "activity": "أنشطة رياضية", "responsibility": "المدربين", "resources": "", "deadline": "06/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم توفر المكان الكافي", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تقسيم المجموعات وتوزيعهم بشكل عادل"}, {"sheetRow": 60, "week": "الرياضة", "schedule": "27/07/2026", "number": "1", "activity": "ورشة مفهوم الرياضة وأهميتها للصحة والنشاط", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "يوم مفتوح", "indicator": "عدد المشاركين", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"sheetRow": 61, "week": "الرياضة", "schedule": "27/07/2026", "number": "2", "activity": "محطات رياضية مهارية (كافة الرياضات)", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"sheetRow": 62, "week": "الرياضة", "schedule": "27/07/2026", "number": "3", "activity": "سباق المهارات الحركية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "27/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات بسيطة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "إشراف المدربين"}, {"sheetRow": 63, "week": "الرياضة", "schedule": "28/07/2026", "number": "1", "activity": "ورشة الإسعافات الأولية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "التعاون مع مستشفى كلباء", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "عدم حضور المحاضر أو عرض نظري", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التواصل مع المستشفى للتأكيد على اسم المنسق واسم المحاضر والتأكيد على ضرورة تجهيز عرض عملي"}, {"sheetRow": 64, "week": "الرياضة", "schedule": "28/07/2026", "number": "2", "activity": "ورشة \"كيف أصبح لاعباً مميزاً؟\"", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "", "target": "", "achieved": "", "result": "", "analysis": "", "risk": "", "probability": "", "impact": "", "riskScore": "", "correction": ""}, {"sheetRow": 65, "week": "الرياضة", "schedule": "28/07/2026", "number": "3", "activity": "ورشة المعلق الرياضي", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "28/07/2026", "taskProgress": "", "activityProgress": "", "notes": "أحمد أو عبدالله الساحر", "indicator": "عدد المعلقين المكتشفين", "target": "5", "achieved": "", "result": "", "analysis": "", "risk": "عدم وجود اهتمام بالورشة من قبل المنتسبين", "probability": "2", "impact": "3", "riskScore": "6", "correction": "التسويق للورشة من بداية الأسبوع وتجهيز هدايا للفائزين"}, {"sheetRow": 66, "week": "الرياضة", "schedule": "29/07/2026", "number": "1", "activity": "مسابقة الألعاب الشعبية الرياضية", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات طفيفة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "تدابير سلامة"}, {"sheetRow": 67, "week": "الرياضة", "schedule": "29/07/2026", "number": "2", "activity": "التغذية الصحية للرياضيين الصغار", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "مستشفى كلباء", "indicator": "نسبة الرضا", "target": "90%", "achieved": "", "result": "", "analysis": "", "risk": "ضعف التفاعل", "probability": "2", "impact": "2", "riskScore": "4", "correction": "قصص ملهمة"}, {"sheetRow": 68, "week": "الرياضة", "schedule": "29/07/2026", "number": "3", "activity": "الأجهزة الذكية في متابعة الأداء", "responsibility": "لجنة الفعاليات", "resources": "", "deadline": "29/07/2026", "taskProgress": "", "activityProgress": "", "notes": "", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "إصابات بسيطة", "probability": "2", "impact": "3", "riskScore": "6", "correction": "متابعة المدربين"}, {"sheetRow": 69, "week": "الرياضة", "schedule": "30/07/2026", "number": "1", "activity": "الحفل الختامي", "responsibility": "كافة اللجان", "resources": "", "deadline": "30/07/2026", "taskProgress": "", "activityProgress": "", "notes": "تحديد قاعة الحفل", "indicator": "عدد المشاركين", "target": "200", "achieved": "", "result": "", "analysis": "", "risk": "حضور عدد قليل", "probability": "2", "impact": "3", "riskScore": "6", "correction": "توزيع الأدوار بشكل جيد والإعلان عن الحفل من بداية الأسبوع"}];
 const weeks = ["الأسرة", "الذكاء الاصطناعي", "الشارقة", "الرياضة"];
 let activeWeek = "الكل";
+let pendingSaves = 0;
 
-const escapeHtml = value => String(value ?? "")
-  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const editableColumns = {
+  resources: 6,          // F
+  taskProgress: 8,       // H
+  activityProgress: 9,   // I
+  target: 12,            // L
+  achieved: 13,          // M
+  result: 14,            // N
+  probability: 17,       // Q
+  impact: 18,            // R
+  riskScore: 19          // S
+};
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
 
 function riskLevel(score) {
-  const n = Number(String(score).replace(/[^0-9.]/g,""));
+  const n = Number(String(score ?? "").replace(/[^0-9.]/g,""));
   if (!n) return "low";
   if (n >= 7) return "high";
   if (n >= 4) return "medium";
@@ -268,117 +131,194 @@ function riskLabel(level) {
   return level === "high" ? "مرتفع" : level === "medium" ? "متوسط" : "منخفض";
 }
 
+function updateGlobalStatus(type, text) {
+  const el = document.getElementById("globalStatus");
+  el.className = "global-status " + (type || "");
+  el.textContent = text;
+}
+
+async function saveToGoogleSheet(input, itemIndex, key) {
+  const item = workPlan[itemIndex];
+  const column = editableColumns[key];
+  const value = input.value.trim();
+  const status = input.parentElement.querySelector(".cell-status");
+
+  item[key] = value;
+  input.classList.remove("saved","error");
+  input.classList.add("saving");
+  status.className = "cell-status saving";
+  status.textContent = "⏳";
+  pendingSaves++;
+  updateGlobalStatus("saving", "جاري الحفظ...");
+
+  try {
+    // text/plain prevents a browser CORS preflight with Apps Script.
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      redirect: "follow",
+      headers: {"Content-Type": "text/plain;charset=utf-8"},
+      body: JSON.stringify({
+        action: "updateCell",
+        sheetName: "خطة عمل",
+        row: item.sheetRow,
+        column: column,
+        value: value
+      })
+    });
+
+    const text = await response.text();
+    let result;
+    try { result = JSON.parse(text); }
+    catch (_) { throw new Error("استجابة الخادم ليست JSON"); }
+
+    if (!result.success) {
+      throw new Error(result.message || result.error || "فشل الحفظ");
+    }
+
+    input.classList.remove("saving","error");
+    input.classList.add("saved");
+    status.className = "cell-status saved";
+    status.textContent = "✓";
+    setTimeout(() => {
+      input.classList.remove("saved");
+      status.textContent = "";
+      status.className = "cell-status";
+    }, 1800);
+
+    if (key === "riskScore") {
+      render();
+    } else {
+      updateSummary(getFilteredData());
+    }
+  } catch (error) {
+    console.error(error);
+    input.classList.remove("saving","saved");
+    input.classList.add("error");
+    status.className = "cell-status error";
+    status.textContent = "!";
+    status.title = error.message;
+    alert("لم يتم الحفظ في Google Sheet:\n" + error.message);
+  } finally {
+    pendingSaves = Math.max(0, pendingSaves - 1);
+    if (pendingSaves === 0) {
+      updateGlobalStatus("", "جاهز للحفظ");
+    }
+  }
+}
+
+function editableInput(item, itemIndex, key, options = {}) {
+  const value = item[key] ?? "";
+  const min = options.min ?? 0;
+  const max = options.max != null ? ` max="${options.max}"` : "";
+  const step = options.step ?? "any";
+  return `<div class="edit-wrap">
+    <input class="editable-number" type="number" min="${min}"${max} step="${step}"
+      value="${escapeHtml(value)}"
+      onchange="saveToGoogleSheet(this,${itemIndex},'${key}')"
+      onkeydown="if(event.key==='Enter'){this.blur();}">
+    <span class="cell-status"></span>
+  </div>`;
+}
+
 function renderTabs() {
-  const container = document.getElementById("weekTabs");
-  const all = ["الكل", ...weeks];
-  container.innerHTML = all.map(week => `
+  document.getElementById("weekTabs").innerHTML = ["الكل", ...weeks].map(week => `
     <button class="week-tab ${week === activeWeek ? "active" : ""}"
-            onclick="setWeek('${escapeHtml(week).replace(/'/g,"\\'")}')">
-      ${escapeHtml(week)}
-    </button>
+      onclick='setWeek(${JSON.stringify(week)})'>${escapeHtml(week)}</button>
   `).join("");
 }
 
-function getFilteredData() {
+function getFilteredDataWithIndexes() {
   const search = document.getElementById("searchInput").value.trim().toLowerCase();
   const risk = document.getElementById("riskFilter").value;
 
-  return workPlan.filter(item => {
+  return workPlan.map((item,index) => ({item,index})).filter(({item}) => {
     const matchesWeek = activeWeek === "الكل" || item.week === activeWeek;
     const haystack = Object.values(item).join(" ").toLowerCase();
     const matchesSearch = !search || haystack.includes(search);
-    const level = riskLevel(item.riskScore);
-    const matchesRisk = risk === "all" || level === risk;
+    const matchesRisk = risk === "all" || riskLevel(item.riskScore) === risk;
     return matchesWeek && matchesSearch && matchesRisk;
   });
 }
 
+function getFilteredData() {
+  return getFilteredDataWithIndexes().map(x => x.item);
+}
+
 function render() {
-  const rows = getFilteredData();
+  const matches = getFilteredDataWithIndexes();
   const tbody = document.getElementById("tableBody");
   const empty = document.getElementById("emptyState");
 
-  tbody.innerHTML = rows.map(item => {
+  tbody.innerHTML = matches.map(({item,index}) => {
     const level = riskLevel(item.riskScore);
-    return `
-      <tr>
-        <td class="week-cell">${escapeHtml(item.week || "—")}</td>
-        <td>${escapeHtml(item.schedule || "—")}</td>
-        <td>${escapeHtml(item.number || "—")}</td>
-        <td class="activity-cell">${escapeHtml(item.activity || "—")}</td>
-        <td>${escapeHtml(item.responsibility || "—")}</td>
-        <td>${escapeHtml(item.resources || "—")}</td>
-        <td>${escapeHtml(item.deadline || "—")}</td>
-        <td>${escapeHtml(item.taskProgress || "—")}</td>
-        <td>${escapeHtml(item.activityProgress || "—")}</td>
-        <td class="notes-cell">${escapeHtml(item.notes || "—")}</td>
-        <td>${escapeHtml(item.indicator || "—")}</td>
-        <td>${escapeHtml(item.target || "—")}</td>
-        <td>${escapeHtml(item.achieved || "—")}</td>
-        <td>${escapeHtml(item.result || "—")}</td>
-        <td>${escapeHtml(item.analysis || "—")}</td>
-        <td class="risk-cell">${escapeHtml(item.risk || "—")}</td>
-        <td>${escapeHtml(item.probability || "—")}</td>
-        <td>${escapeHtml(item.impact || "—")}</td>
-        <td><span class="badge risk-${level}">${escapeHtml(item.riskScore || "0")} — ${riskLabel(level)}</span></td>
-        <td class="correction-cell">${escapeHtml(item.correction || "—")}</td>
-      </tr>`;
+    return `<tr>
+      <td class="week-cell">${escapeHtml(item.week || "—")}</td>
+      <td>${escapeHtml(item.schedule || "—")}</td>
+      <td>${escapeHtml(item.number || "—")}</td>
+      <td class="activity-cell">${escapeHtml(item.activity || "—")}</td>
+      <td>${escapeHtml(item.responsibility || "—")}</td>
+      <td>${editableInput(item,index,"resources")}</td>
+      <td>${escapeHtml(item.deadline || "—")}</td>
+      <td>${editableInput(item,index,"taskProgress",{max:100})}</td>
+      <td>${editableInput(item,index,"activityProgress",{max:100})}</td>
+      <td class="notes-cell">${escapeHtml(item.notes || "—")}</td>
+      <td>${escapeHtml(item.indicator || "—")}</td>
+      <td>${editableInput(item,index,"target")}</td>
+      <td>${editableInput(item,index,"achieved")}</td>
+      <td>${editableInput(item,index,"result")}</td>
+      <td>${escapeHtml(item.analysis || "—")}</td>
+      <td class="risk-cell">${escapeHtml(item.risk || "—")}</td>
+      <td>${editableInput(item,index,"probability",{min:1,max:5,step:1})}</td>
+      <td>${editableInput(item,index,"impact",{min:1,max:5,step:1})}</td>
+      <td>
+        ${editableInput(item,index,"riskScore",{min:0,step:1})}
+        <span class="badge risk-${level}">${riskLabel(level)}</span>
+      </td>
+      <td class="correction-cell">${escapeHtml(item.correction || "—")}</td>
+    </tr>`;
   }).join("");
 
-  empty.style.display = rows.length ? "none" : "block";
-  updateSummary(rows);
+  empty.style.display = matches.length ? "none" : "block";
+  updateSummary(matches.map(x => x.item));
 }
 
 function updateSummary(rows) {
   document.getElementById("totalActivities").textContent = rows.length;
-  document.getElementById("totalWeeks").textContent =
-    new Set(rows.map(r => r.week).filter(Boolean)).size;
-  document.getElementById("highRisks").textContent =
-    rows.filter(r => riskLevel(r.riskScore) === "high").length;
-  document.getElementById("responsibilityCount").textContent =
-    new Set(rows.map(r => r.responsibility).filter(Boolean)).size;
+  document.getElementById("totalWeeks").textContent = new Set(rows.map(r => r.week).filter(Boolean)).size;
+  document.getElementById("highRisks").textContent = rows.filter(r => riskLevel(r.riskScore) === "high").length;
+  document.getElementById("responsibilityCount").textContent = new Set(rows.map(r => r.responsibility).filter(Boolean)).size;
 }
 
-function setWeek(week) {
-  activeWeek = week;
-  renderTabs();
-  render();
-}
+function setWeek(week) { activeWeek = week; renderTabs(); render(); }
 
 function resetFilters() {
   activeWeek = "الكل";
   document.getElementById("searchInput").value = "";
   document.getElementById("riskFilter").value = "all";
-  renderTabs();
-  render();
+  renderTabs(); render();
 }
 
 function exportCSV() {
   const rows = getFilteredData();
-  const headers = [
-    "الأسبوع","الموعد والمكان","م","النشاط أو الفعالية","المسؤولية",
+  const headers = ["الأسبوع","الموعد والمكان","م","النشاط أو الفعالية","المسؤولية",
     "الموارد المالية","التاريخ النهائي","نسبة إنجاز المهام","نسبة إنجاز النشاط",
-    "ملاحظات","مؤشر الأداء","المستهدف","المتحقق","النتيجة","التحليل",
-    "الخطر","الاحتمالية","التأثير","درجة الخطر","التصحيح"
-  ];
-  const keys = [
-    "week","schedule","number","activity","responsibility","resources","deadline",
-    "taskProgress","activityProgress","notes","indicator","target","achieved",
-    "result","analysis","risk","probability","impact","riskScore","correction"
-  ];
-  const csv = [headers, ...rows.map(r => keys.map(k => r[k] ?? ""))]
-    .map(row => row.map(v => `"${String(v).replace(/"/g,'""')}"`).join(","))
-    .join("\n");
-  const blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8;"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "خطة_عمل_صيف_الشارقة.csv";
+    "ملاحظات","مؤشر الأداء","المستهدف","المتحقق","النتيجة","التحليل","الخطر",
+    "الاحتمالية","التأثير","درجة الخطر","التصحيح"];
+  const keys = ["week","schedule","number","activity","responsibility","resources","deadline",
+    "taskProgress","activityProgress","notes","indicator","target","achieved","result",
+    "analysis","risk","probability","impact","riskScore","correction"];
+  const csv = [headers,...rows.map(r=>keys.map(k=>r[k]??""))]
+    .map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download="خطة_عمل_صيف_الشارقة.csv";
   link.click();
   URL.revokeObjectURL(link.href);
 }
 
-document.getElementById("searchInput").addEventListener("input", render);
-document.getElementById("riskFilter").addEventListener("change", render);
+document.getElementById("searchInput").addEventListener("input",render);
+document.getElementById("riskFilter").addEventListener("change",render);
 renderTabs();
 render();
 </script>
