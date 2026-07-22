@@ -1109,7 +1109,7 @@ footer {
 <nav>
 <button onclick="showMainView()" class="active">الحضور </button>
 <button onclick="showActivitiesView()">الحضور حسب الأنشطة</button>
-<button onclick="openStatsLogin()">الإحصائيات</button>
+<button onclick="showStatsView()">الإحصائيات</button>
 <button onclick="showTopParticipants()">المنتسبون المميزون</button>
 <button onclick="showRegisteredStatusView()">
     حالة المسجلين
@@ -3380,97 +3380,110 @@ function getActivityIcon(activity) {
 }
     
 async function renderRankingsChart() {
-  const loadingPopup = document.getElementById('loadingPopup');
-  loadingPopup.style.display = 'block';
+  const loadingPopup = document.getElementById("loadingPopup");
+  loadingPopup.style.display = "block";
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec");
+    const response = await fetch(
+      "https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec?t=" +
+      Date.now()
+    );
+
+    if (!response.ok) {
+      throw new Error("Evaluation server error: " + response.status);
+    }
+
     const data = await response.json();
 
-    const grouped = {};
-
-    data.forEach(entry => {
-      const id = entry["Player ID"];
-      const name = entry["Player Name"];
-      const activity = entry["Activity"] || "غير معروف";
-
-      let raw = parseFloat(entry["Percentage"]);
-      if (isNaN(raw)) raw = 0;
-      const percentage = raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
-
-      if (!id || !name || percentage === 0) return;
-
-      if (!grouped[id]) {
-        grouped[id] = {
-          id,
-          name,
-          activity,
-          total: 0,
-          count: 0
-        };
-      }
-
-      grouped[id].total += percentage;
-      grouped[id].count += 1;
-    });
-
-    const rankings = Object.values(grouped)
-      .map(player => ({
-        ...player,
-        average: Math.round(player.total / player.count)
-      }))
-      .sort((a, b) => b.average - a.average)
-      .slice(0, 50);
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid evaluation data");
+    }
 
     const scoreRanges = {
-      '90-100%': 0,
-      '80-89%': 0,
-      '70-79%': 0,
-      '60-69%': 0,
-      '50-59%': 0,
-      'أقل من %50': 0
+      "90-100%": 0,
+      "80-89%": 0,
+      "70-79%": 0,
+      "60-69%": 0,
+      "50-59%": 0,
+      "أقل من 50%": 0
     };
 
-    rankings.forEach(player => {
-      const score = player.average;
-      if (score >= 90) scoreRanges['90-100%']++;
-      else if (score >= 80) scoreRanges['80-89%']++;
-      else if (score >= 70) scoreRanges['70-79%']++;
-      else if (score >= 60) scoreRanges['60-69%']++;
-      else if (score >= 50) scoreRanges['50-59%']++;
-      else scoreRanges['أقل من %50']++;
+    // Count every evaluation row separately.
+    data.forEach(entry => {
+      let value = entry["Percentage"];
+
+      if (value === null || value === undefined || value === "") {
+        return;
+      }
+
+      // Supports values such as 0.8, 80, "80%" and "0.8".
+      let percentage = parseFloat(
+        String(value).replace("%", "").trim()
+      );
+
+      if (!Number.isFinite(percentage)) {
+        return;
+      }
+
+      if (percentage <= 1) {
+        percentage *= 100;
+      }
+
+      percentage = Math.round(percentage);
+
+      if (percentage >= 90) {
+        scoreRanges["90-100%"]++;
+      } else if (percentage >= 80) {
+        scoreRanges["80-89%"]++;
+      } else if (percentage >= 70) {
+        scoreRanges["70-79%"]++;
+      } else if (percentage >= 60) {
+        scoreRanges["60-69%"]++;
+      } else if (percentage >= 50) {
+        scoreRanges["50-59%"]++;
+      } else {
+        scoreRanges["أقل من 50%"]++;
+      }
     });
 
-    if (charts.rankings) charts.rankings.destroy();
+    if (charts.rankings) {
+      charts.rankings.destroy();
+    }
 
-    const ctx = document.getElementById('rankingsChart').getContext('2d');
+    const canvas = document.getElementById("rankingsChart");
+    const ctx = canvas.getContext("2d");
+
     charts.rankings = new Chart(ctx, {
-      type: 'bar',
+      type: "bar",
       data: {
         labels: Object.keys(scoreRanges),
         datasets: [{
-          label: 'عدد اللاعبين',
+          label: "عدد التقييمات",
           data: Object.values(scoreRanges),
           backgroundColor: [
-            '#4CAF50', 
-            '#8BC34A', 
-            '#FFC107',
-            '#FF9800', 
-            '#F44336',  
-            '#9E9E9E'  
+            "#4CAF50",
+            "#8BC34A",
+            "#FFC107",
+            "#FF9800",
+            "#F44336",
+            "#9E9E9E"
           ],
-          borderColor: '#222',
+          borderColor: "#222",
           borderWidth: 1
         }]
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
+          legend: {
+            display: false
+          },
           tooltip: {
+            rtl: true,
             callbacks: {
-              label: function(context) {
-                return `عدد اللاعبين: ${context.raw}`;
+              label(context) {
+                return context.raw + " تقييم";
               }
             }
           }
@@ -3478,15 +3491,18 @@ async function renderRankingsChart() {
         scales: {
           y: {
             beginAtZero: true,
+            ticks: {
+              precision: 0
+            },
             title: {
               display: true,
-              text: 'عدد اللاعبين'
+              text: "عدد التقييمات"
             }
           },
           x: {
             title: {
               display: true,
-              text: 'نطاق التقييم'
+              text: "نطاق التقييم"
             }
           }
         }
@@ -3495,10 +3511,26 @@ async function renderRankingsChart() {
 
   } catch (error) {
     console.error("Error loading rankings data:", error);
-    document.getElementById('rankingsChart').innerHTML = 
-      '<p style="color: #f4e733; text-align: center;">حدث خطأ في تحميل بيانات التقييمات</p>';
+
+    const parent = document
+      .getElementById("rankingsChart")
+      .parentElement;
+
+    let errorMessage = parent.querySelector(".rankings-error");
+
+    if (!errorMessage) {
+      errorMessage = document.createElement("p");
+      errorMessage.className = "rankings-error";
+      errorMessage.style.color = "#dc3545";
+      errorMessage.style.textAlign = "center";
+      parent.appendChild(errorMessage);
+    }
+
+    errorMessage.textContent =
+      "حدث خطأ في تحميل بيانات التقييمات: " +
+      error.message;
   } finally {
-    loadingPopup.style.display = 'none';
+    loadingPopup.style.display = "none";
   }
 }
 
