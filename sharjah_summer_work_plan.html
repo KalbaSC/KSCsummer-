@@ -141,16 +141,21 @@ async function saveToGoogleSheet(input, itemIndex, key) {
   const item = workPlan[itemIndex];
   const column = editableColumns[key];
   let value = input.value.trim();
+  let sheetValue = value;
 
   if (["taskProgress", "activityProgress", "result"].includes(key)) {
     let percentage = Number(value);
     if (!Number.isFinite(percentage)) percentage = 0;
+
+    // The page uses 0–100, while Google Sheets percentage cells use 0–1.
     percentage = Math.max(0, Math.min(100, percentage));
     value = String(percentage);
+    sheetValue = percentage / 100;
     input.value = value;
   }
   const status = input.parentElement.querySelector(".cell-status");
 
+  // Keep the displayed value as 0–100 inside the page.
   item[key] = value;
   input.classList.remove("saved","error");
   input.classList.add("saving");
@@ -170,7 +175,7 @@ async function saveToGoogleSheet(input, itemIndex, key) {
         sheetName: "خطة عمل",
         row: item.sheetRow,
         column: column,
-        value: value
+        value: sheetValue
       })
     });
 
