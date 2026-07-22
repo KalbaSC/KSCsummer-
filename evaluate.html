@@ -1308,58 +1308,157 @@ function formatDate(dateStr) {
       }
     }    
 
-async function loadPlayersData() {
-  showLoading();
+
+const DATA_CACHE_TTL = 3 * 60 * 1000;
+
+async function fetchJsonCached(url, cacheKey, forceRefresh = false) {
+  if (!forceRefresh) {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(cacheKey) || "null");
+      if (
+        cached &&
+        Array.isArray(cached.data) &&
+        Date.now() - cached.savedAt < DATA_CACHE_TTL
+      ) {
+        return cached.data;
+      }
+    } catch (error) {
+      sessionStorage.removeItem(cacheKey);
+    }
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  const response = await fetch(url + separator + "_t=" + Date.now());
+
+  if (!response.ok) {
+    throw new Error("Server error: " + response.status);
+  }
+
+  const data = await response.json();
+
+  if (!Array.isArray(data)) {
+    throw new Error("Invalid server data");
+  }
+
   try {
-    const url = CONFIG.USE_CORS_PROXY 
-      ? CONFIG.CORS_PROXY_URL + CONFIG.ATTENDANCE_SCRIPT_URL 
+    sessionStorage.setItem(
+      cacheKey,
+      JSON.stringify({
+        savedAt: Date.now(),
+        data: data
+      })
+    );
+  } catch (error) {
+    console.warn("Could not cache data:", error);
+  }
+
+  return data;
+}
+
+async function loadPlayersData(forceRefresh = false) {
+  showLoading();
+
+  try {
+    const attendanceUrl = CONFIG.USE_CORS_PROXY
+      ? CONFIG.CORS_PROXY_URL + CONFIG.ATTENDANCE_SCRIPT_URL
       : CONFIG.ATTENDANCE_SCRIPT_URL;
 
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to fetch players");
+    const evaluationUrl = CONFIG.USE_CORS_PROXY
+      ? CONFIG.CORS_PROXY_URL + CONFIG.EVALUATION_SCRIPT_URL
+      : CONFIG.EVALUATION_SCRIPT_URL;
 
-    const data = await response.json();
+    // Load attendance and evaluations at the same time.
+    const [attendanceData, evaluationData] = await Promise.all([
+      fetchJsonCached(
+        attendanceUrl,
+        "evaluationAttendanceData",
+        forceRefresh
+      ),
+      fetchJsonCached(
+        evaluationUrl,
+        "evaluationSheetData",
+        forceRefresh
+      )
+    ]);
 
-    playersData = data
-      .filter(p => p.Activity === currentCoach.activity)
-      .map(player => ({
-        id: player.ID,
-        name: player["Child Name"],
-        parent: player.Parent,
-        date: player.Timestamp ? new Date(player.Timestamp).toISOString().split('T')[0] : ""
-      }));
+    const uniquePlayers = new Map();
 
-    evaluations = await fetchEvaluationsFromSheet();
+    attendanceData
+      .filter(player =>
+        String(player.Activity || "").trim() ===
+        String(currentCoach.activity || "").trim()
+      )
+      .forEach(player => {
+        const id = String(player.ID || "").trim();
+        const timestamp = player.Timestamp
+          ? new Date(player.Timestamp)
+          : null;
 
-renderPlayersList();
-updatePlayerSelect();
+        const date =
+          timestamp && !isNaN(timestamp.getTime())
+            ? timestamp.toISOString().split("T")[0]
+            : "";
 
-const progressSearch =
+        if (!id) return;
 
+        // Keep one entry per player and attendance date.
+        const key = id + "_" + date;
 
-renderEvaluatedPlayersList();
-    
+        if (!uniquePlayers.has(key)) {
+          uniquePlayers.set(key, {
+            id: id,
+            name: String(player["Child Name"] || "").trim(),
+            parent: String(player.Parent || "").trim(),
+            date: date
+          });
+        }
+      });
+
+    playersData = Array.from(uniquePlayers.values());
+
+    evaluations = evaluationData.filter(entry =>
+      String(entry.Activity || "").trim() ===
+      String(currentCoach.activity || "").trim()
+    );
+
+    currentDisplayedPlayers = playersData;
+
+    renderPlayersList();
+    updatePlayerSelect();
+    renderEvaluatedPlayersList();
+
   } catch (error) {
     console.error("Error loading players:", error);
-    playersData = []; 
+    playersData = [];
+    evaluations = [];
+
+    const playersList = document.getElementById("playersList");
+    if (playersList) {
+      playersList.innerHTML =
+        '<p style="text-align:center;color:#dc3545;">تعذر تحميل أسماء اللاعبين. حاول التحديث مرة أخرى.</p>';
+    }
   } finally {
     hideLoading();
   }
-  updatePlayerSelect();
 }
 
-async function fetchEvaluationsFromSheet() {
-  const url = CONFIG.USE_CORS_PROXY 
-    ? CONFIG.CORS_PROXY_URL + CONFIG.EVALUATION_SCRIPT_URL 
+async function fetchEvaluationsFromSheet(forceRefresh = false) {
+  const url = CONFIG.USE_CORS_PROXY
+    ? CONFIG.CORS_PROXY_URL + CONFIG.EVALUATION_SCRIPT_URL
     : CONFIG.EVALUATION_SCRIPT_URL;
 
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("Failed to fetch evaluations");
+  const data = await fetchJsonCached(
+    url,
+    "evaluationSheetData",
+    forceRefresh
+  );
 
-  const data = await response.json();
-  return data.filter(e => e.Activity === currentCoach.activity);
+  return data.filter(entry =>
+    String(entry.Activity || "").trim() ===
+    String(currentCoach.activity || "").trim()
+  );
 }
-    
+
 function addAlToSecondWord(activity) {
   const parts = activity.trim().split(" ");
   if (parts.length === 2) {
@@ -1764,109 +1863,123 @@ return result;
   }
 }
 
-async function renderEvaluatedPlayersList() {
-  const container = document.getElementById('evaluatedPlayersList');
-  container.innerHTML = '<p>جاري تحميل البيانات...</p>';
-  
-  try {
-    showLoading();
+function renderEvaluatedPlayersList() {
+  const container = document.getElementById("evaluatedPlayersList");
+  if (!container) return;
 
-    const url = CONFIG.USE_CORS_PROXY 
-      ? CONFIG.CORS_PROXY_URL + CONFIG.EVALUATION_SCRIPT_URL 
-      : CONFIG.EVALUATION_SCRIPT_URL;
+  const selectedDate =
+    document.getElementById("filterDate")?.value || "";
 
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to fetch evaluations");
+  const criteria =
+    evaluationCriteria[currentCoach.activity] || [];
 
-    let data = await response.json();
+  const processedData = evaluations
+    .filter(rec => {
+      const matchesActivity =
+        String(rec.Activity || "").trim() ===
+        String(currentCoach.activity || "").trim();
 
-const selectedDate =
-  document.getElementById("filterDate").value;
+      const matchesDate =
+        !selectedDate ||
+        formatDate(rec.Date) === selectedDate;
 
-const processedData = data
-  .filter(rec => {
-    const matchesActivity =
-      rec.Activity === currentCoach.activity;
+      return matchesActivity && matchesDate;
+    })
+    .map(rec => {
+      let total = 0;
 
-    const matchesDate =
-      !selectedDate ||
-      formatDate(rec.Date) === selectedDate;
+      criteria.forEach(criterion => {
+        total += parseInt(rec[criterion], 10) || 0;
+      });
 
-    return matchesActivity && matchesDate;
-  })
-  .map(rec => {
-  let total = 0;
-  const criteria = evaluationCriteria[currentCoach.activity] || [];
-  criteria.forEach(criterion => { total += parseInt(rec[criterion]) || 0; });
-  const percentage = Math.round((total / (criteria.length * 5)) * 100) + "%";
-  return {
-    ...rec,
-    "Date": formatDate(rec.Date),
-    "Time-stamp": formatDate(rec["Timestamp"]),
-    "Total Score": total,
-    "Percentage": percentage,
-    normalizedPlayerId: String(rec["Player ID"]).trim(),
-    normalizedDate: formatDate(rec.Date)
-  };
-});
+      const percentage =
+        criteria.length > 0
+          ? Math.round(
+              (total / (criteria.length * 5)) * 100
+            ) + "%"
+          : "0%";
 
-    evaluations = processedData;
-
-    const playersMap = new Map();
-processedData.forEach(rec => { 
-  const playerId = rec.normalizedPlayerId;
-
-  if (!playersMap.has(playerId)) {
-    playersMap.set(playerId, {
-      id: playerId,
-      name: rec["Player Name"],
-      evaluations: []
+      return {
+        ...rec,
+        "Date": formatDate(rec.Date),
+        "Time-stamp": formatDate(
+          rec.Timestamp || rec["Time-stamp"]
+        ),
+        "Total Score": total,
+        "Percentage": percentage,
+        normalizedPlayerId:
+          String(rec["Player ID"] || "").trim()
+      };
     });
-  }
 
-  playersMap.get(playerId).evaluations.push(rec);
-});
+  const playersMap = new Map();
 
-    container.innerHTML = '';
+  processedData.forEach(rec => {
+    const playerId = rec.normalizedPlayerId;
+    if (!playerId) return;
 
-    if (playersMap.size === 0) {
-      container.innerHTML = '<p>لا يوجد لاعبون مقييمون بعد</p>';
-      return;
+    if (!playersMap.has(playerId)) {
+      playersMap.set(playerId, {
+        id: playerId,
+        name: rec["Player Name"],
+        evaluations: []
+      });
     }
 
-    const sortedPlayers = Array.from(playersMap.values()).sort((a, b) => {
-      const dateA = new Date(b.evaluations[0]["Time-stamp"]);
-      const dateB = new Date(a.evaluations[0]["Time-stamp"]);
-      return dateA - dateB;
-    });
+    playersMap.get(playerId).evaluations.push(rec);
+  });
 
-    sortedPlayers.forEach(player => {
-      const playerCard = document.createElement('div');
-      playerCard.className = 'evaluated-player-card';
-
-      playerCard.innerHTML = `
-        <h3>${player.name || 'غير معروف'} <small>(${player.id || 'غير معروف'})</small></h3>
-        <div class="player-evaluations">
-          ${player.evaluations.map(rec => `
-            <div class="evaluation-session">
-              <p><strong>تاريخ الحضور:</strong> ${rec["Date"] || 'غير محدد'}</p>
-              <p><strong>تاريخ التقييم:</strong> ${rec["Time-stamp"] || 'غير محدد'}</p>
-              <p><strong>المجموع:</strong> ${rec["Total Score"] || 0}/25 (${rec["Percentage"] || '0%'})</p>
-              ${rec["Notes"] ? `<p><strong>ملاحظات:</strong> ${rec["Notes"]}</p>` : ''}
-            </div>
-          `).join('')}
-        </div>
-      `;
-      container.appendChild(playerCard);
-    });
-
-  } catch (error) {
-    console.error("Error loading evaluations:", error);
-    container.innerHTML = '<p>حدث خطأ أثناء تحميل البيانات</p>';
-    showToast('❌ فشل في تحميل التقييمات: ' + error.message, false);
-  } finally {
-    hideLoading();
+  if (playersMap.size === 0) {
+    container.innerHTML =
+      "<p>لا يوجد لاعبون مقييمون بعد</p>";
+    return;
   }
+
+  const sortedPlayers =
+    Array.from(playersMap.values()).sort((a, b) => {
+      const aDate = new Date(
+        a.evaluations[0].Timestamp || 0
+      );
+      const bDate = new Date(
+        b.evaluations[0].Timestamp || 0
+      );
+      return bDate - aDate;
+    });
+
+  // Build the HTML once instead of adding cards one by one.
+  container.innerHTML = sortedPlayers.map(player => `
+    <div class="evaluated-player-card">
+      <h3>
+        ${player.name || "غير معروف"}
+        <small>(${player.id || "غير معروف"})</small>
+      </h3>
+
+      <div class="player-evaluations">
+        ${player.evaluations.map(rec => `
+          <div class="evaluation-session">
+            <p>
+              <strong>تاريخ الحضور:</strong>
+              ${rec["Date"] || "غير محدد"}
+            </p>
+            <p>
+              <strong>تاريخ التقييم:</strong>
+              ${rec["Time-stamp"] || "غير محدد"}
+            </p>
+            <p>
+              <strong>المجموع:</strong>
+              ${rec["Total Score"] || 0}/25
+              (${rec["Percentage"] || "0%"})
+            </p>
+            ${
+              rec.Notes
+                ? `<p><strong>ملاحظات:</strong> ${rec.Notes}</p>`
+                : ""
+            }
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
 }
     
 async function updateRankings() {
