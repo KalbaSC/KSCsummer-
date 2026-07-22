@@ -1958,23 +1958,73 @@ select.appendChild(opt);
 });
 }
 
-async function fetchData() {
+
+const REPORT_CACHE_TTL = 3 * 60 * 1000;
+const EVALUATION_URL = "https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec";
+let evaluationDataCache = null;
+let evaluationDataPromise = null;
+
+async function fetchJsonCached(url, cacheKey, forceRefresh = false) {
+  if (!forceRefresh) {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(cacheKey) || "null");
+      if (cached && Date.now() - cached.savedAt < REPORT_CACHE_TTL) {
+        return cached.data;
+      }
+    } catch (_) {
+      sessionStorage.removeItem(cacheKey);
+    }
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  const response = await fetch(url + separator + "_t=" + Date.now());
+  if (!response.ok) throw new Error("Server error: " + response.status);
+  const data = await response.json();
+
+  try {
+    sessionStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), data }));
+  } catch (_) {}
+
+  return data;
+}
+
+async function getEvaluationData(forceRefresh = false) {
+  if (!forceRefresh && Array.isArray(evaluationDataCache)) {
+    return evaluationDataCache;
+  }
+
+  if (!forceRefresh && evaluationDataPromise) {
+    return evaluationDataPromise;
+  }
+
+  evaluationDataPromise = fetchJsonCached(
+    EVALUATION_URL,
+    "reportsEvaluationData",
+    forceRefresh
+  ).then(data => {
+    evaluationDataCache = Array.isArray(data) ? data : [];
+    return evaluationDataCache;
+  }).finally(() => {
+    evaluationDataPromise = null;
+  });
+
+  return evaluationDataPromise;
+}
+
+async function fetchData(forceRefresh = false) {
   try {
     const loadingElement = document.getElementById("loading");
-    if (loadingElement) {
-      loadingElement.style.display = "block";
+    if (loadingElement) loadingElement.style.display = "block";
+
+    const rawData = await fetchJsonCached(
+      scriptURL,
+      "reportsAttendanceData",
+      forceRefresh
+    );
+
+    if (!Array.isArray(rawData)) {
+      throw new Error("Invalid data format received");
     }
-
-    const res = await fetch(
-  scriptURL + "?t=" + Date.now(),
-  {
-    cache: "no-store"
-  }
-);
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-    const rawData = await res.json();
-    if (!Array.isArray(rawData)) throw new Error("Invalid data format received");
 
     allData = processRawData(rawData);
 
@@ -1987,7 +2037,10 @@ async function fetchData() {
     populateDropdowns(filteredData);
     updateTodayStats();
 
-    console.log("Data loaded successfully:", allData.length, "records");
+    // Warm the evaluation cache without delaying the attendance table.
+    getEvaluationData(false).catch(error =>
+      console.warn("Evaluation preload failed:", error)
+    );
 
   } catch (error) {
     console.error("Error loading data:", error);
@@ -1995,12 +2048,9 @@ async function fetchData() {
     if (tbody) {
       tbody.innerHTML = `<tr><td colspan="6" class="empty-state">حدث خطأ في تحميل البيانات</td></tr>`;
     }
-
   } finally {
     const loadingElement = document.getElementById("loading");
-    if (loadingElement) {
-      loadingElement.style.display = "none";
-    }
+    if (loadingElement) loadingElement.style.display = "none";
   }
 }
 
@@ -3379,21 +3429,14 @@ function getActivityIcon(activity) {
   return icons[activity?.trim()] || "🎯";
 }
     
-async function renderRankingsChart() {
+async function renderRankingsChart(data = null) {
   const loadingPopup = document.getElementById("loadingPopup");
   loadingPopup.style.display = "block";
 
   try {
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec?t=" +
-      Date.now()
-    );
-
-    if (!response.ok) {
-      throw new Error("Evaluation server error: " + response.status);
+    if (!Array.isArray(data)) {
+      data = await getEvaluationData(false);
     }
-
-    const data = await response.json();
 
     if (!Array.isArray(data)) {
       throw new Error("Invalid evaluation data");
@@ -3540,8 +3583,7 @@ async function renderTopRankings() {
   loadingPopup.style.display = 'block';
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec");
-    const data = await response.json();
+    const data = await getEvaluationData(false);
 
 const grouped = {};
 
@@ -3575,7 +3617,7 @@ const rankings = Object.entries(grouped).map(([id, player]) => ({
   average: Math.round(player.total / player.count)
 })).sort((a, b) => b.average - a.average);
       
-     renderRankingsChart(rankings);
+     renderRankingsChart(data);
       
     const topThreeContainer = document.getElementById('topThreeContainer');
     const container = document.getElementById('rankingsContainer');
@@ -4224,25 +4266,15 @@ function showRegisteredStatusView() {
      loadRegisteredAttendanceStatus();
 }
 
- async function loadNationalityData() {
-  const response = await fetch(
-    READFROMID_SCRIPT_URL +
-    "?action=listNationalities&t=" +
-    Date.now()
+ async function loadNationalityData(forceRefresh = false) {
+  const result = await fetchJsonCached(
+    READFROMID_SCRIPT_URL + "?action=listNationalities",
+    "reportsNationalityData",
+    forceRefresh
   );
 
-  if (!response.ok) {
-    throw new Error(
-      "Nationality server error: " + response.status
-    );
-  }
-
-  const result = await response.json();
-
   if (!result.success || !Array.isArray(result.data)) {
-    throw new Error(
-      result.message || "Invalid nationality data"
-    );
+    throw new Error(result.message || "Invalid nationality data");
   }
 
   nationalityMap = {};
@@ -4251,14 +4283,9 @@ function showRegisteredStatusView() {
 
   result.data.forEach(item => {
     const emiratesId = String(
-      item.emiratesId ||
-      item.emiratesID ||
-      item["رقم الهوية"] ||
-      item["رقم الهوية الإماراتية"] ||
-      ""
-    )
-      .replace(/[^\d]/g, "")
-      .trim();
+      item.emiratesId || item.emiratesID ||
+      item["رقم الهوية"] || item["رقم الهوية الإماراتية"] || ""
+    ).replace(/[^\d]/g, "").trim();
 
     if (!emiratesId) return;
 
@@ -4267,21 +4294,13 @@ function showRegisteredStatusView() {
     ).trim();
 
     emirateMap[emiratesId] = String(
-      item.emirate ||
-      item.Emirate ||
-      item["الإمارة"] ||
-      item["الامارة"] ||
-      ""
+      item.emirate || item.Emirate || item["الإمارة"] || item["الامارة"] || ""
     ).trim();
 
     clubMembershipMap[emiratesId] = String(
-      item.clubMembership ||
-      item.clubMember ||
-      item.membership ||
-      item["الانتساب للنادي"] ||
-      item["المنتسبين للنادي"] ||
-      item["المنتسب للنادي"] ||
-      ""
+      item.clubMembership || item.clubMember || item.membership ||
+      item["الانتساب للنادي"] || item["المنتسبين للنادي"] ||
+      item["المنتسب للنادي"] || ""
     ).trim();
   });
 } 
@@ -4311,21 +4330,14 @@ async function loadRegisteredAttendanceStatus() {
       await fetchData();
     }
 
-    await loadNationalityData();
-    const url =
-      REGISTRATION_SCRIPT_URL +
-      "?action=listRegisteredKids&t=" +
-      Date.now();
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(
-        "Registration server error: " + response.status
-      );
-    }
-
-    const result = await response.json();
+    const [_, result] = await Promise.all([
+      loadNationalityData(false),
+      fetchJsonCached(
+        REGISTRATION_SCRIPT_URL + "?action=listRegisteredKids",
+        "reportsRegisteredKids",
+        false
+      )
+    ]);
 
     if (!result.success || !Array.isArray(result.data)) {
       throw new Error(
