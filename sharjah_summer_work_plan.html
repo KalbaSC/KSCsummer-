@@ -170,6 +170,11 @@ async function saveToGoogleSheet(input, itemIndex, key) {
       method: "POST",
       redirect: "follow",
       headers: {"Content-Type": "text/plain;charset=utf-8"},
+      console.log({
+  displayValue: value,
+  sentToSheet: sheetValue,
+  column: column
+});
       body: JSON.stringify({
         action: "updateCell",
         sheetName: "خطة عمل",
