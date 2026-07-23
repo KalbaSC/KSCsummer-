@@ -614,8 +614,37 @@ function buildTodayAttendance(data, today) {
     .trim();
 }
     
+
+    const BUS_CUTOFF_HOUR = 19;
+    const BUS_CUTOFF_MINUTE = 20;
+
+    function getDubaiTimeParts() {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Dubai",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).formatToParts(new Date());
+
+      return {
+        hour: Number(parts.find(part => part.type === "hour")?.value || 0),
+        minute: Number(parts.find(part => part.type === "minute")?.value || 0)
+      };
+    }
+
+    function isBusCutoffReached() {
+      const { hour, minute } = getDubaiTimeParts();
+      return hour > BUS_CUTOFF_HOUR ||
+        (hour === BUS_CUTOFF_HOUR && minute >= BUS_CUTOFF_MINUTE);
+    }
+
+    function busCutoffMessage() {
+      return "لا يمكن تسجيل خروج الطفل بالحافلة بعد الساعة 7:20 مساءً";
+    }
+
     function renderChildren() {
       const list = document.getElementById("childrenList");
+      const busClosed = isBusCutoffReached();
 
 const query = normalizeSearchText(
   document.getElementById("searchInput").value
@@ -700,6 +729,8 @@ const filtered = attendedChildren.filter(child => {
 
               <button
                 class="bus-button"
+                ${busClosed ? "disabled" : ""}
+                title="${busClosed ? busCutoffMessage() : "تسجيل خروج بالحافلة"}"
                 onclick="markDeparture(
                   '${escapeJs(child.id)}',
                   '${escapeJs(child.name)}',
@@ -708,7 +739,7 @@ const filtered = attendedChildren.filter(child => {
                   this
                 )"
               >
-                 حافلة
+                 ${busClosed ? "الحافلة مغلقة" : "حافلة"}
               </button>
             </div>
           </article>
@@ -765,6 +796,12 @@ const filtered = attendedChildren.filter(child => {
       "يمكن عرض الأيام السابقة فقط، ولا يمكن تسجيل خروج بتاريخ قديم",
       false
     );
+    return;
+  }
+
+  if (transportation === "حافلة" && isBusCutoffReached()) {
+    showToast(busCutoffMessage(), false);
+    renderChildren();
     return;
   }
 
@@ -927,6 +964,10 @@ function updateSummary() {
     }
 
     loadPageData();
+
+    setInterval(() => {
+      renderChildren();
+    }, 30000);
   </script>
 
   <script>
