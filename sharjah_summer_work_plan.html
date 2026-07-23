@@ -15,7 +15,7 @@ body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--sky);color:va
 header{background:linear-gradient(135deg,var(--navy),#174f70);color:#fff;padding:28px 20px;text-align:center;box-shadow:0 7px 20px rgba(11,53,81,.18)}
 header h1{margin:0 0 8px;font-size:30px} header p{margin:0;opacity:.86}
 .page{max-width:1500px;margin:24px auto;padding:0 18px 30px}
-.summary{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:14px;margin-bottom:18px}
 .card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 8px 22px rgba(11,53,81,.07);text-align:center}
 .card .label{color:var(--muted);font-size:13px}.card .value{color:var(--navy);font-size:30px;font-weight:800;margin-top:8px}
 .controls{background:#fff;border:1px solid var(--border);border-radius:18px;padding:15px;box-shadow:0 8px 22px rgba(11,53,81,.06);display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
@@ -310,7 +310,6 @@ function render() {
 function updateSummary(rows) {
   document.getElementById("totalActivities").textContent = rows.length;
   document.getElementById("totalWeeks").textContent = new Set(rows.map(r => r.week).filter(Boolean)).size;
-  document.getElementById("highRisks").textContent = rows.filter(r => riskLevel(r.riskScore) === "high").length;
   document.getElementById("responsibilityCount").textContent = new Set(rows.map(r => r.responsibility).filter(Boolean)).size;
 }
 
