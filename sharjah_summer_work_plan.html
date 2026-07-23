@@ -166,15 +166,16 @@ async function saveToGoogleSheet(input, itemIndex, key) {
 
   try {
     // text/plain prevents a browser CORS preflight with Apps Script.
+    console.log({
+      displayValue: value,
+      sentToSheet: sheetValue,
+      column: column
+    });
+
     const response = await fetch(WEB_APP_URL, {
       method: "POST",
       redirect: "follow",
       headers: {"Content-Type": "text/plain;charset=utf-8"},
-      console.log({
-  displayValue: value,
-  sentToSheet: sheetValue,
-  column: column
-});
       body: JSON.stringify({
         action: "updateCell",
         sheetName: "خطة عمل",
