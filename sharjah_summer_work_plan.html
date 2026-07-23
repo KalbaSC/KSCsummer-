@@ -324,18 +324,10 @@ function resetFilters() {
   renderTabs(); render();
 }
 
-async function loadValuesFromGoogleSheet() {
+function applySheetData(result) {
   try {
-    const response = await fetch(
-      WEB_APP_URL + "?t=" + Date.now()
-    );
-
-    const result = await response.json();
-
-    if (!result.success || !Array.isArray(result.data)) {
-      throw new Error(
-        result.message || "تعذر تحميل بيانات الشيت"
-      );
+    if (!result || !result.success || !Array.isArray(result.data)) {
+      throw new Error((result && result.message) || "تعذر تحميل بيانات الشيت");
     }
 
     const valuesByRow = new Map(
@@ -344,31 +336,45 @@ async function loadValuesFromGoogleSheet() {
 
     workPlan.forEach(item => {
       const sheetData = valuesByRow.get(Number(item.sheetRow));
-
       if (!sheetData) return;
 
       item.resources = sheetData.resources ?? "";
-      item.taskProgress = percentageForPage(
-        sheetData.taskProgress
-      );
-      item.activityProgress = percentageForPage(
-        sheetData.activityProgress
-      );
+      item.taskProgress = percentageForPage(sheetData.taskProgress);
+      item.activityProgress = percentageForPage(sheetData.activityProgress);
       item.target = sheetData.target ?? "";
       item.achieved = sheetData.achieved ?? "";
-      item.result = percentageForPage(
-        sheetData.result
-      );
+      item.result = percentageForPage(sheetData.result);
       item.probability = sheetData.probability ?? "";
       item.impact = sheetData.impact ?? "";
       item.riskScore = sheetData.riskScore ?? "";
     });
 
     render();
-
+    updateGlobalStatus("saved", "تم تحميل بيانات Google Sheet");
+    setTimeout(() => updateGlobalStatus("", "جاهز للحفظ"), 1800);
   } catch (error) {
     console.error("Load sheet values error:", error);
+    updateGlobalStatus("error", "فشل تحميل بيانات Google Sheet");
   }
+}
+
+function loadValuesFromGoogleSheet() {
+  const oldScript = document.getElementById("sheet-data-loader");
+  if (oldScript) oldScript.remove();
+
+  const script = document.createElement("script");
+  script.id = "sheet-data-loader";
+  script.src =
+    WEB_APP_URL +
+    "?callback=applySheetData&t=" +
+    Date.now();
+
+  script.onerror = function () {
+    console.error("Could not load Google Sheet data");
+    updateGlobalStatus("error", "فشل تحميل بيانات Google Sheet");
+  };
+
+  document.body.appendChild(script);
 }
 
 function percentageForPage(value) {
