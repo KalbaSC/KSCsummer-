@@ -147,7 +147,6 @@ async function saveToGoogleSheet(input, itemIndex, key) {
     let percentage = Number(value);
     if (!Number.isFinite(percentage)) percentage = 0;
 
-    // The page uses 0–100, while Google Sheets percentage cells use 0–1.
     percentage = Math.max(0, Math.min(100, percentage));
     value = String(percentage);
     sheetValue = percentage / 100;
@@ -155,7 +154,6 @@ async function saveToGoogleSheet(input, itemIndex, key) {
   }
   const status = input.parentElement.querySelector(".cell-status");
 
-  // Keep the displayed value as 0–100 inside the page.
   item[key] = value;
   input.classList.remove("saved","error");
   input.classList.add("saving");
@@ -165,7 +163,6 @@ async function saveToGoogleSheet(input, itemIndex, key) {
   updateGlobalStatus("saving", "جاري الحفظ...");
 
   try {
-    // text/plain prevents a browser CORS preflight with Apps Script.
     console.log({
       displayValue: value,
       sentToSheet: sheetValue,
@@ -327,6 +324,69 @@ function resetFilters() {
   renderTabs(); render();
 }
 
+async function loadValuesFromGoogleSheet() {
+  try {
+    const response = await fetch(
+      WEB_APP_URL + "?t=" + Date.now()
+    );
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error(
+        result.message || "تعذر تحميل بيانات الشيت"
+      );
+    }
+
+    const valuesByRow = new Map(
+      result.data.map(row => [Number(row.sheetRow), row])
+    );
+
+    workPlan.forEach(item => {
+      const sheetData = valuesByRow.get(Number(item.sheetRow));
+
+      if (!sheetData) return;
+
+      item.resources = sheetData.resources ?? "";
+      item.taskProgress = percentageForPage(
+        sheetData.taskProgress
+      );
+      item.activityProgress = percentageForPage(
+        sheetData.activityProgress
+      );
+      item.target = sheetData.target ?? "";
+      item.achieved = sheetData.achieved ?? "";
+      item.result = percentageForPage(
+        sheetData.result
+      );
+      item.probability = sheetData.probability ?? "";
+      item.impact = sheetData.impact ?? "";
+      item.riskScore = sheetData.riskScore ?? "";
+    });
+
+    render();
+
+  } catch (error) {
+    console.error("Load sheet values error:", error);
+  }
+}
+
+function percentageForPage(value) {
+  if (value === "" || value === null || value === undefined) {
+    return "";
+  }
+
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return "";
+  }
+
+  return number >= 0 && number <= 1
+    ? Math.round(number * 100)
+    : Math.round(number);
+}  
+
 function exportCSV() {
   const rows = getFilteredData();
   const headers = ["الأسبوع","الموعد والمكان","م","النشاط أو الفعالية","المسؤولية",
@@ -350,6 +410,7 @@ document.getElementById("searchInput").addEventListener("input",render);
 document.getElementById("riskFilter").addEventListener("change",render);
 renderTabs();
 render();
+loadValuesFromGoogleSheet();
 </script>
 </body>
 </html>
