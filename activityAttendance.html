@@ -77,7 +77,7 @@ function buildTodayPlayers() {
     document.getElementById("attendanceDate").value;
 
   const playerMap = new Map();
-
+let generalAttendanceRecords = 0;
   attendanceRows.forEach(row => {
     const timestamp =
       row.Timestamp ??
@@ -152,9 +152,10 @@ function buildTodayPlayers() {
       player.parent = parent;
     }
 
-    if (isGeneralAttendance) {
-      player.hasGeneralAttendance = true;
-    }
+if (isGeneralAttendance) {
+  generalAttendanceRecords++;
+  player.hasGeneralAttendance = true;
+}
 
     if (
       activity &&
@@ -173,9 +174,11 @@ function buildTodayPlayers() {
         "ar"
       )
     );
+window.generalAttendanceRecords = generalAttendanceRecords;  
 }
 function getFilteredPlayers(){const q=normalizeArabic(document.getElementById('playerSearch').value),words=q.split(/\s+/).filter(Boolean),filter=document.getElementById('viewFilter').value;return todayPlayers.filter(p=>{const txt=normalizeArabic([p.name,p.parent,p.id].join(' '));const ms=!words.length||words.every(w=>txt.includes(w));const hs=p.savedActivities.size>0;const mf=filter==='all'||(filter==='saved'&&hs)||(filter==='unsaved'&&!hs);return ms&&mf})}
-function renderPlayers(){const c=document.getElementById('playersContainer'),players=getFilteredPlayers();visiblePlayerIds=players.map(p=>p.id);document.getElementById('attendeeCount').textContent=`عدد الحاضرين: ${todayPlayers.length}`;if(!players.length){c.innerHTML='<div class="empty">لا يوجد أطفال مطابقون للبحث أو التصفية.</div>';updateSelectedCount();return}c.innerHTML=players.map(p=>`<section class="player-card"><div class="player-head"><div><h3 class="player-name">${esc(p.name||'بدون اسم')}</h3><div class="player-meta">ولي الأمر: ${esc(p.parent||'غير معروف')} — المعرف: ${esc(p.id)}</div></div><div class="saved-badge">الأنشطة المحفوظة: ${p.savedActivities.size}</div></div><div class="activities">${ACTIVITIES.map(a=>{const s=p.savedActivities.has(a),n=p.selectedActivities.has(a);return `<label class="activity ${s?'saved':''}"><input type="checkbox" ${s||n?'checked':''} ${s?'disabled':''} onchange="toggleActivity('${encodeURIComponent(p.id)}','${encodeURIComponent(a)}',this.checked)"><span>${esc(a)}</span></label>`}).join('')}</div></section>`).join('');updateSelectedCount()}
+function renderPlayers(){const c=document.getElementById('playersContainer'),players=getFilteredPlayers();visiblePlayerIds=players.map(p=>p.id);document.getElementById("attendeeCount").textContent =
+  `الأطفال المختلفون: ${todayPlayers.length} | سجلات الحضور: ${window.generalAttendanceRecords || 0}`;if(!players.length){c.innerHTML='<div class="empty">لا يوجد أطفال مطابقون للبحث أو التصفية.</div>';updateSelectedCount();return}c.innerHTML=players.map(p=>`<section class="player-card"><div class="player-head"><div><h3 class="player-name">${esc(p.name||'بدون اسم')}</h3><div class="player-meta">ولي الأمر: ${esc(p.parent||'غير معروف')} — المعرف: ${esc(p.id)}</div></div><div class="saved-badge">الأنشطة المحفوظة: ${p.savedActivities.size}</div></div><div class="activities">${ACTIVITIES.map(a=>{const s=p.savedActivities.has(a),n=p.selectedActivities.has(a);return `<label class="activity ${s?'saved':''}"><input type="checkbox" ${s||n?'checked':''} ${s?'disabled':''} onchange="toggleActivity('${encodeURIComponent(p.id)}','${encodeURIComponent(a)}',this.checked)"><span>${esc(a)}</span></label>`}).join('')}</div></section>`).join('');updateSelectedCount()}
 function toggleActivity(eid,ea,checked){const id=decodeURIComponent(eid),a=decodeURIComponent(ea),p=todayPlayers.find(x=>x.id===id);if(!p)return;checked?p.selectedActivities.add(a):p.selectedActivities.delete(a);updateSelectedCount()}
 function updateSelectedCount(){const n=todayPlayers.reduce((t,p)=>t+p.selectedActivities.size,0);document.getElementById('selectedCount').textContent=`الاختيارات الجديدة: ${n}`}
 function applyBulkActivity(select){const a=document.getElementById('bulkActivity').value;if(!a)return alert('اختر النشاط أولاً.');todayPlayers.forEach(p=>{if(!visiblePlayerIds.includes(p.id)||p.savedActivities.has(a))return;select?p.selectedActivities.add(a):p.selectedActivities.delete(a)});renderPlayers()}
