@@ -57,7 +57,7 @@ function normalizeArabic(v){return String(v||'').toLowerCase().replace(/[\u064B-
 function normalizeDate(v){if(!v)return'';const t=String(v).trim();if(/^\d{4}-\d{2}-\d{2}$/.test(t))return t;if(/^\d{1,2}\/\d{1,2}\/\d{4}/.test(t)){const [d,m,y]=t.split(' ')[0].split('/');return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`}const dt=new Date(t);return Number.isNaN(dt.getTime())?'':getLocalDateValue(dt)}
 function cleanActivity(v){return String(v||'').trim()}function cleanId(v){return String(v||'').trim()}function esc(v){return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
 function showLoading(t){document.getElementById('loadingText').textContent=t;document.getElementById('loading').classList.add('show')}function hideLoading(){document.getElementById('loading').classList.remove('show')}function showMessage(t,type='info'){const b=document.getElementById('message');b.className=`message ${type}`;b.textContent=t}
-async function loadAttendance(){showLoading('جاري تحميل سجل الحضور...');try{const r=await fetch(`${ATTENDANCE_SCRIPT}?v=${Date.now()}`);if(!r.ok)throw new Error(`HTTP ${r.status}`);const data=await r.json();if(!Array.isArray(data))throw new Error('Bad data');attendanceRows=data;buildTodayPlayers();renderPlayers();showMessage(`تم تحميل ${todayPlayers.length} طفلاً مسجل حضورهم العام.`,'ok')}catch(e){console.error(e);todayPlayers=[];renderPlayers();showMessage('تعذر تحميل الحضور. تحقق من رابط Apps Script وإعدادات النشر.','error')}finally{hideLoading()}}
+async function loadAttendance(){showLoading('جاري تحميل سجل الحضور...');try{const r=await fetch(`${ATTENDANCE_SCRIPT}?v=${Date.now()}`);if(!r.ok)throw new Error(`HTTP ${r.status}`);const data=await r.json();if(!Array.isArray(data))throw new Error('Bad data');attendanceRows=data;buildTodayPlayers();renderPlayers();showMessage(`تم تحميل ${todayPlayers.length} طفلاً لديهم سجل حضور في التاريخ المحدد.`,'ok')}catch(e){console.error(e);todayPlayers=[];renderPlayers();showMessage('تعذر تحميل الحضور. تحقق من رابط Apps Script وإعدادات النشر.','error')}finally{hideLoading()}}
 function getDubaiDateKey(value) {
   if (!value) return "";
 
@@ -77,7 +77,8 @@ function buildTodayPlayers() {
     document.getElementById("attendanceDate").value;
 
   const playerMap = new Map();
-let generalAttendanceRecords = 0;
+  let totalAttendanceRecords = 0;
+
   attendanceRows.forEach(row => {
     const timestamp =
       row.Timestamp ??
@@ -99,6 +100,8 @@ let generalAttendanceRecords = 0;
 
     if (!id) return;
 
+    totalAttendanceRecords++;
+
     const name =
       row["Child Name"] ??
       row.Name ??
@@ -118,25 +121,11 @@ let generalAttendanceRecords = 0;
       ""
     );
 
-    const generalValue = String(
-      row.General ??
-      row.general ??
-      ""
-    ).trim();
-
-    const isGeneralAttendance =
-      generalValue === "✔️ حضر" ||
-      generalValue === "حضر" ||
-      generalValue === "✔ حضر" ||
-      activity === "عام" ||
-      activity === "الحضور العام";
-
     if (!playerMap.has(id)) {
       playerMap.set(id, {
         id: id,
         name: name,
         parent: parent,
-        hasGeneralAttendance: false,
         savedActivities: new Set(),
         selectedActivities: new Set()
       });
@@ -152,11 +141,9 @@ let generalAttendanceRecords = 0;
       player.parent = parent;
     }
 
-if (isGeneralAttendance) {
-  generalAttendanceRecords++;
-  player.hasGeneralAttendance = true;
-}
-
+    // Save any existing activity for this child.
+    // General attendance values are ignored here because the child
+    // already qualifies by having any attendance row on this date.
     if (
       activity &&
       activity !== "عام" &&
@@ -167,18 +154,19 @@ if (isGeneralAttendance) {
   });
 
   todayPlayers = [...playerMap.values()]
-    .filter(player => player.hasGeneralAttendance)
     .sort((a, b) =>
       String(a.name).localeCompare(
         String(b.name),
         "ar"
       )
     );
-window.generalAttendanceRecords = generalAttendanceRecords;  
+
+  window.totalAttendanceRecords = totalAttendanceRecords;
 }
+
 function getFilteredPlayers(){const q=normalizeArabic(document.getElementById('playerSearch').value),words=q.split(/\s+/).filter(Boolean),filter=document.getElementById('viewFilter').value;return todayPlayers.filter(p=>{const txt=normalizeArabic([p.name,p.parent,p.id].join(' '));const ms=!words.length||words.every(w=>txt.includes(w));const hs=p.savedActivities.size>0;const mf=filter==='all'||(filter==='saved'&&hs)||(filter==='unsaved'&&!hs);return ms&&mf})}
 function renderPlayers(){const c=document.getElementById('playersContainer'),players=getFilteredPlayers();visiblePlayerIds=players.map(p=>p.id);document.getElementById("attendeeCount").textContent =
-  `الأطفال المختلفون: ${todayPlayers.length} | سجلات الحضور: ${window.generalAttendanceRecords || 0}`;if(!players.length){c.innerHTML='<div class="empty">لا يوجد أطفال مطابقون للبحث أو التصفية.</div>';updateSelectedCount();return}c.innerHTML=players.map(p=>`<section class="player-card"><div class="player-head"><div><h3 class="player-name">${esc(p.name||'بدون اسم')}</h3><div class="player-meta">ولي الأمر: ${esc(p.parent||'غير معروف')} — المعرف: ${esc(p.id)}</div></div><div class="saved-badge">الأنشطة المحفوظة: ${p.savedActivities.size}</div></div><div class="activities">${ACTIVITIES.map(a=>{const s=p.savedActivities.has(a),n=p.selectedActivities.has(a);return `<label class="activity ${s?'saved':''}"><input type="checkbox" ${s||n?'checked':''} ${s?'disabled':''} onchange="toggleActivity('${encodeURIComponent(p.id)}','${encodeURIComponent(a)}',this.checked)"><span>${esc(a)}</span></label>`}).join('')}</div></section>`).join('');updateSelectedCount()}
+  `الأطفال المختلفون: ${todayPlayers.length} | سجلات الحضور: ${window.totalAttendanceRecords || 0}`;if(!players.length){c.innerHTML='<div class="empty">لا يوجد أطفال مطابقون للبحث أو التصفية.</div>';updateSelectedCount();return}c.innerHTML=players.map(p=>`<section class="player-card"><div class="player-head"><div><h3 class="player-name">${esc(p.name||'بدون اسم')}</h3><div class="player-meta">ولي الأمر: ${esc(p.parent||'غير معروف')} — المعرف: ${esc(p.id)}</div></div><div class="saved-badge">الأنشطة المحفوظة: ${p.savedActivities.size}</div></div><div class="activities">${ACTIVITIES.map(a=>{const s=p.savedActivities.has(a),n=p.selectedActivities.has(a);return `<label class="activity ${s?'saved':''}"><input type="checkbox" ${s||n?'checked':''} ${s?'disabled':''} onchange="toggleActivity('${encodeURIComponent(p.id)}','${encodeURIComponent(a)}',this.checked)"><span>${esc(a)}</span></label>`}).join('')}</div></section>`).join('');updateSelectedCount()}
 function toggleActivity(eid,ea,checked){const id=decodeURIComponent(eid),a=decodeURIComponent(ea),p=todayPlayers.find(x=>x.id===id);if(!p)return;checked?p.selectedActivities.add(a):p.selectedActivities.delete(a);updateSelectedCount()}
 function updateSelectedCount(){const n=todayPlayers.reduce((t,p)=>t+p.selectedActivities.size,0);document.getElementById('selectedCount').textContent=`الاختيارات الجديدة: ${n}`}
 function applyBulkActivity(select){const a=document.getElementById('bulkActivity').value;if(!a)return alert('اختر النشاط أولاً.');todayPlayers.forEach(p=>{if(!visiblePlayerIds.includes(p.id)||p.savedActivities.has(a))return;select?p.selectedActivities.add(a):p.selectedActivities.delete(a)});renderPlayers()}
