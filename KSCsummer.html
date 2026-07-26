@@ -97,7 +97,6 @@ body {
   font-weight: 600;
 }
 
-/* Navigation */
 nav{
 
     display:flex;
@@ -190,7 +189,6 @@ nav button.active{
   display: block;
 }
 
-/* Main iframe */
 main {
   flex: 1;
   width: 100%;
@@ -208,7 +206,6 @@ main {
   box-shadow: 0 12px 28px rgba(0,0,0,.08);
 }
 
-/* Footer */
 footer {
   background: white;
   color: var(--text);
@@ -235,12 +232,10 @@ footer p {
   color: #1d4ed8;
 }
 
-/* Mobile menu */
 .mobile-menu-btn {
   display: none;
 }
 
-/* Mobile */
 @media(max-width:768px) {
   body {
     overflow-x: hidden;
@@ -407,6 +402,9 @@ nav {
     <nav id="mainNav">
 
         <button class="active" onclick="loadPage(this,'AttendanceScan.html')">تسجيل الحضور</button>
+      <button onclick="loadPage(this,'activityAttendance.html')">
+  حضور الأنشطة
+</button>
       <button onclick="loadPage(this,'departure.html')">
   تسجيل الخروج 
 </button>
