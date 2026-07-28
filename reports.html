@@ -1364,6 +1364,10 @@ onclick="promptForPassword()">
 <canvas id="pieStaff" height="200"></canvas>
 </div>
 <div class="stat-card">
+<h3>عدد عمليات المسح حسب الموظف (مع التكرار)</h3>
+<canvas id="staffScanCountChart" height="200"></canvas>
+</div>
+<div class="stat-card">
 <h3>حضور بالوقت مقابل متأخر</h3>
 <canvas id="earlyLate" height="200"></canvas>
 </div>
@@ -2841,6 +2845,7 @@ tbody.appendChild(row);
 
 function renderCharts() {
 renderStaffChart();
+renderStaffScanCountChart();
 renderTimingChart();
 renderActivityChart();    
 renderDailyStats();
@@ -2890,6 +2895,59 @@ function renderStaffChart() {
         legend: {
           position: 'bottom',
           rtl: true
+        }
+      }
+    }
+  });
+}
+
+function renderStaffScanCountChart() {
+  const staffCounts = {};
+
+  // Count every saved scan row, including repeated scans for the same child.
+  filteredData.forEach(row => {
+    const staffName = String(
+      row["Scanned By"] || row.staff || row.Staff || "غير معروف"
+    ).trim() || "غير معروف";
+
+    staffCounts[staffName] = (staffCounts[staffName] || 0) + 1;
+  });
+
+  const sortedEntries = Object.entries(staffCounts)
+    .sort((a, b) => b[1] - a[1]);
+
+  if (charts.staffScans) charts.staffScans.destroy();
+
+  const canvas = document.getElementById("staffScanCountChart");
+  if (!canvas) return;
+
+  charts.staffScans = new Chart(canvas.getContext("2d"), {
+    type: "bar",
+    data: {
+      labels: sortedEntries.map(([name]) => name),
+      datasets: [{
+        label: "عدد عمليات المسح",
+        data: sortedEntries.map(([, count]) => count),
+        backgroundColor: "#2f80ed",
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: "y",
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: context => `عدد عمليات المسح: ${context.raw}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
         }
       }
     }
