@@ -1368,6 +1368,11 @@ onclick="promptForPassword()">
 <canvas id="staffScanCountChart" height="200"></canvas>
 </div>
 <div class="stat-card">
+<h3>تسجيل الخروج حسب الموظفين</h3>
+<div id="departureStatsSummary" style="text-align:center;color:#6b7280;font-size:12px;margin-bottom:10px;">جاري تحميل بيانات الخروج...</div>
+<canvas id="departureStaffChart" height="200"></canvas>
+</div>
+<div class="stat-card">
 <h3>حضور بالوقت مقابل متأخر</h3>
 <canvas id="earlyLate" height="200"></canvas>
 </div>
@@ -1698,6 +1703,12 @@ window.addEventListener("pageshow", forceInsideMainPortal);
   
     //https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec';
+
+const DEPARTURE_STATS_URL =
+  "https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
+
+let departureStatsData = [];
+let departureStatsLoaded = false;
 
 const REGISTRATION_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
@@ -2088,14 +2099,16 @@ btn.innerHTML = displayAllRecords
     updateSummary();
 }
 
-function showStatsView() {
+async function showStatsView() {
 setActiveNavButton(2);
 document.getElementById("mainView").style.display = "none";
 document.getElementById("activityView").style.display = "none";
 document.getElementById("statsView").style.display = "block";
 document.getElementById("topParticipantsView").style.display = "none";
+document.getElementById("registeredStatusView").style.display = "none";
 renderCharts();
-document.getElementById("registeredStatusView").style.display = "none";  
+await loadDepartureStats();
+renderDepartureStaffChart();
 }
 
 function showTopParticipants() {
@@ -2846,6 +2859,7 @@ tbody.appendChild(row);
 function renderCharts() {
 renderStaffChart();
 renderStaffScanCountChart();
+renderDepartureStaffChart();
 renderTimingChart();
 renderActivityChart();    
 renderDailyStats();
@@ -2963,6 +2977,130 @@ if (btn) {
 const isShowing = mainView.classList.contains("show-hidden-columns");
 btn.innerHTML = `<i class="fas fa-eye"></i> ${isShowing ? 'إخفاء' : 'عرض'} الأعمدة`;
 }
+}
+
+async function loadDepartureStats(forceRefresh = false) {
+  if (departureStatsLoaded && !forceRefresh) return departureStatsData;
+
+  const summary = document.getElementById("departureStatsSummary");
+  if (summary) summary.textContent = "جاري تحميل بيانات الخروج...";
+
+  try {
+    const response = await fetch(`${DEPARTURE_STATS_URL}?v=${Date.now()}`, {
+      cache: "no-store"
+    });
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error(result.message || "Invalid departure data");
+    }
+
+    departureStatsData = result.data
+      .filter(row => row && row.Timestamp)
+      .map(row => ({
+        ...row,
+        dateKey: getDubaiDateKey(row.Timestamp)
+      }));
+
+    departureStatsLoaded = true;
+    return departureStatsData;
+  } catch (error) {
+    console.error("Departure statistics error:", error);
+    departureStatsData = [];
+    departureStatsLoaded = false;
+    if (summary) summary.textContent = "تعذر تحميل بيانات تسجيل الخروج";
+    return [];
+  }
+}
+
+function getDepartureRowsForCurrentView() {
+  if (!departureStatsData.length) return [];
+
+  const visibleDates = new Set(
+    filteredData
+      .map(row => row.dateKey)
+      .filter(Boolean)
+  );
+
+  // When attendance filters produce dates, use exactly the same visible date range.
+  if (visibleDates.size) {
+    return departureStatsData.filter(row => visibleDates.has(row.dateKey));
+  }
+
+  const selectedDate = document.getElementById("datePicker")?.value;
+  if (selectedDate && currentPeriod === "today") {
+    return departureStatsData.filter(row => row.dateKey === selectedDate);
+  }
+
+  return departureStatsData;
+}
+
+function renderDepartureStaffChart() {
+  const canvas = document.getElementById("departureStaffChart");
+  const summary = document.getElementById("departureStatsSummary");
+  if (!canvas) return;
+
+  if (charts.departureStaff) {
+    charts.departureStaff.destroy();
+    charts.departureStaff = null;
+  }
+
+  if (!departureStatsLoaded) {
+    if (summary) summary.textContent = "جاري تحميل بيانات الخروج...";
+    return;
+  }
+
+  const rows = getDepartureRowsForCurrentView();
+  const staffCounts = {};
+  let carCount = 0;
+  let busCount = 0;
+
+  rows.forEach(row => {
+    const staff = String(row["Scanned By"] || "غير معروف").trim() || "غير معروف";
+    staffCounts[staff] = (staffCounts[staff] || 0) + 1;
+
+    const method = String(row.Transportation || "").trim();
+    if (method === "سيارة") carCount++;
+    if (method === "حافلة") busCount++;
+  });
+
+  const entries = Object.entries(staffCounts).sort((a, b) => b[1] - a[1]);
+
+  if (summary) {
+    summary.textContent = `الإجمالي: ${rows.length} | سيارة: ${carCount} | حافلة: ${busCount}`;
+  }
+
+  charts.departureStaff = new Chart(canvas.getContext("2d"), {
+    type: "bar",
+    data: {
+      labels: entries.map(([name]) => name),
+      datasets: [{
+        label: "عدد تسجيلات الخروج",
+        data: entries.map(([, count]) => count),
+        backgroundColor: "#16a34a",
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: "y",
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: context => `عدد تسجيلات الخروج: ${context.raw}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
 }
 
 function renderTimingChart() {
