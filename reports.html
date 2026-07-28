@@ -1702,7 +1702,11 @@ forceInsideMainPortal();
 window.addEventListener("pageshow", forceInsideMainPortal);
   
     //https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec';
+const ATTENDANCE_SCRIPT_URLS = [
+  'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec',
+  'https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec'
+];
+let scriptURL = ATTENDANCE_SCRIPT_URLS[0];
 
 const DEPARTURE_STATS_URL =
   "https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
@@ -2031,14 +2035,32 @@ async function fetchData(forceRefresh = false) {
     const loadingElement = document.getElementById("loading");
     if (loadingElement) loadingElement.style.display = "block";
 
-    const rawData = await fetchJsonCached(
-      scriptURL,
-      "reportsAttendanceData",
-      forceRefresh
-    );
+    let rawData = null;
+    let lastAttendanceError = null;
+
+    for (let index = 0; index < ATTENDANCE_SCRIPT_URLS.length; index++) {
+      const candidateUrl = ATTENDANCE_SCRIPT_URLS[index];
+      try {
+        rawData = await fetchJsonCached(
+          candidateUrl,
+          `reportsAttendanceData_${index}`,
+          forceRefresh
+        );
+
+        if (Array.isArray(rawData)) {
+          scriptURL = candidateUrl;
+          break;
+        }
+
+        throw new Error("Invalid data format received");
+      } catch (candidateError) {
+        lastAttendanceError = candidateError;
+        console.warn("Attendance URL failed:", candidateUrl, candidateError);
+      }
+    }
 
     if (!Array.isArray(rawData)) {
-      throw new Error("Invalid data format received");
+      throw lastAttendanceError || new Error("Attendance data could not be loaded");
     }
 
     allData = processRawData(rawData);
