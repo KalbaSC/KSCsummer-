@@ -1701,9 +1701,9 @@ onclick="promptForPassword()">
 forceInsideMainPortal();
 window.addEventListener("pageshow", forceInsideMainPortal);
   
-    //https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec
+    //https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec
 const scriptURL =
-  'https://script.google.com/macros/s/AKfycbxij6xIH_fypPRhklqQKURq-7xB5RJ3sC5dCBfwj4sJBjqnfXde1ncFrhCpDy04zuZW6g/exec';
+  'https://script.google.com/macros/s/AKfycbzJwZ7Ulx_pfSOsnpQ-fEicYnXPWsGB7b0k_pTrpglnkFXBPQpU-WEXV7VXYyIQkHh2nw/exec';
 
 const DEPARTURE_STATS_URL =
   "https://script.google.com/macros/s/AKfycbwPUnZ-P69RQ5rrM-euqucJAsvkiwbGosDMYstDk787mU3ngs8emhH_4u-csRNcMBkj/exec";
@@ -2102,7 +2102,7 @@ async function fetchData(forceRefresh = false) {
 
     const attendanceResult = await fetchJsonpCached(
       scriptURL,
-      "reportsAttendanceData_jsonp",
+      "reportsAttendanceData_jsonp_v2",
       forceRefresh
     );
 
