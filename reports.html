@@ -1993,11 +1993,16 @@ function fetchJsonp(url, timeoutMs = 25000) {
       finished = true;
       clearTimeout(timer);
       script.remove();
-      try {
-        delete window[callbackName];
-      } catch (_) {
-        window[callbackName] = undefined;
-      }
+      // Keep a harmless callback briefly because large Apps Script
+      // responses may arrive just after a timeout.
+      window[callbackName] = function () {};
+      setTimeout(() => {
+        try {
+          delete window[callbackName];
+        } catch (_) {
+          window[callbackName] = undefined;
+        }
+      }, 60000);
     }
 
     window[callbackName] = data => {
@@ -2024,7 +2029,12 @@ function fetchJsonp(url, timeoutMs = 25000) {
   });
 }
 
-async function fetchJsonpCached(url, cacheKey, forceRefresh = false) {
+async function fetchJsonpCached(
+  url,
+  cacheKey,
+  forceRefresh = false,
+  timeoutMs = 25000
+) {
   if (!forceRefresh) {
     try {
       const cached = JSON.parse(sessionStorage.getItem(cacheKey) || "null");
@@ -2036,7 +2046,7 @@ async function fetchJsonpCached(url, cacheKey, forceRefresh = false) {
     }
   }
 
-  const data = await fetchJsonp(url);
+  const data = await fetchJsonp(url, timeoutMs);
 
   try {
     sessionStorage.setItem(
@@ -3063,8 +3073,9 @@ async function loadDepartureStats(forceRefresh = false) {
   try {
     const result = await fetchJsonpCached(
       DEPARTURE_STATS_URL,
-      "reportsDepartureData_jsonp",
-      forceRefresh
+      "reportsDepartureData_jsonp_v2",
+      forceRefresh,
+      120000
     );
 
     if (!result || !result.success || !Array.isArray(result.data)) {
