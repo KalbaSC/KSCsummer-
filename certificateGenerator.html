@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b3551">
+  <title>إصدار شهادة مشاركة</title>
+
+  <style>
+    @font-face{
+      font-family:'NotoKufiArabic';
+      src:url('NotoKufiArabic.ttf') format('truetype');
+      font-display:swap;
+    }
+
+    :root{
+      --navy:#0b3551;
+      --blue:#2f80ed;
+      --gold:#c79a4b;
+      --yellow:#f4e733;
+      --bg:#eef6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#dfe7ec;
+      --danger:#b42318;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:'NotoKufiArabic',Tahoma,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right,rgba(244,231,51,.16),transparent 28%),
+        linear-gradient(135deg,#eef6f8,#f8fbfc 55%,#edf6fa);
+    }
+
+    .app{
+      width:min(1500px,calc(100% - 24px));
+      margin:20px auto;
+      display:grid;
+      grid-template-columns:380px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .panel,.preview{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:0 14px 36px rgba(11,53,81,.10);
+    }
+
+    .panel{
+      position:sticky;
+      top:15px;
+      padding:22px;
+    }
+
+    .heading{
+      padding:17px;
+      margin-bottom:18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,var(--navy),#17618e);
+      color:white;
+    }
+
+    .heading h1{
+      margin:0 0 6px;
+      font-size:22px;
+    }
+
+    .heading p{
+      margin:0;
+      font-size:12px;
+      line-height:1.8;
+      opacity:.86;
+    }
+
+    label{
+      display:block;
+      margin:14px 0 7px;
+      color:var(--navy);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    input{
+      width:100%;
+      min-height:48px;
+      padding:11px 13px;
+      border:1px solid var(--border);
+      border-radius:13px;
+      outline:none;
+      background:#f7fbfd;
+      color:var(--text);
+      font-family:inherit;
+      font-size:15px;
+    }
+
+    input:focus{
+      border-color:var(--blue);
+      background:white;
+      box-shadow:0 0 0 4px rgba(47,128,237,.10);
+    }
+
+    .search-box{position:relative}
+
+    .search-results{
+      display:none;
+      position:absolute;
+      top:calc(100% + 6px);
+      right:0;
+      left:0;
+      z-index:50;
+      max-height:280px;
+      overflow:auto;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      box-shadow:0 16px 38px rgba(11,53,81,.18);
+    }
+
+    .search-item{
+      padding:12px;
+      border-bottom:1px solid #edf2f5;
+      cursor:pointer;
+    }
+
+    .search-item:last-child{border-bottom:0}
+    .search-item:hover{background:#eef7fb}
+
+    .search-name{
+      color:var(--navy);
+      font-weight:900;
+    }
+
+    .search-meta{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .help{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.7;
+    }
+
+    .selected{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border:1px solid #cfe1ea;
+      border-radius:14px;
+      background:#eef7fb;
+      color:var(--navy);
+      font-size:13px;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    button{
+      min-height:46px;
+      padding:11px 12px;
+      border:0;
+      border-radius:13px;
+      font-family:inherit;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .primary{
+      grid-column:1/-1;
+      background:linear-gradient(135deg,var(--yellow),#dec900);
+      color:#222;
+    }
+
+    .secondary{
+      background:var(--navy);
+      color:white;
+    }
+
+    .light{
+      background:#edf5f9;
+      color:var(--navy);
+    }
+
+    .status{
+      display:none;
+      margin-top:12px;
+      padding:11px;
+      border-radius:12px;
+      background:#fff1f0;
+      color:var(--danger);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .preview{
+      padding:14px;
+      overflow:auto;
+    }
+
+    .preview-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin:2px 2px 12px;
+    }
+
+    .preview-head h2{
+      margin:0;
+      color:var(--navy);
+      font-size:20px;
+    }
+
+    .preview-head span{
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    canvas{
+      display:block;
+      width:100%;
+      height:auto;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:white;
+    }
+
+    @media(max-width:900px){
+      .app{grid-template-columns:1fr}
+      .panel{position:static}
+    }
+
+    @media(max-width:520px){
+      .app{width:calc(100% - 12px);margin:6px auto}
+      .panel,.preview{border-radius:18px}
+      .actions{grid-template-columns:1fr}
+      .primary{grid-column:auto}
+    }
+  </style>
+</head>
+
+<body>
+<main class="app">
+  <section class="panel">
+    <div class="heading">
+      <h1>إصدار شهادة مشاركة</h1>
+      <p>ابحث عن الطفل المسجل أو اكتب الاسم يدوياً، وسيظهر الاسم مباشرة في مكانه على الشهادة.</p>
+    </div>
+
+    <label for="memberSearch">البحث في قائمة المسجلين</label>
+
+    <div class="search-box">
+      <input
+        id="memberSearch"
+        type="search"
+        placeholder="اكتب الاسم الكامل أو جزءاً منه..."
+        autocomplete="off"
+        oninput="searchMembers()"
+      >
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <div class="help">
+      يمكنك البحث بأي جزء من الاسم. مثال: خالد خميس، حتى لو كان بين الكلمتين اسم آخر.
+    </div>
+
+    <div id="selectedMember" class="selected"></div>
+
+    <label for="certificateName">الاسم الذي سيظهر على الشهادة</label>
+
+    <input
+      id="certificateName"
+      type="text"
+      placeholder="اكتب الاسم هنا"
+      oninput="drawCertificate()"
+    >
+
+    <div id="status" class="status">
+      يرجى كتابة الاسم أولاً.
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="drawCertificate()">
+        تحديث الشهادة
+      </button>
+
+      <button class="secondary" onclick="downloadCertificate()">
+        تحميل PNG
+      </button>
+
+      <button class="light" onclick="printCertificate()">
+        طباعة
+      </button>
+    </div>
+  </section>
+
+  <section class="preview">
+    <div class="preview-head">
+      <h2>معاينة الشهادة</h2>
+      <span>يتم تصغير الاسم الطويل تلقائياً</span>
+    </div>
+
+    <canvas id="certificateCanvas" width="1448" height="1024"></canvas>
+  </section>
+</main>
+
+<script>
+const REGISTRATION_API =
+  "https://script.google.com/macros/s/AKfycbysWX_UMRpmi_wv316IUcihXjjDVE-bTNsXagOWCDF2EjM33VaFP5Ru9YZkhcdcyFhIZQ/exec";
+
+const TEMPLATE_URL = "certificate-template.png";
+
+let members = [];
+let templateImage = new Image();
+let templateReady = false;
+
+const canvas = document.getElementById("certificateCanvas");
+const ctx = canvas.getContext("2d");
+
+templateImage.onload = function () {
+  templateReady = true;
+  drawCertificate();
+};
+
+templateImage.onerror = function () {
+  document.getElementById("status").textContent =
+    "تعذر تحميل صورة الشهادة. تأكد أن certificate-template.png موجود بجانب الصفحة.";
+  document.getElementById("status").style.display = "block";
+};
+
+templateImage.src = TEMPLATE_URL;
+
+async function loadMembers() {
+  try {
+    const response = await fetch(
+      `${REGISTRATION_API}?action=listRegisteredKids&v=${Date.now()}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to load registered children");
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error("Invalid registration response");
+    }
+
+    members = result.data
+      .filter(child => child.childName)
+      .map(child => ({
+        id: String(child.registrationId || ""),
+        name: String(child.childName || ""),
+        parent: String(child.parentName || "")
+      }));
+
+  } catch (error) {
+    console.error(error);
+    const results = document.getElementById("searchResults");
+    results.innerHTML = `
+      <div class="search-item">
+        <div class="search-name">تعذر تحميل قائمة المسجلين</div>
+        <div class="search-meta">ما زال بإمكانك كتابة الاسم يدوياً.</div>
+      </div>
+    `;
+  }
+}
+
+function normalizeArabic(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[\u064B-\u065F\u0670]/g, "")
+    .replace(/ـ/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function searchMembers() {
+  const input = document.getElementById("memberSearch");
+  const results = document.getElementById("searchResults");
+  const query = normalizeArabic(input.value);
+
+  if (!query) {
+    results.style.display = "none";
+    results.innerHTML = "";
+    return;
+  }
+
+  const words = query.split(/\s+/).filter(Boolean);
+
+  const matches = members
+    .filter(member => {
+      const searchable = normalizeArabic(
+        `${member.name} ${member.parent} ${member.id}`
+      );
+
+      return words.every(word => searchable.includes(word));
+    })
+    .slice(0, 15);
+
+  if (!matches.length) {
+    results.innerHTML = `
+      <div class="search-item">
+        <div class="search-name">لا يوجد مسجل بهذا الاسم</div>
+        <div class="search-meta">يمكنك كتابة الاسم يدوياً في الحقل التالي.</div>
+      </div>
+    `;
+    results.style.display = "block";
+    return;
+  }
+
+  results.innerHTML = matches.map(member => {
+    const index = members.indexOf(member);
+
+    return `
+      <div class="search-item" onclick="selectMember(${index})">
+        <div class="search-name">${escapeHtml(member.name)}</div>
+        <div class="search-meta">
+          ولي الأمر: ${escapeHtml(member.parent || "غير معروف")}
+          — المعرف: ${escapeHtml(member.id)}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  results.style.display = "block";
+}
+
+function selectMember(index) {
+  const member = members[index];
+
+  if (!member) return;
+
+  document.getElementById("memberSearch").value = member.name;
+  document.getElementById("certificateName").value = member.name;
+  document.getElementById("searchResults").style.display = "none";
+
+  const selected = document.getElementById("selectedMember");
+  selected.innerHTML = `
+    <strong>${escapeHtml(member.name)}</strong><br>
+    ولي الأمر: ${escapeHtml(member.parent || "غير معروف")}
+  `;
+  selected.style.display = "block";
+
+  drawCertificate();
+}
+
+function fitNameFont(name, maxWidth, startSize, minSize) {
+  let size = startSize;
+
+  while (size > minSize) {
+    ctx.font = `bold ${size}px "NotoKufiArabic", Tahoma, Arial`;
+
+    if (ctx.measureText(name).width <= maxWidth) {
+      return size;
+    }
+
+    size--;
+  }
+
+  return minSize;
+}
+
+function drawCertificate() {
+  if (!templateReady) return;
+
+  const name =
+    document.getElementById("certificateName").value.trim();
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+
+  // Cover the original placeholder "الأسم".
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(285, 492, 520, 88);
+
+  if (!name) return;
+
+  const fontSize = fitNameFont(name, 560, 40, 21);
+
+  ctx.save();
+  ctx.direction = "rtl";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#c79a4b";
+  ctx.font = `bold ${fontSize}px "NotoKufiArabic", Tahoma, Arial`;
+  ctx.fillText(name, 545, 535, 560);
+  ctx.restore();
+
+  document.getElementById("status").style.display = "none";
+}
+
+function downloadCertificate() {
+  const name =
+    document.getElementById("certificateName").value.trim();
+
+  if (!name) {
+    document.getElementById("status").style.display = "block";
+    return;
+  }
+
+  drawCertificate();
+
+  const link = document.createElement("a");
+  link.download = `شهادة-مشاركة-${name}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+function printCertificate() {
+  const name =
+    document.getElementById("certificateName").value.trim();
+
+  if (!name) {
+    document.getElementById("status").style.display = "block";
+    return;
+  }
+
+  drawCertificate();
+
+  const image = canvas.toDataURL("image/png");
+  const printWindow = window.open("", "_blank");
+
+  printWindow.document.write(`
+    <!doctype html>
+    <html dir="rtl">
+    <head>
+      <meta charset="UTF-8">
+      <title>شهادة مشاركة</title>
+      <style>
+        @page{
+          size:A4 landscape;
+          margin:0;
+        }
+
+        html,body{
+          margin:0;
+          width:100%;
+          height:100%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:white;
+        }
+
+        img{
+          width:100%;
+          height:auto;
+          display:block;
+        }
+      </style>
+    </head>
+    <body>
+      <img src="${image}">
+      <script>
+        window.onload = function () {
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+}
+
+document.addEventListener("click", event => {
+  const searchBox = document.querySelector(".search-box");
+
+  if (!searchBox.contains(event.target)) {
+    document.getElementById("searchResults").style.display = "none";
+  }
+});
+
+loadMembers();
+</script>
+
+<script>
+(() => {
+  const sendSize = () => {
+    const body = document.body;
+    const html = document.documentElement;
+
+    const height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      body.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+      html.clientHeight
+    );
+
+    window.parent.postMessage({
+      type:"kalba-iframe-size",
+      height
+    },"*");
+  };
+
+  const observer = new MutationObserver(sendSize);
+
+  observer.observe(document.documentElement,{
+    childList:true,
+    subtree:true,
+    attributes:true,
+    characterData:true
+  });
+
+  window.addEventListener("load",sendSize,true);
+  window.addEventListener("resize",sendSize);
+
+  setTimeout(sendSize,100);
+  setTimeout(sendSize,500);
+  setTimeout(sendSize,1000);
+})();
+</script>
+</body>
+</html>
