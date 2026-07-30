@@ -351,13 +351,17 @@ async function loadMembers() {
       throw new Error("Invalid registration response");
     }
 
-    members = result.data
-      .filter(child => child.childName)
-      .map(child => ({
-        id: String(child.registrationId || ""),
-        name: String(child.childName || ""),
-        parent: String(child.parentName || "")
-      }));
+members = result.data.map(child => ({
+    id: String(child.registrationId || ""),
+    name: String(
+        child.fullName ||
+        child.childFullName ||
+        child.name ||
+        child.childName ||
+        ""
+    ),
+    parent: String(child.parentName || "")
+}));
 
   } catch (error) {
     console.error(error);
