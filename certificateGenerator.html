@@ -280,15 +280,6 @@
 
     <div id="selectedMember" class="selected"></div>
 
-    <label for="certificateName">الاسم الذي سيظهر على الشهادة</label>
-
-    <input
-      id="certificateName"
-      type="text"
-      placeholder="اكتب الاسم هنا"
-      oninput="drawCertificate()"
-    >
-
     <div id="status" class="status">
       يرجى كتابة الاسم أولاً.
     </div>
@@ -460,15 +451,19 @@ function selectMember(index) {
   if (!member) return;
 
   document.getElementById("memberSearch").value = member.name;
-  document.getElementById("certificateName").value = member.name;
+
   document.getElementById("searchResults").style.display = "none";
 
   const selected = document.getElementById("selectedMember");
+
   selected.innerHTML = `
     <strong>${escapeHtml(member.name)}</strong><br>
     ولي الأمر: ${escapeHtml(member.parent || "غير معروف")}
   `;
+
   selected.style.display = "block";
+
+  window.selectedCertificateName = member.name;
 
   drawCertificate();
 }
@@ -492,8 +487,7 @@ function fitNameFont(name, maxWidth, startSize, minSize) {
 function drawCertificate() {
   if (!templateReady) return;
 
-  const name =
-    document.getElementById("certificateName").value.trim();
+ const name = window.selectedCertificateName || "";
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
@@ -519,9 +513,8 @@ function drawCertificate() {
 }
 
 function downloadCertificate() {
-  const name =
-    document.getElementById("certificateName").value.trim();
-
+ const name = window.selectedCertificateName || "";
+  
   if (!name) {
     document.getElementById("status").style.display = "block";
     return;
@@ -536,8 +529,7 @@ function downloadCertificate() {
 }
 
 function printCertificate() {
-  const name =
-    document.getElementById("certificateName").value.trim();
+const name = window.selectedCertificateName || "";
 
   if (!name) {
     document.getElementById("status").style.display = "block";
