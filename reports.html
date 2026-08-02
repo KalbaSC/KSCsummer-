@@ -1403,10 +1403,10 @@ onclick="promptForPassword()">
 <div class="container" id="topParticipantsView" style="display: none;">
     <div class="controls" style="margin-bottom:20px">
   <div class="export-buttons" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
-    <button class="export" onclick="exportToExcel()">
+    <button class="export" onclick="exportTopParticipantsToExcel()">
       <span class="download-icon"></span> Excel
     </button>
-<button class="export" onclick="exportToPrintableView()">
+<button class="export" onclick="exportTopParticipantsToPDF()">
   <span class="download-icon"></span> PDF
 </button>
   </div>
@@ -1979,6 +1979,9 @@ const REPORT_CACHE_TTL = 3 * 60 * 1000;
 const EVALUATION_URL = "https://script.google.com/macros/s/AKfycbz3uCLPvjazvaFRAiZVppFkKMMS2AlOWC4P3Fpy4XluiJ7xGV3BUVuwgmxfww7bMEcR/exec";
 let evaluationDataCache = null;
 let evaluationDataPromise = null;
+
+let currentTopParticipantsMode = "attendance";
+let currentEvaluationRankings = [];
 
 function fetchJsonp(url, timeoutMs = 25000) {
   return new Promise((resolve, reject) => {
@@ -3899,6 +3902,14 @@ const rankings = Object.entries(grouped).map(([id, player]) => ({
   activity: player.activity,
   average: Math.round(player.total / player.count)
 })).sort((a, b) => b.average - a.average);
+
+currentEvaluationRankings = rankings.map((player, index) => ({
+  rank: index + 1,
+  id: player.id,
+  name: player.name,
+  activity: player.activity,
+  average: player.average
+}));
       
      renderRankingsChart(data);
       
@@ -5101,6 +5112,101 @@ function exportRegisteredStatusToExcel() {
 
   XLSX.writeFile(workbook, fileName);
 }  
+function getTopAttendanceExportData() {
+  const selectedDate = document.getElementById("datePicker").value;
+  const selectedRecords = currentPeriod === "today"
+    ? allData.filter(row => row.dateKey === selectedDate && !row.isGeneral && row.Activity)
+    : filteredData.filter(row => !row.isGeneral && row.Activity);
+  const participants = {};
+  selectedRecords.forEach(row => {
+    if (!row.ID) return;
+    if (!participants[row.ID]) {
+      participants[row.ID] = {
+        id: row.ID,
+        name: `${row["Child Name"] || ""} ${row.Parent || ""}`.replace(/\s+/g, " ").trim(),
+        activities: new Set()
+      };
+    }
+    const activity = String(row.Activity || "").trim();
+    if (activity && activity !== "عام") participants[row.ID].activities.add(activity);
+  });
+  return Object.values(participants)
+    .map(player => ({ ...player, count: player.activities.size }))
+    .sort((a, b) => b.count - a.count)
+    .map((player, index) => ({
+      rank: index + 1,
+      id: player.id,
+      name: player.name,
+      activities: Array.from(player.activities).join("، "),
+      count: player.count
+    }));
+}
+
+function exportTopAttendanceToExcel() {
+  const rankings = getTopAttendanceExportData();
+  if (!rankings.length) { alert("لا توجد بيانات حضور للتصدير."); return; }
+  const exportData = rankings.map(player => ({
+    "الترتيب": player.rank,
+    "اسم اللاعب": player.name,
+    "المعرف": player.id,
+    "الأنشطة": player.activities,
+    "عدد الأنشطة": player.count
+  }));
+  const worksheet = XLSX.utils.json_to_sheet(exportData);
+  worksheet["!cols"] = [{wch:12},{wch:35},{wch:28},{wch:45},{wch:18}];
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "المميزون حسب الحضور");
+  XLSX.writeFile(workbook, "المميزون حسب الحضور.xlsx");
+}
+
+async function exportTopParticipantsToExcel() {
+  if (currentTopParticipantsMode === "evaluation") {
+    if (!currentEvaluationRankings.length) await renderTopRankings();
+    if (!currentEvaluationRankings.length) { alert("لا توجد بيانات تقييم للتصدير."); return; }
+    const exportData = currentEvaluationRankings.map(player => ({
+      "الترتيب": player.rank,
+      "اسم اللاعب": player.name,
+      "المعرف": player.id,
+      "النشاط": player.activity,
+      "معدل التقييم": player.average + "%"
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    worksheet["!cols"] = [{wch:12},{wch:35},{wch:28},{wch:22},{wch:18}];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "المميزون حسب التقييم");
+    XLSX.writeFile(workbook, "المميزون حسب التقييم.xlsx");
+    return;
+  }
+  exportTopAttendanceToExcel();
+}
+
+async function exportTopParticipantsToPDF() {
+  let title = "", rowsHtml = "", detailColumn = "", lastColumn = "";
+  if (currentTopParticipantsMode === "evaluation") {
+    if (!currentEvaluationRankings.length) await renderTopRankings();
+    if (!currentEvaluationRankings.length) { alert("لا توجد بيانات تقييم للتصدير."); return; }
+    title = "المميزون حسب التقييم";
+    detailColumn = "النشاط";
+    lastColumn = "معدل التقييم";
+    rowsHtml = currentEvaluationRankings.map(player => `
+      <tr><td>${player.rank}</td><td>${escapeRegisteredHtml(player.name)}</td><td>${escapeRegisteredHtml(player.id)}</td><td>${escapeRegisteredHtml(player.activity)}</td><td>${player.average}%</td></tr>
+    `).join("");
+  } else {
+    const rankings = getTopAttendanceExportData();
+    if (!rankings.length) { alert("لا توجد بيانات حضور للتصدير."); return; }
+    title = "المميزون حسب الحضور";
+    detailColumn = "الأنشطة";
+    lastColumn = "عدد الأنشطة";
+    rowsHtml = rankings.map(player => `
+      <tr><td>${player.rank}</td><td>${escapeRegisteredHtml(player.name)}</td><td>${escapeRegisteredHtml(player.id)}</td><td>${escapeRegisteredHtml(player.activities)}</td><td>${player.count}</td></tr>
+    `).join("");
+  }
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) { alert("تعذر فتح نافذة الطباعة. اسمح بالنوافذ المنبثقة لهذا الموقع."); return; }
+  printWindow.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>${title}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;color:#0b3551;background:white}.report-header{text-align:center;margin-bottom:20px}h1{margin:0 0 8px;font-size:26px}.date{color:#6b7280;font-size:13px}table{width:100%;border-collapse:collapse;direction:rtl}th,td{padding:10px;border:1px solid #dfe7ec;text-align:center;font-size:13px}th{background:#0b3551;color:white}tbody tr:nth-child(even){background:#f5faff}tbody tr:nth-child(1){background:#fff9d8;font-weight:bold}</style></head><body><div class="report-header"><h1>${title}</h1><div class="date">تاريخ التصدير: ${new Date().toLocaleDateString("ar-AE")}</div></div><table><thead><tr><th>الترتيب</th><th>اسم اللاعب</th><th>المعرف</th><th>${detailColumn}</th><th>${lastColumn}</th></tr></thead><tbody>${rowsHtml}</tbody></table><script>window.onload=function(){window.print();};<\/script></body></html>`);
+  printWindow.document.close();
+}
+
 window.onload = initialize;
 window.addEventListener('load', checkMobileView);
 window.addEventListener('resize', checkMobileView);
@@ -5114,16 +5220,19 @@ window.showActivitiesView  = showActivitiesView;
     
 <script>
   document.getElementById("showTopAttendanceBtn").addEventListener("click", () => {
+    currentTopParticipantsMode = "attendance";
     document.getElementById("topAttendanceContainer").style.display = "block";
     document.getElementById("topRankingContainer").style.display = "none";
     toggleRankingButtons(true);
+    renderTopParticipants();
   });
 
-  document.getElementById("showTopEvaluationBtn").addEventListener("click", () => {
+  document.getElementById("showTopEvaluationBtn").addEventListener("click", async () => {
+    currentTopParticipantsMode = "evaluation";
     document.getElementById("topAttendanceContainer").style.display = "none";
     document.getElementById("topRankingContainer").style.display = "block";
     toggleRankingButtons(false);
-    renderTopRankings();
+    await renderTopRankings();
   });
 
   function toggleRankingButtons(showAttendance) {
