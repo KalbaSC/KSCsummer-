@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رأيكم في مشروع راصد</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+@font-face{
+  font-family:'NotoKufiArabic';
+  src:url('NotoKufiArabic.ttf') format('truetype');
+  font-display:swap;
+}
+
+:root{
+  --yellow:#f4e733;
+  --blue:#0b3551;
+  --sky:#eef6f8;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:28px;
+  font-family:'NotoKufiArabic',Arial,sans-serif;
+  background:var(--sky);
+  color:var(--text);
+}
+
+.wrapper{
+  max-width:1050px;
+  margin:auto;
+  padding:36px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:28px;
+  box-shadow:0 14px 35px rgba(0,0,0,.08);
+}
+
+h1{
+  margin:0;
+  text-align:center;
+  color:var(--blue);
+  font-size:36px;
+}
+
+.subtitle{
+  margin:12px 0 30px;
+  text-align:center;
+  color:var(--muted);
+  font-size:17px;
+  line-height:2;
+}
+
+.top-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.field label,
+.notes-box label{
+  display:block;
+  margin-bottom:8px;
+  color:var(--blue);
+  font-weight:bold;
+}
+
+.optional{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:normal;
+}
+
+.input-box{position:relative}
+
+.input-box i{
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#9ca3af;
+  pointer-events:none;
+}
+
+input,textarea{
+  width:100%;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#f8fbff;
+  color:var(--text);
+  font-family:inherit;
+  font-size:16px;
+}
+
+.input-box.has-icon input{
+  padding-left:48px;
+}
+
+input[type="tel"]{
+  direction:ltr;
+  text-align:right;
+}
+
+textarea{
+  min-height:130px;
+  padding:18px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+  outline:2px solid var(--yellow);
+  outline-offset:2px;
+}
+
+.rating-row{
+  display:grid;
+  grid-template-columns:230px 1fr;
+  align-items:center;
+  gap:18px;
+  padding:16px;
+  margin-bottom:14px;
+  background:#f8fbff;
+  border:1px solid var(--border);
+  border-radius:20px;
+}
+
+.rating-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--blue);
+  font-weight:bold;
+  font-size:16px;
+}
+
+.rating-title i{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  width:46px;
+  height:46px;
+  border:1px solid #dbeafe;
+  border-radius:50%;
+  background:white;
+  color:var(--blue);
+  font-size:20px;
+}
+
+.rating{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+}
+
+.rating button{
+  min-height:76px;
+  padding:10px 5px;
+  border:1px solid #dbeafe;
+  border-radius:16px;
+  background:white;
+  color:var(--text);
+  font-family:inherit;
+  font-size:13px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.rating button strong{
+  display:block;
+  margin-bottom:5px;
+  color:#b78a20;
+  font-size:20px;
+}
+
+.rating button:hover{
+  border-color:#d6bd25;
+}
+
+.rating button:focus-visible{
+  outline:3px solid var(--blue);
+  outline-offset:3px;
+}
+
+.rating button.active{
+  background:linear-gradient(135deg,var(--yellow),#fff176);
+  border-color:var(--yellow);
+  color:#222;
+  transform:scale(1.03);
+  box-shadow:0 8px 18px rgba(244,231,51,.35);
+}
+
+.notes-box{margin-top:22px}
+
+.submit-btn{
+  display:block;
+  width:70%;
+  margin:28px auto 10px;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--yellow),#fff176);
+  color:#222;
+  font-family:inherit;
+  font-size:23px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(244,231,51,.25);
+}
+
+.submit-btn:disabled{
+  opacity:.65;
+  cursor:wait;
+}
+
+.privacy{
+  margin-top:16px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
+}
+
+.status{
+  min-height:28px;
+  margin-top:12px;
+  text-align:center;
+  color:#b42318;
+  font-size:14px;
+}
+
+.thanks{
+  display:none;
+  padding:65px 20px;
+  text-align:center;
+}
+
+.thanks-icon{
+  color:#d6a93b;
+  font-size:58px;
+}
+
+.thanks h2{
+  color:var(--blue);
+  font-size:36px;
+}
+
+.thanks p{
+  color:var(--muted);
+  font-size:19px;
+  line-height:2;
+}
+
+.again-btn{
+  margin-top:18px;
+  padding:14px 24px;
+  border:none;
+  border-radius:14px;
+  background:var(--yellow);
+  color:var(--blue);
+  font-family:inherit;
+  font-size:16px;
+  cursor:pointer;
+}
+
+@media(max-width:768px){
+  body{padding:14px}
+  .wrapper{padding:22px;border-radius:24px}
+  h1{font-size:27px}
+  .subtitle{font-size:14px}
+  .top-fields{grid-template-columns:1fr}
+  .rating-row{grid-template-columns:1fr}
+  .rating-title{font-size:15px}
+  .rating{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rating button:last-child{grid-column:1 / -1}
+  .submit-btn{width:100%;font-size:20px}
+  .thanks h2{font-size:29px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<form id="feedbackForm">
+
+  <h1>رأيكم في مشروع راصد</h1>
+
+  <div class="subtitle">
+    بعد تعرّفكم على المشروع والاستماع إلى شرح اللاعبين،
+    شاركونا رأيكم لمساعدتنا على التطوير
+  </div>
+
+  <div class="top-fields">
+
+    <div class="field">
+      <label for="parentName">
+        الاسم
+        <span class="optional">(اختياري)</span>
+      </label>
+
+      <div class="input-box has-icon">
+        <input
+          type="text"
+          id="parentName"
+          placeholder="اكتب اسمك"
+          autocomplete="name"
+          maxlength="150">
+        <i class="fa-solid fa-user" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="phone">
+        رقم الهاتف
+        <span class="optional">(اختياري)</span>
+      </label>
+
+      <div class="input-box">
+        <input
+          type="tel"
+          id="phone"
+          placeholder="05xxxxxxxx"
+          autocomplete="tel"
+          maxlength="25">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rating-row">
+    <div class="rating-title" id="overallTitle">
+      <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+      التقييم العام للمشروع
+    </div>
+
+    <div class="rating"
+         data-name="overall"
+         role="group"
+         aria-labelledby="overallTitle"></div>
+  </div>
+
+  <div class="rating-row">
+    <div class="rating-title" id="clarityTitle">
+      <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+      وضوح فكرة المشروع
+    </div>
+
+    <div class="rating"
+         data-name="registration"
+         role="group"
+         aria-labelledby="clarityTitle"></div>
+  </div>
+
+  <div class="rating-row">
+    <div class="rating-title" id="playersTitle">
+      <i class="fa-solid fa-microphone" aria-hidden="true"></i>
+      شرح اللاعبين وتقديمهم
+    </div>
+
+    <div class="rating"
+         data-name="reception"
+         role="group"
+         aria-labelledby="playersTitle"></div>
+  </div>
+
+  <div class="rating-row">
+    <div class="rating-title" id="benefitTitle">
+      <i class="fa-solid fa-futbol" aria-hidden="true"></i>
+      فائدة المشروع للنادي
+    </div>
+
+    <div class="rating"
+         data-name="activities"
+         role="group"
+         aria-labelledby="benefitTitle"></div>
+  </div>
+
+  <div class="rating-row">
+    <div class="rating-title" id="presentationTitle">
+      <i class="fa-solid fa-display" aria-hidden="true"></i>
+      طريقة العرض وتنظيمه
+    </div>
+
+    <div class="rating"
+         data-name="organization"
+         role="group"
+         aria-labelledby="presentationTitle"></div>
+  </div>
+
+  <div class="notes-box">
+    <label for="notes">
+      ملاحظاتكم واقتراحاتكم
+      <span class="optional">(اختياري)</span>
+    </label>
+
+    <textarea
+      id="notes"
+      maxlength="3000"
+      placeholder="ما الذي أعجبكم في المشروع أو شرح اللاعبين؟ وما اقتراحاتكم للتطوير؟"></textarea>
+  </div>
+
+  <button type="submit" id="submitBtn" class="submit-btn">
+    <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+    إرسال الرأي
+  </button>
+
+  <div id="status" class="status" role="alert"></div>
+
+  <div class="privacy">
+    <i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
+    رأيكم يساعدنا على تطوير المشروع وتحسين العروض القادمة
+  </div>
+
+</form>
+
+<div id="thanks" class="thanks" role="status">
+
+  <div class="thanks-icon">
+    <i class="fa-solid fa-star" aria-hidden="true"></i>
+  </div>
+
+  <h2>شكراً لمشاركتكم</h2>
+
+  <p>
+    أُرسل طلب التقييم.<br>
+    نقدّر رأيكم في مشروع راصد وشرح اللاعبين.
+  </p>
+
+  <button type="button" id="againBtn" class="again-btn">
+    مشاركة رأي جديد
+  </button>
+
+</div>
+
+</div>
+
+<script>
+function forceInsideMainPortal(){
+  if(window.top === window.self){
+    const page = location.pathname.split("/").pop();
+
+    window.location.replace(
+      "KSCsummer.html?page=" + encodeURIComponent(page)
+    );
+
+    return true;
+  }
+
+  return false;
+}
+
+const redirecting = forceInsideMainPortal();
+
+window.addEventListener("pageshow", forceInsideMainPortal);
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwGDIAJXMEr7XbGQHIdfZSxqHCEc5zw8yOjUUNipK8G3YeOR9m1FB94kGWeiJoTjh1j/exec";
+
+/*
+نحافظ على أسماء الحقول التي يستقبلها السكربت الحالي:
+
+parentName   = اسم المشارك بالرأي
+overall      = التقييم العام للمشروع
+registration = وضوح فكرة المشروع
+reception    = شرح اللاعبين وتقديمهم
+activities   = فائدة المشروع للنادي
+organization = طريقة العرض وتنظيمه
+*/
+
+const values = {
+  overall:"",
+  registration:"",
+  reception:"",
+  activities:"",
+  organization:""
+};
+
+const fieldTitles = {
+  overall:"التقييم العام للمشروع",
+  registration:"وضوح فكرة المشروع",
+  reception:"شرح اللاعبين وتقديمهم",
+  activities:"فائدة المشروع للنادي",
+  organization:"طريقة العرض وتنظيمه"
+};
+
+const labels = {
+  1:"ضعيف",
+  2:"مقبول",
+  3:"جيد",
+  4:"جيد جداً",
+  5:"ممتاز"
+};
+
+const form = document.getElementById("feedbackForm");
+const submitBtn = document.getElementById("submitBtn");
+const statusBox = document.getElementById("status");
+const thanks = document.getElementById("thanks");
+
+let submitting = false;
+
+document.querySelectorAll(".rating").forEach(group => {
+  const name = group.dataset.name;
+
+  for(let i = 5; i >= 1; i--){
+    const btn = document.createElement("button");
+
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", `${labels[i]}، ${i} من 5`);
+    btn.innerHTML = `<strong>${i} ⭐</strong>${labels[i]}`;
+
+    btn.addEventListener("click", () => {
+      values[name] = i;
+
+      group.querySelectorAll("button").forEach(button => {
+        button.classList.remove("active");
+        button.setAttribute("aria-pressed", "false");
+      });
+
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+
+      statusBox.textContent = "";
+    });
+
+    group.appendChild(btn);
+  }
+});
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if(submitting || redirecting) return;
+
+  statusBox.textContent = "";
+
+  for(const name of Object.keys(values)){
+    if(!values[name]){
+      statusBox.textContent =
+        `يرجى اختيار تقييم: ${fieldTitles[name]}.`;
+
+      const group =
+        document.querySelector(`.rating[data-name="${name}"]`);
+
+      group.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+      group.querySelector("button").focus({
+        preventScroll:true
+      });
+
+      return;
+    }
+  }
+
+  const body = new URLSearchParams();
+
+  body.append(
+    "parentName",
+    document.getElementById("parentName").value.trim()
+  );
+
+  body.append(
+    "phone",
+    document.getElementById("phone").value.trim()
+  );
+
+  Object.entries(values).forEach(([name, value]) => {
+    body.append(name, String(value));
+  });
+
+  body.append(
+    "notes",
+    document.getElementById("notes").value.trim()
+  );
+
+  submitting = true;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "جارٍ الإرسال...";
+
+  try{
+    await fetch(SCRIPT_URL, {
+      method:"POST",
+      mode:"no-cors",
+      body
+    });
+
+    /*
+    no-cors لا يتيح قراءة رد السكربت أو التأكد من حفظ
+    البيانات في الجدول، لذلك الرسالة تؤكد إرسال الطلب فقط.
+    */
+
+    form.style.display = "none";
+    thanks.style.display = "block";
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+    sendSize();
+    setTimeout(sendSize, 300);
+
+  }catch(error){
+    statusBox.textContent =
+      "تعذّر إرسال الطلب. يرجى التحقق من الاتصال والمحاولة مرة أخرى.";
+
+  }finally{
+    submitting = false;
+    submitBtn.disabled = false;
+
+    submitBtn.innerHTML =
+      '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> إرسال الرأي';
+  }
+});
+
+document.getElementById("againBtn").addEventListener("click", () => {
+  form.reset();
+
+  Object.keys(values).forEach(name => {
+    values[name] = "";
+  });
+
+  document.querySelectorAll(".rating button").forEach(btn => {
+    btn.classList.remove("active");
+    btn.setAttribute("aria-pressed", "false");
+  });
+
+  statusBox.textContent = "";
+  thanks.style.display = "none";
+  form.style.display = "block";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  sendSize();
+});
+
+let sizeFrame = null;
+
+function sendSize(){
+  if(sizeFrame !== null) return;
+
+  sizeFrame = requestAnimationFrame(() => {
+    sizeFrame = null;
+
+    if(window.parent === window) return;
+
+    const height = Math.ceil(
+      document.querySelector(".wrapper")
+        .getBoundingClientRect().height +
+      parseFloat(getComputedStyle(document.body).paddingTop) +
+      parseFloat(getComputedStyle(document.body).paddingBottom)
+    );
+
+    window.parent.postMessage({
+      type:"kalba-iframe-size",
+      height
+    }, location.origin);
+  });
+}
+
+window.addEventListener("load", sendSize);
+window.addEventListener("resize", sendSize);
+
+if("ResizeObserver" in window){
+  new ResizeObserver(sendSize).observe(
+    document.querySelector(".wrapper")
+  );
+}
+
+if(document.fonts){
+  document.fonts.ready.then(sendSize);
+}
+</script>
+
+</body>
+</html>
